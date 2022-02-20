@@ -1,0 +1,47 @@
+$(document).ready(function() {
+
+    $('#btnLoginEmployees').click(function() {
+
+        let dataForm = $('#formLogin').serialize()
+
+        $.ajax({
+            url: 'databases/login_staffs_db.php',
+            type: 'POST',
+            data: dataForm,
+            beforeSend: function() {
+                $("#webLoader").fadeIn()
+            },
+            success: function(data) {
+                console.log(data)
+                switch (data) {
+                    case "0":
+                        $('#printValidation').removeClass('d-none')
+                        $('#printValidation').text('Invalid username or password!')
+                        $("#webLoader").fadeOut(1000)
+                    break;
+
+                    case "1":
+                        $('#printValidation').removeClass('d-none')
+                        $('#printValidation').text('Invalid query!')
+                        $("#webLoader").fadeOut(1000)
+                    break;
+
+                    case "2":
+                        location.reload()
+                    break;
+
+                    default:
+                        $('#printValidation').text('There was a problem connecting to internet!')
+                        $("#webLoader").fadeOut(1000)
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr)
+                console.log(status)
+                console.log(error)
+            }
+        })
+
+    })
+
+})

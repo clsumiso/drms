@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&family=Raleway:ital,wght@0,300;0,400;0,500;0,700;1,500&display=swap');
+
+
+/* Custom Properties */
+:root {
+    /* Font Families */
+    --poppins: 'Poppins', sans-serif;
+    --raleway: 'Raleway', sans-serif;
+
+    /* Font Sizes */
+    --fs-default: 16px;
+
+    /* Colors Scheme */
+    --green: #499f55;
+    --dark-green: #24642d;
+    --yellow: #ffc107;
+    --orange: #b96b12;
+    --default-color: #f0f0f0;
+}
+
+
+
+/* Scrollbar Width */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+  /* Scrollbar Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+  
+  /* Scrollbar Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+  
+/* Scrollbar Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+
+body {
+    margin: 0;
+    top: 0;
+    left: 0;
+    counter-reset: my-sec-counter;
+}
+
+*, 
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+
+
+a {
+    text-decoration: none;
+}
+
+input,
+select,
+textarea {
+    font-family: var(--poppins);
+    resize: none;
+}
+
+label {
+    font-weight: 500;
+    font-family: var(--poppins);
+    font-size: 16px;
+    text-transform: capitalize;
+}
+/* 
+textarea.form-control:focus:not(.is-invalid),
+input[type="text"].form-control:focus:not(.is-invalid),
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+input[type="checkbox"]:focus:not(.is-invalid),
+select:focus:not(.is-invalid),
+.uneditable-input:focus {   
+  border-color: var(--green) !important;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6) !important;
+  outline: 0 none !important;
+} */
+
+
+input[type="checkbox"]:checked {
+    background-color: green !important;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+.poppins {
+    font-family: var(--poppins) !important;
+}
+
+.raleway {
+    font-family: var(--raleway) !important;
+}
+
+.green {
+    color: var(--green) !important;
+}
+
+.dark-green {
+    color: var(--dark-green) !important;
+}
+
+.yellow {
+    color: var(--yellow) !important;
+}
+
+.default-color {
+    color: #f0f0f0;
+}
+
+.default-text {
+    font-size: 17px;
+    font-family: var(--poppins);
+    line-height: 1.8;
+}
+
+.fs-10 {
+    font-size: 10px !important;
+}
+
+.fs-14 {
+    font-size: 14px !important;
+}
+
+.fs-16 {
+    font-size: 16px !important;
+}
+
+.fs-17 {
+    font-size: 17px !important;
+}
+
+.fs-18 {
+    font-size: 18px !important;
+}
+
+.fw-500 {
+    font-weight: 500 !important;
+}
+
+/* page loader */
+.bg-logo-web-load {
+    display: none;  /* need magblock after magloading */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(49, 49, 49, 0.877);
+    z-index: 2;
+    animation-name: animatepopup;
+    animation-duration: .6s;
+    z-index: 999;
+}
+@keyframes animatepopup {
+    from {
+        opacity: 0;
+    } to {
+        opacity: 1;
+    }
+}
+
+
+.bg-logo-web-load .logo-wrapper {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 450px;
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 0 6px rgba(78, 78, 78, 0.842);
+}
+
+.bg-logo-web-load .logo-wrapper p {
+    font-size: 16px;
+    font-family: var(--poppins);
+    font-weight: 500;
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+@keyframes spin3D {
+  from { transform: rotateY(0deg) }
+  to { transform: rotateY(360deg) }
+}
+.bg-logo-web-load .spinlogo {
+  animation-name: spin3D;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+@media only screen and (min-width: 769px){
+    .logo-wrapper {
+        max-width: 450px;
+    }
+}
+
+
+
+@keyframes animateModal {
+    from {
+        top: 35%;
+        opacity: 0;
+    }
+    to {
+        top: 50%;
+        opacity: 1;
+    }
+}
