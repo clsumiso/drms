@@ -4,11 +4,12 @@
 /**
  * 
  */
+
+
 class StudentModel extends CI_Model
 {
 	
-	function __construct()
-	{
+	function __construct() {
 		$this->load->database();
 	}
 
@@ -24,4 +25,30 @@ class StudentModel extends CI_Model
         return $query->result();
     }
 
+
+    public function insertRequest($request = array(), $info = array(), $document = array()) {
+        
+        $this->db->trans_begin();
+        $this->db->trans_strict(TRUE);
+
+        $this->db->insert('request_tbl', $request);
+        $id = $this->db->insert_id();
+
+        $this->db->insert('requestor_info_tbl', $info);
+        $this->db->insert_batch('document_request_tbl', $document);
+        
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            return "Request was not sent!";
+        } else {
+            $this->db->trans_commit();
+            return "Request was sent!";
+        }
+        
+    }
+
+
+
+
+    
 }

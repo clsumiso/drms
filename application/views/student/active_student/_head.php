@@ -7,3 +7,4 @@
     
     <title>Active Student | Online Document Request</title>
     <link rel="shortcut icon" href="<?php echo base_url('assets/'); ?>styles/resources/logo.png" type="image/x-icon">
+    

@@ -1,5 +1,19 @@
 $(document).ready(function() {
 
+    // dummy data
+    $('#getStudentID').val('18-2079')
+    $('#getFirstname').val('darwin')
+    $('#getMiddlename').val('bulgado')
+    $('#getLastname').val('labiste')
+    $('#getSuffix').val('')
+    $('#getEmail').val('labiste.darwin@clsu2.edu.ph')
+    $('#getPhone').val('9278285895')
+    $('#getAddress').val('Umingan, Pangasinan')
+    $('.getCourse option:eq(1)').prop('selected', true)
+
+
+
+
     // Reusable functions for validations
     function validateEmail(email) {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -19,7 +33,7 @@ $(document).ready(function() {
     function validateImg(file) {
         var ext = file.split(".")
         ext = ext[ext.length-1].toLowerCase()
-        var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"]
+        var arrayExtensions = ["jpg" , "jpeg", "png", "pdf", "gif", "bmp"]
         if (arrayExtensions.lastIndexOf(ext) == -1) {
             return false
         } else {
@@ -75,10 +89,10 @@ $(document).ready(function() {
                                                     
                                                         '<div class="row d-none">'+
                                                             '<div class="form-group col-lg-8 mb-3">'+
-                                                                '<input type="text" class="form-control mb-3 getFDocuments" name="getFDocuments[]" id="getFDocuments" placeholder="Document Name" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFCopies" name="getFCopies[]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFPages" name="getFPages[]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFType" name="getFType[]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+    
+                                                                '<input type="text" class="form-control mb-3 getFDocuments" name="document['+appendedDocuments+'][document_name]" id="getFDocuments" placeholder="Document Name" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFCopies" name="document['+appendedDocuments+'][document_type]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_copies]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_pages]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+    
                                                             '</div>'+
                                                         '</div>'+
 
@@ -1250,8 +1264,8 @@ $(document).ready(function() {
 
         let dataForm = new FormData(this)
 
-        $.ajax({
-            url: '../../databases/students/insert_active_request_db.php',
+        $.ajax({ 
+            url: window.location.origin + '/drms_ojt/student/active_request',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {
@@ -1260,7 +1274,7 @@ $(document).ready(function() {
             success: function(data) {
                 $('#validationSubmit').text(data)
                 $('.bg-logo-web-load .spinlogo').css('animation-iteration-count', '0')
-                $('#validationSubmit').append('<div class="mt-3"><a href="../../index.php" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
+                $('#validationSubmit').append('<div class="mt-3"><a href="'+window.location.origin+'/drms_ojt" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
                 console.log(data)
             },
             error: function(xhr, status, error) {
@@ -1269,8 +1283,9 @@ $(document).ready(function() {
                 console.log(error)
             },
             cache: false,
+            async: false,
+            processData: false,
             contentType: false,
-            processData: false
         })
     })
 

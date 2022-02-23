@@ -12,11 +12,6 @@
 
     class HomepageController extends CI_Controller {
         
-        function __construct() {
-            parent::__construct();
-            $this->load->model('HomepageModel', 'homepage');
-        }
-
         public function index() {
             $this->load->view('homepage/_head');
             $this->load->view('homepage/_css');

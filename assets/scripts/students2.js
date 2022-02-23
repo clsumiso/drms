@@ -20,7 +20,7 @@ $(document).ready(function() {
     function validateImg(file) {
         var ext = file.split(".")
         ext = ext[ext.length-1].toLowerCase()
-        var arrayExtensions = ["jpg" , "jpeg", "png", "pdf"]
+        var arrayExtensions = ["jpg" , "jpeg", "png", "pdf", "gif", "bmp"]
         if (arrayExtensions.lastIndexOf(ext) == -1) {
             return false
         } else {

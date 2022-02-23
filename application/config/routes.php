@@ -56,14 +56,17 @@ $route = array (
     'email-us'                  => 'homepageController/email_us',
 
 
-    'login'                     => 'LoginController',
+    'login'                     => 'loginController',
 
     'student/active'            => 'studentController/active_student',
+    'student/active_request'    => 'studentController/insert_active_request',
+
     'student/inactive'          => 'studentController/inactive_student',
 
     'student/courses'           => 'studentController/getCourse',
 
-    'staff'                     => 'staffController'
+    'staff'                     => 'staffController',
+    
 );
 
 $route['404_override'] = '';
