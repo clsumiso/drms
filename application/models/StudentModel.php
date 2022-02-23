@@ -34,7 +34,10 @@ class StudentModel extends CI_Model
         $this->db->insert('request_tbl', $request);
         $id = $this->db->insert_id();
 
+
+        $info['request_id'] = $id;
         $this->db->insert('requestor_info_tbl', $info);
+
         $this->db->insert_batch('document_request_tbl', $document);
         
         if ($this->db->trans_status() === FALSE) {

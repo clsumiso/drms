@@ -143,7 +143,6 @@
                 echo "There was a problem moving your identity file. File is not uploaded!";
             }
 
-
             $stud_no  = $this->input->post('getStudentID');
             $firstname  = strtolower($this->input->post('getFirstname'));
             $middlename  = strtolower($this->input->post('getMiddlename'));
