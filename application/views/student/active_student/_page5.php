@@ -91,7 +91,7 @@
                 <hr class="my-4"></hr>
 
                 <button class="btn btn-secondary px-5 poppins" type="button" id="backToPage4">Back</button>
-                <button class="btn btn-success px-5 poppins" type="submit" id="submitFormActive" name="submitFormActive">Next</button>
+                <button class="btn btn-success px-5 poppins" type="submit" id="submitFormActive" name="submitFormActive">Send Request</button>
 
             </div>
 

@@ -128,7 +128,7 @@ $(document).ready(function() {
         let dataReviewForm = $('#submitReviewForm').serialize()
 
         $.ajax({
-            url: 'databases/students/insert_ratings_db.php',
+            url: window.location.origin + '/drms_ojt/feedback',
             type: 'POST',
             data: dataReviewForm,
             datatype: 'json',
@@ -136,7 +136,7 @@ $(document).ready(function() {
                 $('.modal-feedback').css('display', 'none')
                 Swal.fire({
                     icon: 'success',
-                    title: data,
+                    title: 'Thank you for your feedback!',
                 }).then(function() {
                     location.reload()
                 })

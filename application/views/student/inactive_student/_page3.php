@@ -40,11 +40,11 @@
 
                     <div class="row d-none">
                         <div class="form-group col-lg-8 mb-3">
-                            <input type="text" class="form-control mb-3 getFDocuments" name="getFDocuments[]" id="getFDocuments" placeholder="Document Name" readonly>
-                            <input type="text" class="form-control mb-3 getFCopies" name="getFCopies[]" id="getFCopies" placeholder="Document Copies" value="0" readonly>
-                            <input type="text" class="form-control mb-3 getFPages" name="getFPages[]" id="getFPages" placeholder="Document Pages" value="0" readonly>
+                            <input type="text" class="form-control mb-3 getFDocuments" name="document[0][document_name]" id="getFDocuments" placeholder="Document Name" readonly>
+                            <input type="text" class="form-control mb-3 getFCopies" name="document[0][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>
+                            <input type="text" class="form-control mb-3 getFPages" name="document[0][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>
                             <input type="file" class="form-control mb-3 getFUploads" name="getFUploads[]" id="getFUploads" readonly>
-                            <input type="text" class="form-control mb-3 getFType" name="getFType[]" id="getFType" placeholder="Document Type" value="0" readonly>
+                            <input type="text" class="form-control mb-3 getFType" name="document[0][document_type]" id="getFType" placeholder="Document Type" value="0" readonly>
                         </div>
                     </div>
 

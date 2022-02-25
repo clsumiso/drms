@@ -75,10 +75,10 @@
                             <p class="label">Requested Documents: </p>
                             <div class="data" id="appendAllRequests">
                                 <!-- append all requested documents -->
-                                <div class="document-list-wrapper-appendedRequests">
+                                <!-- <div class="document-list-wrapper-appendedRequests">
                                     <p class="poppins mt-2 fs-17 fw-500"><i class="bx bxs-circle fs-10 me-2"></i>1x Certification of Grades</p>
                                     <p class="poppins m-0 ms-5"><i class="bx bxs-right-arrow fs-14"></i> <text class="fw-500">Uploaded File:</text> <u>asdasdasdas.png</u></p>
-                                </div>
+                                </div> -->
                                 
                             </div>
                         </div>
@@ -91,7 +91,7 @@
                 <hr class="my-4"></hr>
 
                 <button class="btn btn-secondary px-5 poppins" type="button" id="backToPage4">Back</button>
-                <button class="btn btn-success px-5 poppins" type="submit" id="submitFormActive" name="submitFormActive">Next</button>
+                <button class="btn btn-success px-5 poppins" type="submit" id="submitFormActive" name="submitFormActive">Send Request</button>
 
             </div>
 

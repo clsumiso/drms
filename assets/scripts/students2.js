@@ -1,5 +1,15 @@
 $(document).ready(function() {
 
+    // dummy data
+    // $('#getStudentID').val('18-2079')
+    // $('#getFirstname').val('darwin')
+    // $('#getMiddlename').val('bulgado')
+    // $('#getLastname').val('labiste')
+    // $('#getSuffix').val('')
+    // $('#getEmail').val('labiste.darwin@clsu2.edu.ph')
+    // $('#getPhone').val('9278285895')
+    // $('#getAddress').val('Umingan, Pangasinan')
+
     // Reusable functions for validations
     function validateEmail(email) {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -75,7 +85,7 @@ $(document).ready(function() {
                                                                     '<option value="1">Certification of Units Earneds</option>'+
                                                                     '<option value="2">Certification of Course Description</option>'+
                                                                     '<option value="3">Certification of Graduation with Ranking</option>'+
-                                                                    '<option value="4">Certification of Graduation with Academic Honors/option>'+
+                                                                    '<option value="4">Certification of Graduation with Academic Honors</option>'+
                                                                     '<option value="5">Certification of Grading System</option>'+
                                                                     '<option value="6">Honorable Dismissal & Transfer Credentials</option>'+
                                                                     '<option value="7">Certification of Graduation with GWA</option>'+
@@ -109,11 +119,11 @@ $(document).ready(function() {
                                                     
                                                         '<div class="row d-none">'+
                                                             '<div class="form-group col-lg-8 mb-3">'+
-                                                                '<input type="text" class="form-control mb-3 getFDocuments" name="getFDocuments[]" id="getFDocuments" placeholder="Document Name" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFCopies" name="getFCopies[]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFPages" name="getFPages[]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFDocuments" name="document['+appendedDocuments+'][document_name]" id="getFDocuments" placeholder="Document Name" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFCopies" name="document['+appendedDocuments+'][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
                                                                 '<input type="file" class="form-control mb-3 getFUploads" name="getFUploads[]" id="getFUploads" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFType" name="getFType[]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+      
+                                                                '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_type]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+      
                                                             '</div>'+
                                                         '</div>'+
 
@@ -1273,7 +1283,6 @@ $(document).ready(function() {
                
                
             } else if ($(this).val() == 8 || $(this).val() == 10 || $(this).val() == 11 || $(this).val() == 12) {
-                console.log('asd')
                 let copiesDoc = $(this).parent().parent().parent().find('.getFCopies').val()
                 let uploadsDoc = $(this).parent().parent().parent().find('.getFUploads').get(0).files.item(0).name
                 $('body').find('#appendAllRequests').append('<div class="document-list-wrapper-appendedRequests">'+
@@ -1385,18 +1394,19 @@ $(document).ready(function() {
         e.preventDefault()
 
         let dataForm = new FormData(this)
+        $("#webLoader").fadeIn()
 
         $.ajax({
-            url: '../../databases/students/insert_inactive_request_db.php',
+            url: window.location.origin + '/drms_ojt/student/inactive_request',
             type: 'POST',
             data: dataForm,
-            beforeSend: function() {
-                $("#webLoader").fadeIn()
-            },
+            // beforeSend: function() {
+            //     $("#webLoader").fadeIn()
+            // },
             success: function(data) {
                 $('#validationSubmit').text(data)
                 $('.bg-logo-web-load .spinlogo').css('animation-iteration-count', '0')
-                $('#validationSubmit').append('<div class="mt-3"><a href="../../index.php" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
+                $('#validationSubmit').append('<div class="mt-3"><a href="'+window.location.origin+'/drms_ojt" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
             },
             error: function(xhr, status, error) {
                 console.log(xhr)
@@ -1404,6 +1414,7 @@ $(document).ready(function() {
                 console.log(error)
             },
             cache: false,
+            async: true,
             contentType: false,
             processData: false
         })

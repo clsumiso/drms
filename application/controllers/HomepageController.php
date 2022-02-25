@@ -6,7 +6,6 @@
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
 
-    //Load Composer's autoloader
     require 'vendor/autoload.php';
 
 
@@ -20,6 +19,7 @@
             $this->load->view('homepage/_about');
             $this->load->view('homepage/_footer');
             $this->load->view('homepage/_modal_email');
+            $this->load->view('homepage/_modal_feedback');
             $this->load->view('homepage/_script');
         }
 
@@ -66,6 +66,29 @@
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
+        }
+
+
+        public function feedback() {
+
+            $user = $_SESSION['user'];
+            $user_friendly = $_POST['star'];
+            $informative = $_POST['star2'];
+            $suggestion = $this->input->post('getSuggestion'); 
+            $today = date('Y-m-d H:i:s');
+
+            $feedback = array (
+                "student_type"      =>  $user,
+                "user_friendly"     =>  $user_friendly,
+                "informative"       =>  $informative,
+                "suggestion"        =>  $suggestion,
+                "date_created"      =>  $today
+            );
+
+
+            $this->load->model('HomepageModel');
+            $this->HomepageModel->insert_feedback($feedback);
+
         }
     
     }

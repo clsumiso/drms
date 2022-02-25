@@ -54,17 +54,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route = array (
     'default_controller'        => 'homepageController',
     'email-us'                  => 'homepageController/email_us',
-
-
-    'login'                     => 'loginController',
+    'feedback'                  => 'homepageController/feedback',
 
     'student/active'            => 'studentController/active_student',
     'student/active_request'    => 'studentController/insert_active_request',
 
     'student/inactive'          => 'studentController/inactive_student',
+    'student/inactive_request'  => 'studentController/insert_inactive_request',
 
     'student/courses'           => 'studentController/getCourse',
 
+    
+    'login'                     => 'loginController',
+    
     'staff'                     => 'staffController',
     
 );
