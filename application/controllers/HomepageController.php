@@ -88,6 +88,7 @@
 
             $this->load->model('HomepageModel');
             $this->HomepageModel->insert_feedback($feedback);
+            $this->session->unset_userdata('user');
 
         }
     

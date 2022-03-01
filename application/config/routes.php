@@ -66,8 +66,18 @@ $route = array (
 
     
     'login'                     => 'loginController',
+    'staff_login'               => 'loginController/login',
+    'staff_logout'              => 'staffController/logout',
     
     'staff'                     => 'staffController',
+    'staff/count_request'       => 'staffController/getCountRequest',
+    'staff/get_all_requests'    => 'staffController/getAllRequest',
+    'staff/get_request'         => 'staffController/getRequest',
+    'staff/notes'               => 'staffController/insertNotes',
+    'staff/decline_request'     => 'staffController/mailDeclineRequest',
+    'staff/ondelivery_request'  => 'staffController/mailOnDelivery',
+    'staff/delivered_request'  => 'staffController/mailDelivered',
+    'staff/send_document'  => 'staffController/mailSendDocument',
     
 );
 

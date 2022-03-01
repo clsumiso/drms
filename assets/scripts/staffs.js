@@ -41,10 +41,9 @@ $(document).ready(function() {
     function displayRequestTitle() {
 
         let requestType = $('#getRequestType').val()
-        let search = $('#getSearch').val()
 
         $.ajax ({
-            url: '../../databases/staffs/get_requests_count.php',
+            url: window.location.origin + '/drms_ojt/staff/count_request',
             type: 'POST',
             data: {
                 request_type: requestType
@@ -64,13 +63,17 @@ $(document).ready(function() {
 
         $('.document-request-wrapper').empty()
         $('#getRequestType').val('1')
+        let requestType = $('#getRequestType').val()
         displayRequestTitle()
         
         $(document).prop('title', 'All Requests')
 
         $.ajax ({
-            url: '../../databases/staffs/get_all_requests.php',
-            type: 'GET',
+            url: window.location.origin + '/drms_ojt/staff/get_all_requests',
+            type: 'POST',
+            data: {
+                request_type: requestType
+            },
             success: function(data) {
                 $('.document-request-wrapper').append(data)
             }, 
@@ -87,22 +90,26 @@ $(document).ready(function() {
 
         $('.document-request-wrapper').empty()
         $('#getRequestType').val('2')
+        let requestType = $('#getRequestType').val()
         displayRequestTitle()
 
         $(document).prop('title', 'Pending Requests')
 
-        // $.ajax ({
-        //     url: '../../databases/staffs/get_pending_requests.php',
-        //     type: 'GET',
-        //     success: function(data) {
-        //         $('.document-request-wrapper').append(data)
-        //     }, 
-        //     error: function(status, xhr, error) {
-        //         console.log(status)
-        //         console.log(xhr)
-        //         console.log(error)
-        //     }
-        // })
+        $.ajax ({
+            url: window.location.origin + '/drms_ojt/staff/get_all_requests',
+            type: 'POST',
+            data: {
+                request_type: requestType
+            },
+            success: function(data) {
+                $('.document-request-wrapper').append(data)
+            }, 
+            error: function(status, xhr, error) {
+                console.log(status)
+                console.log(xhr)
+                console.log(error)
+            }
+        })
 
     }
 
@@ -110,13 +117,17 @@ $(document).ready(function() {
 
         $('.document-request-wrapper').empty()
         $('#getRequestType').val('3')
+        let requestType = $('#getRequestType').val()
         displayRequestTitle()
 
         $(document).prop('title', 'On Delivery')
 
         $.ajax ({
-            url: '../../databases/staffs/get_on_delivery_requests.php',
-            type: 'GET',
+            url: window.location.origin + '/drms_ojt/staff/get_all_requests',
+            type: 'POST',
+            data: {
+                request_type: requestType
+            },
             success: function(data) {
                 $('.document-request-wrapper').append(data)
             }, 
@@ -133,13 +144,17 @@ $(document).ready(function() {
 
         $('.document-request-wrapper').empty()
         $('#getRequestType').val('4')
+        let requestType = $('#getRequestType').val()
         displayRequestTitle()
 
         $(document).prop('title', 'Archives')
 
         $.ajax ({
-            url: '../../databases/staffs/get_archives_requests.php',
-            type: 'GET',
+            url: window.location.origin + '/drms_ojt/staff/get_all_requests',
+            type: 'POST',
+            data: {
+                request_type: requestType
+            },
             success: function(data) {
                 $('.document-request-wrapper').append(data)
             }, 
@@ -444,7 +459,7 @@ $(document).ready(function() {
         $('.display-review-request').fadeIn()
 
         $.ajax ({
-            url: '../../databases/staffs/get_request.php',
+            url: window.location.origin + '/drms_ojt/staff/get_request',
             type: 'POST',
             data: {
                 request_id: request_id
@@ -512,18 +527,17 @@ $(document).ready(function() {
         let dataForm = $(this).parent().parent().serialize()
         
         $.ajax ({
-            url: '../../databases/staffs/insert_notes.php',
+            url: window.location.origin + '/drms_ojt/staff/notes',
             type: 'POST',
             data: dataForm,
             success: function(data) {
                 Swal.fire({
                     position: 'top-end',
                     icon: 'success',
-                    title: 'Notes saved',
+                    title: 'Note updated',
                     showConfirmButton: false,
                     timer: 1000
                   })
-                  console.log(data)
             },
             error: function(xhr, status, error) {
                 console.log(xhr)
@@ -545,7 +559,7 @@ $(document).ready(function() {
             let dataForm = new FormData(this)
 
             $.ajax ({
-                url: '../../databases/staffs/mail_send_documents_request.php',
+                url: window.location.origin + '/drms_ojt/staff/send_document',
                 type: 'POST',
                 data: dataForm,
                 beforeSend: function() {
@@ -607,7 +621,7 @@ $(document).ready(function() {
         let dataForm = $(this).serialize()
 
         $.ajax ({
-            url: '../../databases/staffs/mail_delivered_request.php',
+            url: window.location.origin + '/drms_ojt/staff/delivered_request',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {
@@ -669,7 +683,7 @@ $(document).ready(function() {
                     let dataForm = $(this).serialize()
 
                     $.ajax ({
-                        url: '../../databases/staffs/mail_decline_request.php',
+                        url: window.location.origin + '/drms_ojt/staff/decline_request',
                         type: 'POST',
                         data: dataForm,
                         beforeSend: function() {
@@ -723,7 +737,7 @@ $(document).ready(function() {
         let dataForm = $(this).serialize()
 
         $.ajax ({
-            url: '../../databases/staffs/mail_on_delivery_request.php',
+            url: window.location.origin + '/drms_ojt/staff/ondelivery_request',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {

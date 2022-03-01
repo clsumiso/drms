@@ -1,11 +1,13 @@
 $(document).ready(function() {
 
-    $('#btnLoginEmployees').click(function() {
+    $('#formLogin').submit(function(e) {
+
+        e.preventDefault()
 
         let dataForm = $('#formLogin').serialize()
 
         $.ajax({
-            url: 'databases/login_staffs_db.php',
+            url: window.location.origin + '/drms_ojt/staff_login',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {
@@ -21,12 +23,6 @@ $(document).ready(function() {
                     break;
 
                     case "1":
-                        $('#printValidation').removeClass('d-none')
-                        $('#printValidation').text('Invalid query!')
-                        $("#webLoader").fadeOut(1000)
-                    break;
-
-                    case "2":
                         location.reload()
                     break;
 

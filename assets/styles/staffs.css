@@ -725,6 +725,15 @@ i.toggleBackRequest {
 }
 
 
+.back-notes {
+    display: flex;
+    flex-direction: column;
+    margin: 25px 0;
+    gap: 25px;
+}
+
+
+
 @media only screen and (min-width: 820px) {
             
     .request-review {
@@ -766,6 +775,15 @@ i.toggleBackRequest {
     }
     
     .back-notes {
+        flex-direction: row;
+        width: 50%;
+    }
+
+    .back-notes form {
+        width: 50%;
+    }
+
+    .back-notes p {
         width: 50%;
     }
 
