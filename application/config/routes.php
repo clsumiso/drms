@@ -76,8 +76,8 @@ $route = array (
     'staff/notes'               => 'staffController/insertNotes',
     'staff/decline_request'     => 'staffController/mailDeclineRequest',
     'staff/ondelivery_request'  => 'staffController/mailOnDelivery',
-    'staff/delivered_request'  => 'staffController/mailDelivered',
-    'staff/send_document'  => 'staffController/mailSendDocument',
+    'staff/delivered_request'   => 'staffController/mailDelivered',
+    'staff/send_document'       => 'staffController/mailSendDocument',
     
 );
 
