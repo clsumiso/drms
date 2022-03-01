@@ -1,6 +1,5 @@
 <?php
 
-    session_start();
     if(isset($_SESSION['upload']) && isset($_SESSION['user'])) {
 
         echo '<div class="modal-feedback">'.
