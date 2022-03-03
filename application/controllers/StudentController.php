@@ -25,7 +25,6 @@
             $this->load->view('student/active_student/main.php');
             $this->load->view('student/active_student/_script.php');
         }
-        
 
         public function inactive_student() {
             $this->load->view('student/inactive_student/_head.php');
@@ -75,7 +74,7 @@
 
                     $fileExtPayment = explode(".", $payment_filename);
                     $fileMainExtPayment = strtolower(end($fileExtPayment));
-                    $filePaymentNewName = uniqid('', true).".".$fileMainExtPayment;
+                    $filePaymentNewName = uniqid().".".$fileMainExtPayment;
 
                     $payment['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
                     $payment['file_name'] = $filePaymentNewName;
@@ -130,7 +129,7 @@
             // Upload identity file
             $fileExtIdentity = explode(".", $identity_filename);
             $fileMainExtIdentity = strtolower(end($fileExtIdentity));
-            $fileIdentityNewName = uniqid('', true).".".$fileMainExtIdentity;
+            $fileIdentityNewName = uniqid().".".$fileMainExtIdentity;
 
             $identity['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
             $identity['file_name'] = $fileIdentityNewName;
@@ -288,7 +287,7 @@
 
                     $fileExtPayment = explode(".", $payment_filename);
                     $fileMainExtPayment = strtolower(end($fileExtPayment));
-                    $filePaymentNewName = uniqid('', true).".".$fileMainExtPayment;
+                    $filePaymentNewName = uniqid().".".$fileMainExtPayment;
 
                     $payment['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
                     $payment['file_name'] = $filePaymentNewName;
@@ -341,7 +340,7 @@
             // Upload identity file
             $fileExtIdentity = explode(".", $identity_filename);
             $fileMainExtIdentity = strtolower(end($fileExtIdentity));
-            $fileIdentityNewName = uniqid('', true).".".$fileMainExtIdentity;
+            $fileIdentityNewName = uniqid().".".$fileMainExtIdentity;
 
             $identity['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
             $identity['file_name'] = $fileIdentityNewName;
@@ -404,7 +403,7 @@
                     $fileExtUpload = explode(".", $tmp_document_upload[$i]);
                     $fileMainExtUpload = strtolower(end($fileExtUpload));
                     
-                    $document_upload = uniqid('', true).".".$fileMainExtUpload;
+                    $document_upload = uniqid().".".$fileMainExtUpload;
         
                   
                     $requirement['allowed_types'] = 'pdf';

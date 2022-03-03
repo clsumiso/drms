@@ -281,13 +281,13 @@
 
 
 
-                // if($mainExtIdentity == "pdf") {
-                //     $identity_file = '<iframe src="./assets/uploads/identities/'.$identity.'"></iframe>';
-                //     $display_file_design = '<i class="bx bxs-file-pdf"></i>';
-                // } else {
-                //     $identity_file = '<img src="./assets/uploads/identities/'.$identity.'" alt="'.$identity.'">';
-                //     $display_file_design = '<i class="bx bxs-file-image"></i>';
-                // }
+                if($mainExtIdentity == "pdf") {
+                    $identity_file = '<iframe src="./assets/uploads/identities/'.$identity.'"></iframe>';
+                    $display_file_design = '<i class="bx bxs-file-pdf"></i>';
+                } else {
+                    $identity_file = '<img src="./assets/uploads/identities/'.$identity.'" alt="'.$identity.'">';
+                    $display_file_design = '<i class="bx bxs-file-image"></i>';
+                }
 
 
 
@@ -380,17 +380,17 @@
                 $payment_file = "";
                 $display_file_design_payment = "";
                 $payment_show = '<i class="bx bxs-file-blank"></i> <a href="#" class="toggleOpenPayment" id="toggleOpenPayment">Click here to view payment</a>';
-                // if($mainExtPayment == "png" || $mainExtPayment == "jpg" || $mainExtPayment == "jpeg") {
-                //     $payment_file = '<img src="./assets/uploads/payments/'.$payment.'" alt="'.$payment.'">';
-                //     $display_file_design_payment = '<i class="bx bxs-file-image"></i>';
-                // } else if($mainExtPayment == "pdf") {
-                //     $payment_file = '<iframe src="./assets/uploads/payments/'.$payment.'"></iframe>';
-                //     $display_file_design_payment = '<i class="bx bxs-file-pdf"></i>';
-                // } else {
-                //     $payment_file = '';
-                //     $payment_show = "<b class='fst-itatlic m-0'>Not Applicable</b>";
-                //     $display_file_design_payment = '';
-                // }
+                if($mainExtPayment == "png" || $mainExtPayment == "jpg" || $mainExtPayment == "jpeg") {
+                    $payment_file = '<img src="./assets/uploads/payments/'.$payment.'" alt="'.$payment.'">';
+                    $display_file_design_payment = '<i class="bx bxs-file-image"></i>';
+                } else if($mainExtPayment == "pdf") {
+                    $payment_file = '<iframe src="./assets/uploads/payments/'.$payment.'"></iframe>';
+                    $display_file_design_payment = '<i class="bx bxs-file-pdf"></i>';
+                } else {
+                    $payment_file = '';
+                    $payment_show = "<b class='fst-itatlic m-0'>Not Applicable</b>";
+                    $display_file_design_payment = '';
+                }
 
                 $purpose = $request->purpose;
                 $delivery = $request->delivery_option;
