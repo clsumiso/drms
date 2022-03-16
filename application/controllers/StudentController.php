@@ -200,12 +200,17 @@
 
 
                 $this->load->model('studentModel');
-                $designatedStaff = $this->StudentModel->getDesignatedRIC($course);
+                $staff = $this->StudentModel->getDesignatedRIC($course);
 
-                foreach($designatedStaff as $staff):
-                    $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
-                    $staff_email = $staff->staff_email;
-                endforeach;
+                $email_contact_ric = "";
+                if (isset($staff)) {
+                    if($staff->staff_id_ric != 0) {
+                        $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
+                        $staff_email = $staff->staff_email;
+                        $email_contact_ric = ", ".$staff_name." (<a href='mailto:".$staff_email."'>".$staff_email."</a>)";
+                    }
+                }
+
 
                 $mail = new PHPMailer(true);
                 try {
@@ -236,7 +241,7 @@
                                         <br>
                                         <p style='line-height: 1.5; margin: 0;'>This is to inform you that your request has been forwarded to the respective record-in-charge (RIC). You will be duly inform regarding the process of the documents you have requested.</p>
                                         <br>
-                                        <p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_name." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                        <p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge ".$email_contact_ric." or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
                                         <br>
                                         <p style='line-height: 1.5; margin: 0;'>Thank you!</p>
                                         <br>
@@ -459,12 +464,16 @@
             } else {
 
                 $this->load->model('studentModel');
-                $designatedStaff = $this->StudentModel->getDesignatedFrontline($course);
+                $staff = $this->StudentModel->getDesignatedFrontline($course);
 
-                foreach($designatedStaff as $staff):
-                    $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
-                    $staff_email = $staff->staff_email;
-                endforeach;
+                $email_contact_frontline = "";
+                if (isset($staff)) {
+                    if($staff->staff_id_frontline != 0) {
+                        $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
+                        $staff_email = $staff->staff_email;
+                        $email_contact_frontline = ", ".$staff_name." (<a href='mailto:".$staff_email."'>".$staff_email."</a>)";
+                    }
+                }
 
                 $mail = new PHPMailer(true);
                 try {
@@ -495,7 +504,7 @@
                                         <br>
                                         <p style='line-height: 1.5; margin: 0;'>This is to inform you that your request has been forwarded to the respective record-in-charge (RIC). You will be duly inform regarding the process of the documents you have requested.</p>
                                         <br>
-                                        <p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_name." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                        <p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective frontline".$email_contact_frontline." or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
                                         <br>
                                         <p style='line-height: 1.5; margin: 0;'>Thank you!</p>
                                         <br>

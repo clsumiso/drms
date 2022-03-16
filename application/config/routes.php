@@ -52,33 +52,63 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 $route = array (
-    'default_controller'        => 'homepageController',
-    'email-us'                  => 'homepageController/email_us',
-    'feedback'                  => 'homepageController/feedback',
+    'default_controller'                => 'homepageController',
+    'email-us'                          => 'homepageController/email_us',
+    'feedback'                          => 'homepageController/feedback',
 
-    'student/active'            => 'studentController/active_student',
-    'student/active_request'    => 'studentController/insert_active_request',
+    'student/active'                    => 'studentController/active_student',
+    'student/active_request'            => 'studentController/insert_active_request',
 
-    'student/inactive'          => 'studentController/inactive_student',
-    'student/inactive_request'  => 'studentController/insert_inactive_request',
+    'student/inactive'                  => 'studentController/inactive_student',
+    'student/inactive_request'          => 'studentController/insert_inactive_request',
 
-    'student/courses'           => 'studentController/getCourse',
+    'student/courses'                   => 'studentController/getCourse',
 
     
-    'login'                     => 'loginController',
-    'staff_login'               => 'loginController/login',
-    'staff_logout'              => 'staffController/logout',
+    'login'                             => 'loginController',
+    'staff_login'                       => 'loginController/login',
+    'staff_logout'                      => 'loginController/logout',
     
-    'staff'                     => 'staffController',
-    'staff/count_request'       => 'staffController/getCountRequest',
-    'staff/get_all_requests'    => 'staffController/getAllRequest',
-    'staff/get_request'         => 'staffController/getRequest',
-    'staff/notes'               => 'staffController/insertNotes',
-    'staff/decline_request'     => 'staffController/mailDeclineRequest',
-    'staff/ondelivery_request'  => 'staffController/mailOnDelivery',
-    'staff/delivered_request'   => 'staffController/mailDelivered',
-    'staff/send_document'       => 'staffController/mailSendDocument',
+    'staff'                             => 'staffController',
+    'staff/count_request'               => 'staffController/getCountRequest',
+    'staff/get_all_requests'            => 'staffController/getAllRequest',
+    'staff/get_request'                 => 'staffController/getRequest',
+    'staff/notes'                       => 'staffController/insertNotes',
+    'staff/decline_request'             => 'staffController/mailDeclineRequest',
+    'staff/ondelivery_request'          => 'staffController/mailOnDelivery',
+    'staff/delivered_request'           => 'staffController/mailDelivered',
+    'staff/send_document'               => 'staffController/mailSendDocument',
+
+    'admin'                             => 'adminController',
+    'admin/accounts'                    => 'adminController/accountManagement',
+    'admin/courses'                     => 'adminController/courseManagement',
+    'admin/handlers'                    => 'adminController/handlersManagement',
+    'admin/feedbacks'                   => 'adminController/feedbackManagement',
+    'admin/reports'                     => 'adminController/reportManagement',
+    'admin/maintenance'                 => 'adminController/maintenanceManagement',
+
+    'admin/display_account'             => 'adminController/display_staff_accounts',
+    'admin/create_account'              => 'adminController/createStaffAccount',
+    'admin/update_account'              => 'adminController/updateStaffAccount',
+    'admin/delete_account'              => 'adminController/deleteStaffAccount',
+
+    'admin/display_college'             => 'adminController/displayColleges',
+    'admin/create_college'              => 'adminController/createColleges',
+    'admin/update_college'              => 'adminController/updateColleges',
+    'admin/delete_college'              => 'adminController/deleteColleges',
+
+    'admin/get_colleges_opt'            => 'adminController/getCollegesOpt',
+    'admin/display_course'              => 'adminController/displayCourse',
+    'admin/create_course'               => 'adminController/createCourse',
+    'admin/update_course'               => 'adminController/updateCourse',
+    'admin/delete_course'               => 'adminController/deleteCourse',
+
+    'admin/display_handler'             => 'adminController/displayHandlers',
+    'admin/update_handler_ric'          => 'adminController/updateHandlerRIC',
+    'admin/update_handler_frontline'    => 'adminController/updateHandlerFrontline',
     
+    'admin/display_feedback_ratings'    => 'adminController/displayFeedbackRatings',
+    'admin/display_suggestions'         => 'adminController/displaySuggestion'
 );
 
 $route['404_override'] = '';

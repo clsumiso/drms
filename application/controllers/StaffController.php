@@ -249,7 +249,7 @@
                 echo '<div class="no-request-wrapper">
                         <p>'.$message.'</p>
                         <div class="img-wrapper-result">
-                            <img src="./assets/styles/resources/'.$undraw_icon.'" alt="undraw_new_message_re_fp03.svg">
+                            <img src="'.base_url('/assets/styles/resources/'.$undraw_icon).'" alt="undraw_new_message_re_fp03.svg">
                         </div>
                     </div>';
             }
@@ -282,10 +282,10 @@
 
 
                 if($mainExtIdentity == "pdf") {
-                    $identity_file = '<iframe src="./assets/uploads/identities/'.$identity.'"></iframe>';
+                    $identity_file = '<iframe src="'.base_url('/assets/uploads/identities/'.$identity).'"></iframe>';
                     $display_file_design = '<i class="bx bxs-file-pdf"></i>';
                 } else {
-                    $identity_file = '<img src="./assets/uploads/identities/'.$identity.'" alt="'.$identity.'">';
+                    $identity_file = '<img src="'.base_url('/assets/uploads/identities/'.$identity).'" alt="'.$identity.'">';
                     $display_file_design = '<i class="bx bxs-file-image"></i>';
                 }
 
@@ -381,10 +381,10 @@
                 $display_file_design_payment = "";
                 $payment_show = '<i class="bx bxs-file-blank"></i> <a href="#" class="toggleOpenPayment" id="toggleOpenPayment">Click here to view payment</a>';
                 if($mainExtPayment == "png" || $mainExtPayment == "jpg" || $mainExtPayment == "jpeg") {
-                    $payment_file = '<img src="./assets/uploads/payments/'.$payment.'" alt="'.$payment.'">';
+                    $payment_file = '<img src="'.base_url('/assets/uploads/payments/'.$payment).'" alt="'.$payment.'">';
                     $display_file_design_payment = '<i class="bx bxs-file-image"></i>';
                 } else if($mainExtPayment == "pdf") {
-                    $payment_file = '<iframe src="./assets/uploads/payments/'.$payment.'"></iframe>';
+                    $payment_file = '<iframe src="'.base_url('/assets/uploads/payments/'.$payment).'"></iframe>';
                     $display_file_design_payment = '<i class="bx bxs-file-pdf"></i>';
                 } else {
                     $payment_file = '';
@@ -557,11 +557,6 @@
 
 
 
-
-
-
-
-
             }
 
             
@@ -639,6 +634,18 @@
         public function mailDeclineRequest() {
 
             $uid = $this->session->UID;
+
+
+            $this->load->model('StaffModel');
+            $staff = $this->StaffModel->get_staff($uid);
+            
+            if (isset($staff)) {
+                $firstname = $staff->staff_fname;
+                $middlename = $staff->staff_mname;
+                $lastname = $staff->staff_lname;
+                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_email = $staff->staff_email;
+            }
             
             $request_id = $this->input->post('setRequestID');
             $email = $this->input->post('setEmail');
@@ -646,8 +653,7 @@
 
             $status = 3;
 
-            $this->load->model('StaffModel');
-            $this->StaffModel->updateRequest($request_id, $message, $status);
+            $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname);
             
 
             $documents = $this->StaffModel->get_documents($request_id);
@@ -662,14 +668,7 @@
             $docs = implode(", ", $documentRequested);
 
 
-            $staff = $this->StaffModel->get_staff($uid);
 
-            if (isset($staff)) {
-                $firstname = $staff->staff_fname;
-                $lastname = $staff->staff_lname;
-                $staff_fullname = ucfirst($firstname." ".$lastname);
-                $staff_email = $staff->staff_email;
-            }
 
 
             $request = $this->StaffModel->request($request_id);
@@ -757,11 +756,24 @@
             $message = $this->input->post('getMessage');
             $status = 2;
 
+
             $this->load->model('StaffModel');
+
+            $staff = $this->StaffModel->get_staff($uid);
+            if (isset($staff)) {
+                $firstname = $staff->staff_fname;
+                $middlename = $staff->staff_mname;
+                $lastname = $staff->staff_lname;
+                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_email = $staff->staff_email;
+            }
+
             $this->StaffModel->updateRequest($request_id, $message, $status);
             
 
             $documents = $this->StaffModel->get_documents($request_id);
+
+            
 
             $documentRequested = "";
 
@@ -770,14 +782,7 @@
             endforeach;
 
 
-            $staff = $this->StaffModel->get_staff($uid);
 
-            if (isset($staff)) {
-                $firstname = $staff->staff_fname;
-                $lastname = $staff->staff_lname;
-                $staff_fullname = ucfirst($firstname." ".$lastname);
-                $staff_email = $staff->staff_email;
-            }
 
 
             $request = $this->StaffModel->request($request_id);
@@ -916,6 +921,18 @@
             $status = 0;
 
             $this->load->model('StaffModel');
+
+
+            $staff = $this->StaffModel->get_staff($uid);
+            if (isset($staff)) {
+                $firstname = $staff->staff_fname;
+                $middlename = $staff->staff_mname;
+                $lastname = $staff->staff_lname;
+                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_email = $staff->staff_email;
+            }
+
+
             $this->StaffModel->updateRequest($request_id, $message, $status);
             
 
@@ -928,14 +945,6 @@
             endforeach;
 
 
-            $staff = $this->StaffModel->get_staff($uid);
-
-            if (isset($staff)) {
-                $firstname = $staff->staff_fname;
-                $lastname = $staff->staff_lname;
-                $staff_fullname = ucfirst($firstname." ".$lastname);
-                $staff_email = $staff->staff_email;
-            }
 
 
             $request = $this->StaffModel->request($request_id);
@@ -1099,14 +1108,16 @@
             $this->load->model('StaffModel');
 
             $staff = $this->StaffModel->get_staff($uid);
-
             if (isset($staff)) {
                 $firstname = $staff->staff_fname;
+                $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
-                $staff_fullname = ucfirst($firstname." ".$lastname);
+                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
                 $staff_email = $staff->staff_email;
             }
 
+
+            $this->StaffModel->updateRequest($request_id, $message, $status);
 
             $request = $this->StaffModel->request($request_id);
             if (isset($request)) {
@@ -1208,14 +1219,6 @@
 
 
         }
-
-
-        public function logout() {
-            $this->session->sess_destroy();
-            header("Location: login");
-        }
-
-
 
 
 

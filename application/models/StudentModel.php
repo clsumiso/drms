@@ -114,13 +114,13 @@ class StudentModel extends CI_Model
     public function getDesignatedRIC($course_id) {
         $result = $this->db->query("SELECT * FROM course_handler_tbl JOIN staff_account_tbl WHERE course_handler_tbl.course_id = '$course_id' AND course_handler_tbl.staff_id_ric = staff_account_tbl.staff_id");
 
-        return $result->result();
+        return $result->row();
     }
 
     public function getDesignatedFrontline($course_id) {
         $result = $this->db->query("SELECT * FROM course_handler_tbl JOIN staff_account_tbl WHERE course_handler_tbl.course_id = '$course_id' AND course_handler_tbl.staff_id_frontline = staff_account_tbl.staff_id");
 
-        return $result->result();
+        return $result->row();
     }
 
 

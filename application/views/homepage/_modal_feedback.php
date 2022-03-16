@@ -6,11 +6,11 @@
                 '<div class="modal-feedback-wrapper">'.
                     '<form id="submitReviewForm" action="insert_ratings_db.php" method="POST">'.
         
-                        '<h4 class="poppins mt-3 mb-3 text-center">Please answer our quick survey to improve our services</h4>'.
+                        '<h4 class="poppins mt-3 mb-3 text-center">Rate us to improve our services</h4>'.
                         '<hr>'.
                         '<div class="row mt-4 mb-3">'.
                             '<div class="ratings-star-wrapper form-group col-lg col-md">'.
-                                '<label class="form-label">User Friendly</label>'.
+                                // '<label class="form-label">User Friendly</label>'.
                                 '<div class="star-wrapper">'.
                                     '<div class="rating">'.
                                         '<input type="radio" name="star" id="star1" value="5" ><label for="star1"></label>'.
@@ -22,18 +22,18 @@
                                 '</div>'.
                             '</div>'.
         
-                            '<div class="ratings-star-wrapper form-group col-lg col-md">'.
-                                '<label class="form-label">Informative</label>'.
-                                '<div class="star-wrapper">'.
-                                    '<div class="rating">'.
-                                        '<input type="radio" name="star2" id="star21" value="5" ><label for="star21"></label>'.
-                                        '<input type="radio" name="star2" id="star22" value="4"><label for="star22"></label>'.
-                                        '<input type="radio" name="star2" id="star23" value="3"><label for="star23"></label>'.
-                                        '<input type="radio" name="star2" id="star24" value="2"><label for="star24"></label>'.
-                                        '<input type="radio" name="star2" id="star25" value="1" checked><label for="star25"></label>'.
-                                    '</div>'.
-                                '</div>'.
-                            '</div>'.
+                            // '<div class="ratings-star-wrapper form-group col-lg col-md">'.
+                            //     '<label class="form-label">Informative</label>'.
+                            //     '<div class="star-wrapper">'.
+                            //         '<div class="rating">'.
+                            //             '<input type="radio" name="star2" id="star21" value="5" ><label for="star21"></label>'.
+                            //             '<input type="radio" name="star2" id="star22" value="4"><label for="star22"></label>'.
+                            //             '<input type="radio" name="star2" id="star23" value="3"><label for="star23"></label>'.
+                            //             '<input type="radio" name="star2" id="star24" value="2"><label for="star24"></label>'.
+                            //             '<input type="radio" name="star2" id="star25" value="1" checked><label for="star25"></label>'.
+                            //         '</div>'.
+                            //     '</div>'.
+                            // '</div>'.
                         '</div>'.
         
                         '<div class="form-group mb-3">'.

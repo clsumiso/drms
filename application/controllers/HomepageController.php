@@ -73,17 +73,24 @@
 
             $user = $_SESSION['user'];
             $user_friendly = $_POST['star'];
-            $informative = $_POST['star2'];
             $suggestion = $this->input->post('getSuggestion'); 
             $today = date('Y-m-d H:i:s');
 
-            $feedback = array (
-                "student_type"      =>  $user,
-                "user_friendly"     =>  $user_friendly,
-                "informative"       =>  $informative,
-                "suggestion"        =>  $suggestion,
-                "date_created"      =>  $today
-            );
+            if (!empty($suggestion)) {
+                $feedback = array (
+                    "student_type"      =>  $user,
+                    "user_friendly"     =>  $user_friendly,
+                    "suggestion"        =>  $suggestion,
+                    "date_created"      =>  $today
+                );
+            } else {
+                $feedback = array (
+                    "student_type"      =>  $user,
+                    "user_friendly"     =>  $user_friendly,
+                    "date_created"      =>  $today
+                );
+            }
+           
 
 
             $this->load->model('HomepageModel');
