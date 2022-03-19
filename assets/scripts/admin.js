@@ -30,6 +30,7 @@ $(document).ready(function() {
 
 
 
+
     // Navigation
     $('#toggleMenu').click(function() {
         $("nav").animate({
@@ -70,6 +71,55 @@ $(document).ready(function() {
     })
 
 
+    // Dashboard
+    if ($('#navID').val() == 1) {
+
+        function displayWidgets() {
+
+            $.ajax ({
+                url: window.location.origin + '/drms_ojt/admin/dashboard_widgets',
+                type: 'GET',
+                success: function(data) {
+                    $('.widgets').empty()
+                    $('.widgets').append(data)
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr)
+                    console.log(status)
+                    console.log(error)
+                }
+            })
+
+        }
+
+        displayWidgets()
+        
+
+
+        function displayEmployeeStatus() {
+
+                $.ajax ({
+                    url: window.location.origin + '/drms_ojt/admin/dashboard_employee_status',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(data)
+                        $('#tblEmployeeStatus tbody').empty()
+                        $('#tblEmployeeStatus tbody').append(data)
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr)
+                        console.log(status)
+                        console.log(error)
+                    }
+                })
+                
+        }
+
+        displayEmployeeStatus()
+
+
+    }
+
 
     // Accounts
     if ($('#navID').val() == 2) {
@@ -77,7 +127,7 @@ $(document).ready(function() {
 
         function displayStaffAccounts() {
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/display_account/',
+                url: window.location.origin + '/drms_ojt/admin/display_account',
                 type: 'GET',
                 success: function(data) {
                     $('#tableStaffs tbody').empty()
@@ -1359,21 +1409,22 @@ $(document).ready(function() {
         })
 
 
-
         $(document).on('change', '.course_RIC', function() {
-
             let id = $(this).parent().parent().parent().find('.handlerID').val()
+            let course_id = $(this).parent().parent().parent().find('.courseID').val()
             let ric = $(this).val()
+            let self = this
 
             $.ajax ({
                 url: window.location.origin + '/drms_ojt/admin/update_handler_ric',
                 type: 'POST',
                 data: {
                     id: id,
+                    course_id: course_id,
                     ric: ric
                 },
                 success: function(data) {
-                    console.log(data)
+                    $(self).parent().parent().parent().find('.handlerID').val(data)
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
@@ -1390,6 +1441,7 @@ $(document).ready(function() {
 
             })
 
+
         })
 
 
@@ -1398,21 +1450,24 @@ $(document).ready(function() {
         $(document).on('change', '.course_frontline', function() {
 
             let id = $(this).parent().parent().parent().find('.handlerID').val()
+            let course_id = $(this).parent().parent().parent().find('.courseID').val()
             let frontline = $(this).val()
+            let self = this
 
             $.ajax ({
                 url: window.location.origin + '/drms_ojt/admin/update_handler_frontline',
                 type: 'POST',
                 data: {
                     id: id,
+                    course_id: course_id,
                     frontline: frontline
                 },
                 success: function(data) {
-                    console.log(data)
+                    $(self).parent().parent().parent().find('.handlerID').val(data)
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'Record-in-charge updated!',
+                        title: 'Frontline updated!',
                         showConfirmButton: false,
                         timer: 1500
                     })

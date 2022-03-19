@@ -92,6 +92,155 @@
 
 
 
+        public function displayWidgets() {
+
+            $this->load->model('AdminModel');
+            $this_month = date('m');
+            $last_month = date("m", strtotime("last month"));
+            
+
+            $now_monthly = $this->AdminModel->display_widgets("0, 1, 2, 3", $this_month);
+            $last_monthly = $this->AdminModel->display_widgets("0, 1, 2, 3", $last_month);
+            
+            $monthly_count = 0;
+            if (isset($now_monthly)) {
+                $monthly_count = $now_monthly->counts;
+            }
+
+            $last_monthly_count = 0;
+            if (isset($last_monthly)) {
+                $last_monthly_count = $last_monthly->counts;
+            }
+
+            echo '<div class="widget-card green">
+                        <div class="widget-data">
+                            <h3>'.$monthly_count.'</h3>
+                            <p class="data">Monthly Request</p>                        
+                            <p class="recent-data">Last month: '.$last_monthly_count.'</p>
+                        </div>
+
+                        <i class="fas fa-comment-alt"></i>
+                    </div>';
+
+
+            $now_pending = $this->AdminModel->display_widgets("1, 2", $this_month);
+            $last_pending = $this->AdminModel->display_widgets("1, 2", $last_month);
+            
+            $pending_count = 0;
+            if (isset($now_pending)) {
+                $pending_count = $now_pending->counts;
+            }
+
+            $last_pending_count = 0;
+            if (isset($last_pending)) {
+                $last_pending_count = $last_pending->counts;
+            }
+
+            echo '<div class="widget-card dark-blue">
+                        <div class="widget-data">
+                            <h3>'.$pending_count.'</h3>
+                            <p class="data">Pending Request</p>                        
+                            <p class="recent-data">Last month: '.$last_pending_count.'</p>
+                        </div>
+
+                        <i class="fas fa-envelope"></i>
+                    </div>';
+
+
+
+            $now_completed = $this->AdminModel->display_widgets("0", $this_month);
+            $last_completed = $this->AdminModel->display_widgets("0", $last_month);
+            
+            $completed_count = 0;
+            if (isset($now_completed)) {
+                $completed_count = $now_completed->counts;
+            }
+
+            $last_completed_count = 0;
+            if (isset($last_completed)) {
+                $last_completed_count = $last_completed->counts;
+            }
+
+
+            echo '<div class="widget-card blue">
+                    <div class="widget-data">
+                        <h3>'.$completed_count.'</h3>
+                        <p class="data">Completed Request</p>                        
+                        <p class="recent-data">Last month: '.$last_completed_count.'</p>
+                    </div>
+
+                    <i class="fas fa-calendar-check"></i>
+                </div>';
+
+
+        }
+
+
+
+        public function employeeStatus() {
+
+            
+            $this->load->model('AdminModel');
+            $employees = $this->AdminModel->display_employee_status();
+
+            foreach ($employees as $employee):
+                if ($employee->account_status != 3 && $employee->staff_type != 3) {
+
+                    $emp_id = $employee->staff_id;
+                    $fullname = ucwords($employee->staff_fname. ' '.$employee->staff_lname);
+                    $staff_type = "";
+                    if ($employee->staff_type == 1) {
+                        $staff_type = "RIC";
+                    }
+
+                    if ($employee->staff_type == 2) {
+                        $staff_type = "Frontline";
+                    }
+
+                    if ($employee->staff_type == 1) {
+                        $monthly_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '0,1,2,3', '1');
+                        $pending_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '1', '1');
+                        $completed_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '0', '1');
+                        $declined_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '3', '1');
+                    }
+
+                    if ($employee->staff_type == 2) {
+                        $monthly_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '0,1,2,3', '2');
+                        $pending_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '1', '2');
+                        $completed_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '0', '2');
+                        $declined_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '3', '2');
+                    }
+
+                    $monthy_count = 0;
+                    $pending_count = 0;
+                    $completed_count = 0;
+                    $declined_count = 0;
+
+                    $monthy_count = $monthly_status->count;
+                    $pending_count = $pending_status->count;
+                    $completed_count = $completed_status->count;
+                    $declined_count = $declined_status->count;
+
+                    echo '<tr>
+                                <td>'.$fullname.'</td>
+                                <td>'.$staff_type.'</td>
+                                <td>'.$monthy_count.'</td>
+                                <td>'.$completed_count.'</td>
+                                <td>'.$pending_count.'</td>
+                                <td>'.$declined_count.'</td>
+                            </tr>';
+
+
+                }
+               
+
+            endforeach;
+
+
+        }
+
+
+
         public function display_staff_accounts() {
 
             $this->load->model('AdminModel');
@@ -134,10 +283,18 @@
                     if ($status == 0) {
                         $status_text = "Inactive";
                         $status_color = "text-danger";
-                    } else {
+                    } 
+
+                    if ($status == 1) {
                         $status_text = "Active";
                         $status_color = "text-success";
-                    }
+                    } 
+
+                    if ($status == 2) {
+                        $status_text = "Disabled";
+                        $status_color = "text-muted";
+                    } 
+                    
     
                     $log = "";
                     if($logged == '0000-00-00 00:00:00') {
@@ -258,70 +415,65 @@
 
                 $college_id = $college->college_id;
                 $college_name = ucwords($college->college_name);
-                $college_acro = strtoupper($college->college_acronym);
+                $college_acro = strtoupper($college->college_desc);
                 
                 echo '<tr>
                         <td class="d-none">
                             <input type="text" name="set_collegeID" id="set_collegeID" class="set_collegeID" value="'.$college_id.'">
-                            <input type="text" class="set_college" value="'.$college_name.'">
-                            <input type="text" class="set_collegeAcro" value="'.$college_acro.'">
+                            <input type="text" class="set_college" value="'.$college_acro.'">
+                            <input type="text" class="set_collegeAcro" value="'.$college_name.'">
                         </td>
-                        <td>'.$college_name.' ('.$college_acro.')</td>
-                        <td>
-                            <button class="btn btn-primary btnEditCollege" id="btnEditCollege"><i class="fas fa-pen"></i></button>
-                            <button class="btn btn-danger btnDeleteCollege" id="btnDeleteCollege"><i class="fas fa-trash"></i></button>
-                        </td>
+                        <td>'.$college_acro.' ('.$college_name.')</td>
                     </tr>';
 
             endforeach;
         }
 
 
-        public function createColleges() {
+        // public function createColleges() {
 
-            $college_name = $this->input->post('c_getCollege');
-            $college_acronym = $this->input->post('c_getCollegeAcronym');
+        //     $college_name = $this->input->post('c_getCollege');
+        //     $college_acronym = $this->input->post('c_getCollegeAcronym');
 
-            $data = array (
-                "college_name"      =>  $college_name,
-                "college_acronym"   =>  $college_acronym
-            );
+        //     $data = array (
+        //         "college_name"      =>  $college_name,
+        //         "college_acronym"   =>  $college_acronym
+        //     );
 
             
-            $this->load->model('AdminModel');
-            $this->AdminModel->createCollege($data);
+        //     $this->load->model('AdminModel');
+        //     $this->AdminModel->createCollege($data);
 
-        }
+        // }
 
 
-        public function updateColleges() {
+        // public function updateColleges() {
             
-            $id = $this->input->post('setCollegeID');
-            $college_name = $this->input->post('u_getCollege');
-            $college_acro = $this->input->post('u_getCollegeAcronym');
+        //     $id = $this->input->post('setCollegeID');
+        //     $college_name = $this->input->post('u_getCollege');
+        //     $college_acro = $this->input->post('u_getCollegeAcronym');
 
-            $colleges = array(
-                "college_name"      =>  $college_name,
-                "college_acronym"   =>  $college_acro
-            );
+        //     $colleges = array(
+        //         "college_name"      =>  $college_name,
+        //         "college_acronym"   =>  $college_acro
+        //     );
 
-            $this->load->model('AdminModel');
-            $this->AdminModel->updateCollege($id, $colleges);
+        //     $this->load->model('AdminModel');
+        //     $this->AdminModel->updateCollege($id, $colleges);
             
-        }
+        // }
 
-        public function deleteColleges() {
+        // public function deleteColleges() {
 
-            $id = $this->input->post('id');
-            $this->load->model('AdminModel');
-            $this->AdminModel->deleteCollege($id);
+        //     $id = $this->input->post('id');
+        //     $this->load->model('AdminModel');
+        //     $this->AdminModel->deleteCollege($id);
             
-        }
+        // }
 
 
 
         public function getCollegesOpt() {
-            
             $this->load->model('AdminModel');
             $colleges = $this->AdminModel->getColleges_option();
 
@@ -330,14 +482,13 @@
 
                 $id = $college->college_id;
                 $college_name = ucwords($college->college_name);
-                $college_acro = strtoupper($college->college_acronym);
+                $college_acro = strtoupper($college->college_desc);
 
                 $college_options .= '<option value="'.$id.'">'.$college_name.' ('.$college_acro.')</option>';
 
             endforeach;
 
             echo $college_options;
-
         }
 
 
@@ -351,7 +502,7 @@
 
             foreach($colleges as $college):
                 $college_id = $college->college_id;
-                $college_name = strtoupper($college->college_acronym);
+                $college_name = strtoupper($college->college_name);
 
                 $courses = $this->AdminModel->displayCourses($college_id);
 
@@ -359,9 +510,17 @@
                     
                     $course_id = $course->course_id;
                     $course_name = $course->course_name;
-                    $course_acro = $course->course_acronym;
+                    $course_acro = $course->course_desc;
+                    $course_status = $course->course_status;
+                    $status_color = '';
+                    if ($course_status == 1) {
+                        $status_color = 'text-success';
+                    } else {
+                        $status_color = 'text-danger';
+                    }
 
                     $course_text .= '<tr>
+                                        <td><i class="fas fa-circle '.$status_color.'"></i></td>
                                         <td class="d-none">
                                             <input type="text" class="set_courseID" value="'.$course_id.'">
                                             <input type="text" class="set_college" value="'.$college_id.'">
@@ -369,11 +528,7 @@
                                             <input type="text" class="set_courseAcro" value="'.$course_acro.'">
                                         </td>
                                         <td>'.$college_name.'</td>
-                                        <td>'.ucwords($course_name).' ('.strtoupper($course_acro).')</td>
-                                        <td>
-                                            <button class="btn btn-primary btnEditCourse" id="btnEditCourse"><i class="fas fa-pen"></i></button>
-                                            <button class="btn btn-danger btnDeleteCourse" id="btnDeleteCourse"><i class="fas fa-trash"></i></button>
-                                        </td>
+                                        <td>'.ucwords($course_acro).' ('.strtoupper($course_name).')</td>
                                     </tr>';
                 endforeach;
 
@@ -431,94 +586,109 @@
         public function displayHandlers() {
 
             $handlers_text = "";
-
             $this->load->model('AdminModel');
-
             $colleges = $this->AdminModel->getColleges_option();
 
             foreach($colleges as $college):
                 
-                $college_id = $college->college_id;
-                $college_name = ucwords($college->college_name);
-                $handlers = $this->AdminModel->displayHandlers($college_id);
-                
-                $handlers_text .= '<div class="handling">
 
+                if (($college->college_id != "11") && ($college->college_id != "12")) {
+
+                    $college_desc = ucwords($college->college_desc);
+                    $handlers_text .= '<div class="handling">
                                             <div class="d-flex align-items-center mb-3 showCoursesContent">
                                                 <i class="fas fa-caret-right fs-18 me-2"></i>
-                                                <h3 class="college-title m-0">'.$college_name.'</h3>
+                                                <h3 class="college-title m-0">'.$college_desc.'</h3>
                                             </div>
                                             
                                             <div class="cards-handlings">';
 
-                foreach($handlers as $handler):
-
-                    $handler_ric = $handler->staff_id_ric;
-                    $rics = $this->AdminModel->getRICs();
-                    $rics_append = "";
-                    foreach($rics as $ric):
-                        $staff_id = $ric->staff_id;
-                        $staff_name = ucwords($ric->staff_fname.' '.$ric->staff_mname.' '.$ric->staff_lname);
-                        $selected = "";
-
-                        if ($handler_ric == $staff_id) {
-                            $selected = "selected";
-                        }
-
-                        $rics_append .= '<option value="'.$staff_id.'" '. $selected.'>'.$staff_name.'</option>';
-                    endforeach;
-        
-                    $handler_frontline = $handler->staff_id_frontline;
-                    $frontlines = $this->AdminModel->getfrontlines();
-                    $frontlines_append = "";
-                    foreach($frontlines as $frontline):
-                        $staff_id = $frontline->staff_id;
-                        $staff_name = ucwords($frontline->staff_fname.' '.$frontline->staff_mname.' '.$frontline->staff_lname);
-                        $selected = "";
-
-                        if ($handler_frontline == $staff_id) {
-                            $selected = "selected";
-                        }
-
-                        $frontlines_append .= '<option value="'.$staff_id.'" '.$selected.'>'.$staff_name.'</option>';
-                    endforeach;
-
-
-
-
-
+                    $college_id = $college->college_id;
+                    $courses = $this->AdminModel->displayCourses($college_id);
                     
-                    $course_id = $handler->course_id;
-                    $course_name = ucwords($handler->course_name);
-                    $course_acro = strtoupper($handler->course_acronym);
+                    foreach($courses as $course):
 
-                    $handlers_text .=       '<div class="handler-card">
-                                                    <input type="text" value="'.$course_id.'" class="d-none handlerID">
+                        if ($course->course_status == 1) {
+                            $handler_ric = 0;
+                            $handler_frontline = 0;
+
+                            $course_id = $course->course_id;
+                            $handler = $this->AdminModel->displayHandlers($course_id);
+                            $temp_id = 0;
+                            if (isset($handler)) {
+                                $temp_id = $handler->course_handler_id;
+                                $handler_ric = $handler->staff_id_ric;
+                                $handler_frontline = $handler->staff_id_frontline;
+                            }
+
+                            $rics = $this->AdminModel->getRICs();
+                            $rics_append = "";
+                            foreach($rics as $ric):
+                                if ($ric->account_status != 2) {
+                                    $staff_id = $ric->staff_id;
+                                    $staff_name = ucwords($ric->staff_fname.' '.$ric->staff_mname.' '.$ric->staff_lname);
+                                    $selected = "";
+            
+                                    if ($handler_ric == $staff_id) {
+                                        $selected = "selected";
+                                    }
+            
+                                    $rics_append .= '<option value="'.$staff_id.'" '. $selected.'>'.$staff_name.'</option>';
+                                }
+                            endforeach;
+
+
+                            $frontlines = $this->AdminModel->getfrontlines();
+                            $frontlines_append = "";
+                            foreach($frontlines as $frontline):
+                                if ($frontline->account_status != 2) {
+                                    $staff_id = $frontline->staff_id;
+                                    $staff_name = ucwords($frontline->staff_fname.' '.$frontline->staff_mname.' '.$frontline->staff_lname);
+                                    $selected = "";
+            
+                                    if ($handler_frontline == $staff_id) {
+                                        $selected = "selected";
+                                    }
+            
+                                    $frontlines_append .= '<option value="'.$staff_id.'" '.$selected.'>'.$staff_name.'</option>';
+                                }
+                            endforeach;
+        
+
+                            $course_desc = $course->course_desc;
+                            $course_name = $course->course_name;
+
+                            $handlers_text .= '<div class="handler-card">
+                                                <input type="text" value="'.$temp_id.'" class="d-none handlerID" placeholder="handlerID">
+                                                <input type="text" value="'.$course_id.'" class="d-none courseID" placeholder="courseID">
                             
-                                                    <p class="course_handle">'.$course_name.' ('.$course_acro.')</p>
-                                                    
-                                                    <div class="select-handlers-wrapper">
-                                                        <div class="form-group">
-                                                            <select name="course_RIC" id="course_RIC" class="form-select course_RIC">
-                                                                <option value="0" selected>-- Select designated RIC --</option>
-                                                                '.$rics_append.'
-                                                            </select>
-                                                        </div>
-                                    
-                                                        <div class="form-group">
-                                                            <select name="course_frontline" id="course_frontline" class="form-select course_frontline">
-                                                                <option value="0" selected>-- Select designated frontline --</option>
-                                                                '.$frontlines_append.'
-                                                            </select>
-                                                        </div>
+                                                <p class="course_handle">'.$course_desc.' ('.$course_name.')</p>
+                                                
+                                                <div class="select-handlers-wrapper">
+                                                    <div class="form-group">
+                                                        <select name="course_RIC" id="course_RIC" class="form-select course_RIC">
+                                                            <option value="0" selected>-- Select designated RIC --</option>
+                                                            '.$rics_append.'
+                                                        </select>
                                                     </div>
-                                                </div>';
+                                
+                                                    <div class="form-group">
+                                                        <select name="course_frontline" id="course_frontline" class="form-select course_frontline">
+                                                            <option value="0" selected>-- Select designated frontline --</option>
+                                                            '.$frontlines_append.'
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>';
+                        }
+                        
+                    endforeach;
 
-                endforeach;
+                    $handlers_text .= '         </div>
+                                        </div>';
 
-                $handlers_text .= '         </div>
-                                    </div>';
-
+                }
+                
             endforeach;
 
             echo $handlers_text;
@@ -529,11 +699,28 @@
         public function updateHandlerRIC() {
 
             $handler_id = $this->input->post('id');
+            $course_id = $this->input->post('course_id');
             $ric = $this->input->post('ric');
 
-            
             $this->load->model('AdminModel');
-            $this->AdminModel->update_handlerRIC($handler_id, $ric);
+
+            if ($handler_id == 0) {
+                $handler = array (
+                    "course_id"     =>  $course_id,
+                    "staff_id_ric"  =>  $ric
+                );
+
+                $create_handler = $this->AdminModel->create_handlerRIC($handler);
+                if (isset($create_handler)) {
+                    echo $create_handler;
+                }
+            } else {
+
+                $update_handler = $this->AdminModel->update_handlerRIC($handler_id, $ric);
+                if (isset($update_handler)) {
+                    echo $update_handler;
+                }
+            }
 
         }
 
@@ -541,11 +728,28 @@
         public function updateHandlerFrontline() {
 
             $handler_id = $this->input->post('id');
+            $course_id = $this->input->post('course_id');
             $frontline = $this->input->post('frontline');
-
             
+
             $this->load->model('AdminModel');
-            $this->AdminModel->update_handlerFrontline($handler_id, $frontline);
+            if ($handler_id == 0) {
+                $handler = array (
+                    "course_id"             =>  $course_id,
+                    "staff_id_frontline"    =>  $frontline
+                );
+
+                $create_handler = $this->AdminModel->create_handlerFrontline($handler);
+                if (isset($create_handler)) {
+                    echo $create_handler;
+                }
+            } else {
+
+                $update_handler = $this->AdminModel->update_handlerFrontline($handler_id, $frontline);
+                if (isset($update_handler)) {
+                    echo $update_handler;
+                }
+            }
 
         }
 

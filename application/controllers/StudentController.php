@@ -42,20 +42,22 @@
             $course = $this->StudentModel->getCourses();
 
             foreach($college as $row_college):
-                echo "<optgroup label='".$row_college->college_name."'>";
+                if (($row_college->college_id != "11") && ($row_college->college_id != "12")) {
+                    echo "<optgroup label='".$row_college->college_desc."'>";
                     foreach($course as $row_course):
                         if($row_college->college_id == $row_course->college_id) {
-                            echo "<option value='".$row_course->course_id."'>".$row_course->course_name."</option>";
+                            echo "<option value='".$row_course->course_id."'>".$row_course->course_desc."</option>";
                         }
                     endforeach;
-                echo "</optgroup>";
+                    echo "</optgroup>";
+                }
             endforeach;
 
         }
 
         public function insert_active_request() {
 
-            $today = date('Y-m-d H:i:s'); 
+            $today = date('Y-m-d H:i:s');
             $date_created = $today;
 
             $today_subject = date_create($today);
@@ -151,11 +153,16 @@
             $lastname = strtolower($this->input->post('getLastname'));
             $suffix = strtolower($this->input->post('getSuffix'));
             $fullname = ucwords($firstname.' '.$middlename.' '.$lastname.' '.$suffix);
-            $course_final  = $this->input->post('getFinalCourseText');
+            $course_final  = strtolower($this->input->post('getFinalCourseText'));
             $year  = $this->input->post('getSchoolYear');
             $email  = $this->input->post('getEmail');
             $contact_no  = $this->input->post('getPhone');
-            $address   = $this->input->post('getAddress');
+
+            $region = strtolower($this->input->post('setRegion'));
+            $province = strtolower($this->input->post('setProvince'));
+            $city = strtolower($this->input->post('setCity'));
+            $barangay = strtolower($this->input->post('setBarangay'));
+
 
             $info_data = array (
                 "identity_file"    =>      $fileIdentityNewName,
@@ -167,11 +174,13 @@
                 "course_name"      =>      $course_final,
                 "year"             =>      $year,
                 "email"            =>      $email,
-                "contact_no"       =>      $contact_no,
-                "address"          =>      $address
+                "contact_no"       =>      "+63".$contact_no,
+                "region"           =>      $region,
+                "province"         =>      $province,
+                "city"             =>      $city,
+                "barangay"         =>      $barangay
             );
 
-            // echo json_encode($info_data);
 
 
             $document_data = array();
@@ -284,7 +293,7 @@
             $payment_filename = $_FILES['getPaymentUpload']['name'];
             $payment_file_error = $_FILES['getPaymentUpload']['error'];
 
-            $filePaymentNewName = "";
+            $filePaymentNewName = "NULL";
 
             if ($payment_file_error === 0 || $payment_file_error === 4) {
 
@@ -367,11 +376,15 @@
             $lastname = strtolower($this->input->post('getLastname'));
             $suffix = strtolower($this->input->post('getSuffix'));
             $fullname = ucwords($firstname.' '.$middlename.' '.$lastname.' '.$suffix);
-            $course_final  = $this->input->post('getFinalCourseText');
+            $course_final  = strtolower($this->input->post('getFinalCourseText'));
             $year  = $this->input->post('getSchoolYear');
             $email  = $this->input->post('getEmail');
             $contact_no  = $this->input->post('getPhone');
-            $address   = $this->input->post('getAddress');
+
+            $region = strtolower($this->input->post('setRegion'));
+            $province = strtolower($this->input->post('setProvince'));
+            $city = strtolower($this->input->post('setCity'));
+            $barangay = strtolower($this->input->post('setBarangay'));
 
             $info_data = array (
                 "identity_file"    =>      $fileIdentityNewName,
@@ -382,8 +395,11 @@
                 "course_name"      =>      $course_final,
                 "year"             =>      $year,
                 "email"            =>      $email,
-                "contact_no"       =>      $contact_no,
-                "address"          =>      $address
+                "contact_no"       =>      "+63".$contact_no,
+                "region"           =>      $region,
+                "province"         =>      $province,
+                "city"             =>      $city,
+                "barangay"         =>      $barangay
             );
 
 

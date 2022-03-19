@@ -14,8 +14,28 @@ class AdminModel extends CI_Model
 	}
 
 
+	public function display_widgets($type, $month) {
+		$query = $this->db->query("SELECT count(*) AS counts FROM request_tbl WHERE MONTH(date_created) = '".$month."' AND YEAR(date_created) = 2022 AND status IN(".$type.")");
+		return $query->row();
+	}
+
+	public function display_employee_status() {
+		$query = $this->db->get('staff_account_tbl');
+		return $query->result();
+	}
+
+
+	public function count_employee_status($id, $staff_type, $status, $student_type) {
+		$query = $this->db->query("SELECT count(*) as count FROM course_handler_tbl, request_tbl where course_handler_tbl.course_id = request_tbl.course_id AND request_tbl.status IN (".$status.") AND course_handler_tbl.".$staff_type." = '".$id."' AND request_tbl.student_type = '".$student_type."'");
+		
+		return $query->row(); 
+	}
+
+
+
+
 	public function displayAccounts() {
-		$query = $this->db->query("SELECT * FROM staff_account_tbl ORDER BY staff_type ASC");
+		$query = $this->db->query("SELECT * FROM staff_account_tbl ORDER BY CASE WHEN account_status = '1' THEN 1 WHEN account_status = '0' THEN 2 WHEN account_status = '2' THEN 3 END ASC, staff_type");
         return $query->result();
 	}
 	
@@ -34,54 +54,61 @@ class AdminModel extends CI_Model
 	}
 
 	public function displayColleges() {
-		$query = $this->db->get('college_tbl');
+		$query = $this->db->get('tbl_college');
         return $query->result();
 	}
 
-	public function createCollege($data) {
-        $this->db->insert('college_tbl', $data);
-	}
+	// public function createCollege($data) {
+    //     $this->db->insert('college_tbl', $data);
+	// }
 
-	public function updateCollege($id, $data) {
-		$this->db->where('college_id', $id);
-		$this->db->update('college_tbl', $data);
-	}
+	// public function updateCollege($id, $data) {
+	// 	$this->db->where('college_id', $id);
+	// 	$this->db->update('college_tbl', $data);
+	// }
 
 
-	public function deleteCollege($id) {
-		$this->db->where('college_id', $id);
-		$this->db->delete('college_tbl');
-	}
+	// public function deleteCollege($id) {
+	// 	$this->db->where('college_id', $id);
+	// 	$this->db->delete('college_tbl');
+	// }
 
 
 	public function getColleges_option() {
-		$query = $this->db->query("SELECT * FROM college_tbl ORDER BY college_id ASC");
+		$query = $this->db->query("SELECT * FROM tbl_college ORDER BY college_id ASC");
         return $query->result();
 	}
 
 	public function displayCourses($id) {
-		$query = $this->db->query("SELECT * FROM course_tbl WHERE college_id = '".$id."'");
+		$query = $this->db->query("SELECT * FROM tbl_course WHERE college_id = '".$id."'");
         return $query->result();
 	}
 
 
-	public function createCourse($data) {
-		$this->db->insert('course_tbl', $data);
-        $id = $this->db->insert_id();
-
-		$this->db->query("INSERT INTO course_handler_tbl (course_id) VALUES ('".$id."')");
+	public function displayHandlers($id) {
+		$query = $this->db->query("SELECT * FROM course_handler_tbl where course_id = '".$id."'");
+		
+        return $query->row();
 	}
+
+
+	// public function createCourse($data) {
+	// 	$this->db->insert('course_tbl', $data);
+    //     $id = $this->db->insert_id();
+
+	// 	$this->db->query("INSERT INTO course_handler_tbl (course_id) VALUES ('".$id."')");
+	// }
 	
 
-	public function updateCourse($id, $data) {
-		$this->db->where('course_id', $id);
-		$this->db->update('course_tbl', $data);
-	}
+	// public function updateCourse($id, $data) {
+	// 	$this->db->where('course_id', $id);
+	// 	$this->db->update('course_tbl', $data);
+	// }
 
-	public function deleteCourse($id) {
-		$this->db->where('course_id', $id);
-		$this->db->delete('course_tbl');
-	}
+	// public function deleteCourse($id) {
+	// 	$this->db->where('course_id', $id);
+	// 	$this->db->delete('course_tbl');
+	// }
 
 
 	public function getRICs() {
@@ -94,23 +121,33 @@ class AdminModel extends CI_Model
         return $query->result();
 	}
 
-	public function displayHandlers($id) {
-		$query = $this->db->query("SELECT * FROM course_handler_tbl, course_tbl WHERE course_handler_tbl.course_id = course_tbl.course_id AND course_tbl.college_id = '".$id."'");
-		
-        return $query->result();
+	
+	public function create_handlerRIC($data) {
+		$this->db->insert('course_handler_tbl', $data);
+        $id = $this->db->insert_id();
+		return $id;
 	}
 
+
+	public function create_handlerFrontline($data) {
+		$this->db->insert('course_handler_tbl', $data);
+        $id = $this->db->insert_id();
+		return $id;
+	}
 	
 	public function update_handlerRIC($id, $ric) {
 		$this->db->set('staff_id_ric', $ric);
 		$this->db->where('course_handler_id', $id);
 		$this->db->update('course_handler_tbl');
+		return $id;
 	}
+	
 
 	public function update_handlerFrontline($id, $frontline) {
 		$this->db->set('staff_id_frontline', $frontline);
 		$this->db->where('course_handler_id', $id);
 		$this->db->update('course_handler_tbl');
+		return $id;
 	}
 
 	public function feedbackRatings($type){

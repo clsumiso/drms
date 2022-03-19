@@ -88,9 +88,41 @@
                 </div>
 
                 <div class="row mt-3">
-                    <div class="form-group">
-                        <label for="getAddress" class="form-label d-flex">Complete Address<p class="m-0 text-danger mx-1">*</p></label>
-                        <textarea name="getAddress" id="getAddress" class="form-control" cols="30" rows="5" placeholder="House no., Street/Barangay, City/Municipality, Province"></textarea autocomplete="off">
+
+                    <div class="form-group col-lg-7 mb-3">
+                        <label for="region" class="form-label d-flex">Region<p class="m-0 text-danger mx-1">*</p></label>
+                        <select name= "region" id="region" class="form-select">
+                            <option value="0" selected>- Select option -</option>
+                        </select>
+                        <input type="text" class="form-control d-none" name="setRegion" id="setRegion" value="" readonly>
+                    </div>
+
+                    <div class="form-group col-lg-4 mb-3">
+                        <label for="province" class="form-label d-flex">Province<p class="m-0 text-danger mx-1">*</p></label>
+                        <select name= "province" id="province" class="form-select">
+                            <option value="0">- Select option -</option>
+                        </select>
+                        <input type="text" class="form-control d-none" name="setProvince" id="setProvince" value="" readonly>
+                    </div>
+
+                </div>
+
+            
+                <div class="row">
+                    <div class="form-group col-lg-5 mb-3">
+                        <label for="city" class="form-label d-flex">City<p class="m-0 text-danger mx-1">*</p></label>
+                        <select name= "city" id="city" class="form-select">
+                            <option value="0">- Select option -</option>
+                        </select>
+                        <input type="text" class="form-control d-none" name="setCity" id="setCity" value="" readonly>
+                    </div>
+
+                    <div class="form-group col-lg-5 mb-3">
+                        <label for="barangay" class="form-label d-flex">Barangay<p class="m-0 text-danger mx-1">*</p></label>
+                        <select name="barangay" id="barangay" class="form-select">
+                            <option value="0">- Select option -</option>
+                        </select>
+                        <input type="text" class="form-control d-none" name="setBarangay" id="setBarangay" value="" readonly>
                     </div>
                 </div>
 

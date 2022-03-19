@@ -3,7 +3,7 @@
         <div class="flex-title-pagination">
             <div class="page-title">
                 <h3>request form</h3>
-                <p>(inctive student)</p>
+                <p>(inactive student)</p>
             </div>
 
             <div class="pagination">

@@ -56,6 +56,7 @@
                             <select name="c_status" id="c_status" class="form-select">
                                 <option value="0" selected>Inactive (Default)</option>
                                 <option value="1">Active</option>
+                                <option value="2">Disabled</option>
                             </select>
                         </div>
                     </div>

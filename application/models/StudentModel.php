@@ -14,13 +14,13 @@ class StudentModel extends CI_Model
 	}
 
     public function getCourses() {
-        $query = $this->db->query('SELECT * FROM course_tbl;');
+        $query = $this->db->query('SELECT * FROM tbl_course;');
 
         return $query->result();
     }
 
 	public function getColleges() {
-        $query = $this->db->query('SELECT * FROM college_tbl');
+        $query = $this->db->query('SELECT * FROM tbl_college');
 
         return $query->result();
     }

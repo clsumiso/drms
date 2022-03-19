@@ -348,9 +348,20 @@ ul li a p span {
     color: #fff !important;
     border-radius: 4px;
     width: 100%;
+    opacity: 1;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
     transition: all .3s;
+    /* animation: animateWidgetCards .8s ease-in-out; */
 } 
+
+@keyframes animateWidgetCards {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
 .widget-card:hover {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0);
@@ -761,7 +772,7 @@ ul li a p span {
 .table-courses {
     background-color: #fff;
     overflow-x: auto;
-    max-height: 600px;
+    max-height: 700px;
     border-radius: 4px;
     box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3);
     margin-top: -20px;
@@ -827,7 +838,7 @@ ul li a p span {
     width: 120px;
 }
 
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1500px) {
         
     .button-create-wrapper {
         justify-content: flex-start;
@@ -835,7 +846,7 @@ ul li a p span {
 
     .colleges-courses {
         flex-direction: row;
-        gap: 50px;
+        max-width: 97%;
     }
 
     .colleges-wrapper {

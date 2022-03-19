@@ -435,7 +435,7 @@
 
                 endforeach;
 
-
+                
 
                 $note = "";
                 $showNoteTextarea = "";

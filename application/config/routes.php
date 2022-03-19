@@ -87,6 +87,9 @@ $route = array (
     'admin/reports'                     => 'adminController/reportManagement',
     'admin/maintenance'                 => 'adminController/maintenanceManagement',
 
+    'admin/dashboard_employee_status'   => 'adminController/employeeStatus',
+    'admin/dashboard_widgets'           => 'adminController/displayWidgets',
+
     'admin/display_account'             => 'adminController/display_staff_accounts',
     'admin/create_account'              => 'adminController/createStaffAccount',
     'admin/update_account'              => 'adminController/updateStaffAccount',

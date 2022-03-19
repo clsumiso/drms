@@ -62,7 +62,7 @@ $(document).ready(function() {
     function generateSY(start, end) {
         var options = ""
         for (let i = start; i > end; i--) {
-            options += "<option value=" + i + (i - 1) + ">S.Y " + i + " - " + (i + 1) + " </option>"
+            options += "<option value='S.Y. "+i+" - "+(i+1)+"'>S.Y. " + i + " - " + (i + 1) + " </option>"
         }
 
         return options
@@ -407,17 +407,66 @@ $(document).ready(function() {
         }
     })
 
-    $('#getAddress').change(function () {
+    // $('#getAddress').change(function () {
+    //     $(this).parent().parent().find('.error-msg').remove()
+    //     if($(this).val()) {
+    //         $(this).removeClass('is-invalid')
+    //     } else {
+    //         // error code 
+    //         $(this).addClass('is-invalid') 
+    //         $(this).parent().append("<p class='error-msg text-danger'>Field cannot be blank!</p>")
+    //     }
+    // })
+
+
+
+    $('#region').change(function () {
         $(this).parent().parent().find('.error-msg').remove()
-        if($(this).val()) {
+        if ($(this).val() != 0) {
             $(this).removeClass('is-invalid')
         } else {
-            // error code 
-            $(this).addClass('is-invalid') 
-            $(this).parent().append("<p class='error-msg text-danger'>Field cannot be blank!</p>")
+            $(this).addClass('is-invalid')
+            $(this).parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
         }
+
+        $('#setRegion').val($(this).find('option:selected').text())
     })
 
+    $('#province').change(function () {
+        $(this).parent().parent().find('.error-msg').remove()
+        if ($(this).val() != 0) {
+            $(this).removeClass('is-invalid')
+        } else {
+            $(this).addClass('is-invalid')
+            $(this).parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
+        }
+
+        $('#setProvince').val($(this).find('option:selected').text())
+    })
+
+    $('#city').change(function () {
+        $(this).parent().parent().find('.error-msg').remove()
+        if ($(this).val() != 0) {
+            $(this).removeClass('is-invalid')
+        } else {
+            $(this).addClass('is-invalid')
+            $(this).parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
+        }
+        
+        $('#setCity').val($(this).find('option:selected').text())
+    })
+
+    $('#barangay').change(function () {
+        $(this).parent().parent().find('.error-msg').remove()
+        if ($(this).val() != 0) {
+            $(this).removeClass('is-invalid')
+        } else {
+            $(this).addClass('is-invalid')
+            $(this).parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
+        }
+        
+        $('#setBarangay').val($(this).find('option:selected').text())
+    })
 
 
     $(document).on('click', '.btnUploadDocumentFileRequirement',function() {
@@ -902,7 +951,7 @@ $(document).ready(function() {
         // counts total validated inputs
         let countValidatePage2 = 0
         // add validations for optional input
-        let countOptValidatePage2 = 8
+        let countOptValidatePage2 = 11
 
         // remove validation to prevent overlapping
         $(' .error-msg').remove()
@@ -1042,15 +1091,51 @@ $(document).ready(function() {
             $('#getPhone').parent().parent().append("<p class='error-msg text-danger'>Field cannot be blank!</p>")
         }
 
-        // Validates Address
-        if($('#getAddress').val()) {
-            // success code
-            $('#getAddress').removeClass('is-invalid')
+        // // Validates Address
+        // if($('#getAddress').val()) {
+        //     // success code
+        //     $('#getAddress').removeClass('is-invalid')
+        //     countValidatePage2++
+        // } else {
+        //     // error code 
+        //     $('#getAddress').addClass('is-invalid') 
+        //     $('#getAddress').parent().append("<p class='error-msg text-danger'>Field cannot be blank!</p>")
+        // }
+
+
+        if ($('#region').val() != 0) {
+            $('#region').removeClass('is-invalid')
             countValidatePage2++
         } else {
-            // error code 
-            $('#getAddress').addClass('is-invalid') 
-            $('#getAddress').parent().append("<p class='error-msg text-danger'>Field cannot be blank!</p>")
+            $('#region').addClass('is-invalid')
+            $('#region').parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
+        }
+
+
+        if ($('#province').val() != 0) {
+            $('#province').removeClass('is-invalid')
+            countValidatePage2++
+        } else {
+            $('#province').addClass('is-invalid')
+            $('#province').parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
+        }
+
+
+        if ($('#city').val() != 0) {
+            $('#city').removeClass('is-invalid')
+            countValidatePage2++
+        } else {
+            $('#city').addClass('is-invalid')
+            $('#city').parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
+        }
+
+
+        if ($('#barangay').val() != 0) {
+            $('#barangay').removeClass('is-invalid')
+            countValidatePage2++
+        } else {
+            $('#barangay').addClass('is-invalid')
+            $('#barangay').parent().append("<p class='error-msg text-danger'>Please choose from the options!!</p>")
         }
 
 
@@ -1424,6 +1509,47 @@ $(document).ready(function() {
     $('#btnBackSubmit').click(function() {
         window.location.href = "../../index.php";
     }) 
+
+
+
+    
+
+    var my_handlers = {
+
+        fill_provinces:  function(){
+
+            var region_code = $(this).val();
+            $('#province').ph_locations('fetch_list', [{"region_code": region_code}]);
+            
+        },
+
+        fill_cities: function(){
+
+            var province_code = $(this).val();
+            $('#city').ph_locations( 'fetch_list', [{"province_code": province_code}]);
+        },
+
+
+        fill_barangays: function(){
+
+            var city_code = $(this).val();
+            $('#barangay').ph_locations('fetch_list', [{"city_code": city_code}]);
+        }
+    };
+
+    $(function(){
+        $('#region').on('change', my_handlers.fill_provinces);
+        $('#province').on('change', my_handlers.fill_cities);
+        $('#city').on('change', my_handlers.fill_barangays);
+
+        $('#region').ph_locations({'location_type': 'regions'});
+        $('#province').ph_locations({'location_type': 'provinces'});
+        $('#city').ph_locations({'location_type': 'cities'});
+        $('#barangay').ph_locations({'location_type': 'barangays'});
+
+        $('#region').ph_locations('fetch_list');
+        
+    });
 
 
 })

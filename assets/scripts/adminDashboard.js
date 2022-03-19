@@ -2,9 +2,9 @@ am5.ready(function() {
 
     var requestStatus = am5.Root.new("requestStatus");
 
-    requestStatus.setThemes([
-        am5themes_Animated.new(requestStatus)
-    ]);
+    // requestStatus.setThemes([
+    //     am5themes_Animated.new(requestStatus)
+    // ]);
 
     var chart = requestStatus.container.children.push(am5percent.PieChart.new(requestStatus, {
         layout: requestStatus.verticalLayout,
@@ -32,8 +32,7 @@ am5.ready(function() {
     }));
     
     legend.data.setAll(series.dataItems);
-    
-    series.appear(1000, 100);
+    series.appear(0, 100);
 
 
 
@@ -42,9 +41,9 @@ am5.ready(function() {
 
     var mostRequested = am5.Root.new("mostRequested");
 
-    mostRequested.setThemes([
-        am5themes_Animated.new(mostRequested)
-    ]);
+    // mostRequested.setThemes([
+    //     am5themes_Animated.new(mostRequested)
+    // ]);
 
     var chart = mostRequested.container.children.push(am5percent.PieChart.new(mostRequested, {
         layout: mostRequested.verticalLayout,
@@ -78,7 +77,7 @@ am5.ready(function() {
     
     legend.data.setAll(series.dataItems);
     
-    series.appear(1000, 100);
+    series.appear(0, 100);
 
 
 
@@ -91,9 +90,9 @@ am5.ready(function() {
 
     var requestRecord = am5.Root.new("requestRecord");
 
-    requestRecord.setThemes([
-      am5themes_Animated.new(requestRecord)
-    ]);
+    // requestRecord.setThemes([
+    //   am5themes_Animated.new(requestRecord)
+    // ]);
     
     
     var chart = requestRecord.container.children.push(am5xy.XYChart.new(requestRecord, {
@@ -250,167 +249,8 @@ am5.ready(function() {
     
     // Make stuff animate on load
     // https://www.amcharts.com/docs/v5/concepts/animations/
-    chart.appear(1600, 100);
+    series.appear(0, 100);
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-    var feedbackStatus = am5.Root.new("feedbackStatus");
-
-    feedbackStatus.setThemes([am5themes_Animated.new(feedbackStatus)]);
-
-
-    var chart = feedbackStatus.container.children.push(
-        am5xy.XYChart.new(feedbackStatus, {
-            panX: false,
-            panY: false,
-            wheelX: "none",
-            wheelY: "none"
-        })
-    );
-
-
-    var yRenderer = am5xy.AxisRendererY.new(feedbackStatus, { minGridDistance: 30 });
-
-    var yAxis = chart.yAxes.push(
-        am5xy.CategoryAxis.new(feedbackStatus, {
-            maxDeviation: 0,
-            categoryField: "country",
-            renderer: yRenderer
-        })
-    );
-
-    var xAxis = chart.xAxes.push(
-        am5xy.ValueAxis.new(feedbackStatus, {
-            maxDeviation: 0,
-            min: 0,
-            renderer: am5xy.AxisRendererX.new(feedbackStatus, {})
-        })
-    );
-
-
-   
-    var series = chart.series.push(
-        am5xy.ColumnSeries.new(feedbackStatus, {
-            name: "Series 1",
-            xAxis: xAxis,
-            yAxis: yAxis,
-            valueXField: "value",
-            sequencedInterpolation: true,
-            categoryYField: "country"
-        })
-    );
-
-    var columnTemplate = series.columns.template;
-
-    columnTemplate.setAll({
-        draggable: true,
-        cursorOverStyle: "pointer",
-        tooltipText: "drag to rearrange",
-        cornerRadiusBR: 10,
-        cornerRadiusTR: 10
-    });
-
-    columnTemplate.adapters.add("fill", (fill, target) => {
-        return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
-
-    columnTemplate.adapters.add("stroke", (stroke, target) => {
-        return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
-
-    columnTemplate.events.on("dragstop", () => {
-        sortCategoryAxis();
-    });
-
-    function getSeriesItem(category) {
-        for (var i = 0; i < series.dataItems.length; i++) {
-            var dataItem = series.dataItems[i];
-            if (dataItem.get("categoryY") == category) {
-            return dataItem;
-            }
-        }
-    }
-
-
-    function sortCategoryAxis() {
-        series.dataItems.sort(function (x, y) {
-        return y.get("graphics").y() - x.get("graphics").y();
-    });
-
-    var easing = am5.ease.out(am5.ease.cubic);
-
-    am5.array.each(yAxis.dataItems, function (dataItem) {
-        var seriesDataItem = getSeriesItem(dataItem.get("category"));
-
-        if (seriesDataItem) {
-            var index = series.dataItems.indexOf(seriesDataItem);
-
-            var column = seriesDataItem.get("graphics");
-
-            var fy =
-                yRenderer.positionToCoordinate(yAxis.indexToPosition(index)) -
-                column.height() / 2;
-
-            if (index != dataItem.get("index")) {
-                dataItem.set("index", index);
-
-                var x = column.x();
-                var y = column.y();
-
-                column.set("dy", -(fy - y));
-                column.set("dx", x);
-
-                column.animate({ key: "dy", to: 0, duration: 600, easing: easing });
-                column.animate({ key: "dx", to: 0, duration: 600, easing: easing });
-            } else {
-                column.animate({ key: "y", to: fy, duration: 600, easing: easing });
-                column.animate({ key: "x", to: 0, duration: 600, easing: easing });
-            }
-        }
-    });
-
-    yAxis.dataItems.sort(function (x, y) {
-        return x.get("index") - y.get("index");
-        });
-    }
-
-    var data = [{
-        country: "1 Star",
-        value: 456
-        }, {
-        country: "2 Star",
-        value: 156
-        }, {
-        country: "3 Star",
-        value: 235
-        }, {
-        country: "4 Star",
-        value: 561
-        }, {
-        country: "5 Star",
-        value: 1345
-    }];
-
-
-    yAxis.data.setAll(data);
-    series.data.setAll(data);
-
-
-    series.appear(1000);
-    chart.appear(1000, 100);
-
-
 
 
 
