@@ -38,6 +38,11 @@ class AdminModel extends CI_Model
 		$query = $this->db->query("SELECT * FROM staff_account_tbl ORDER BY CASE WHEN account_status = '1' THEN 1 WHEN account_status = '0' THEN 2 WHEN account_status = '2' THEN 3 END ASC, staff_type");
         return $query->result();
 	}
+
+	public function checkAccount($email) {
+		$query = $this->db->query("SELECT * FROM staff_account_tbl WHERE staff_email = '".$email."'");
+		return $query->row();
+	}
 	
 	public function createAccount($data) {
         $this->db->insert('staff_account_tbl', $data);

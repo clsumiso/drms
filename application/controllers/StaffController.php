@@ -17,89 +17,128 @@
             $this->load->view('staff/_session');
             $this->load->view('staff/_head');
             $this->load->view('staff/_css');
-            $this->load->view('staff/_page_loader');
+            $this->load->view('staff/_pageLoader');
             $this->load->view('staff/_header');
             $this->load->view('staff/_navigation');
             $this->load->view('staff/main');
-            $this->load->view('staff/_modal_send_documents');
-            $this->load->view('staff/_modal_on_delivery');
-            $this->load->view('staff/_modal_delivered');
-            $this->load->view('staff/_modal_declined');
-            $this->load->view('staff/_modal_logout');
+            $this->load->view('staff/_modalCreateSendDocument');
+            $this->load->view('staff/_modalOnDeliveryRequest');
+            $this->load->view('staff/_modalDeliveredRequest');
+            $this->load->view('staff/_modalDeliveredRequest');
+            $this->load->view('staff/_modalDeclineRequest');
             $this->load->view('staff/_script');
         }
-    
 
 
+        public function getNavigationCount() {
 
+            $this->load->model('StaffModel');
 
-
-
-        public function getCountRequest() {
-            
             $uid = $_SESSION["UID"];
             $staff_type = $_SESSION["staff_type"];
-            $request_type = $_POST['request_type'];
 
-
+            
             if ($staff_type == 1) {
-                $staff = 'staff_id_ric';
+                $staff_type = "staff_id_ric";
+                $student_type = 1;
             }
 
             if ($staff_type == 2) {
-                $staff = 'staff_id_frontline';
+                $staff_type = "staff_id_frontline";
+                $student_type = 2;
             }
 
 
+            $pending_count = 0;
+            $delivery_count = 0;
+            $outbox_count = 0;
+            $reminder_count = 0;
+
+            $pending = $this->StaffModel->get_navigation_count($uid, $staff_type, $student_type, '1');
+            if (isset($pending)) {
+                $pending_count = $pending->count;
+            }
 
 
+            $delivery = $this->StaffModel->get_navigation_count($uid, $staff_type, $student_type, '2');
+            if (isset($delivery)) {
+                $delivery_count = $delivery->count;
+            }
 
-            if ($request_type == 1) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND course_tbl.course_id =  request_tbl.course_id ORDER BY request_tbl.date_created ASC";
-        
-                $request_title = "All Request";
-            }
-        
-            elseif ($request_type == 2) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status = '1' AND course_tbl.course_id =  request_tbl.course_id ORDER BY request_tbl.date_created ASC";
-        
-                $request_title = "Pending Request";
-            }
-        
-            elseif ($request_type == 3) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status = '2' AND course_tbl.course_id =  request_tbl.course_id ORDER BY request_tbl.date_created ASC";
-        
-                $request_title = "On Delivery";
-            }
-        
-            elseif ($request_type == 4) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN (0, 3) AND course_tbl.course_id =  request_tbl.course_id ORDER BY request_tbl.date_created ASC";
-        
-                $request_title = "Archives";
-            }
-        
             
+            $outbox = $this->StaffModel->get_outbox_count($uid, $staff_type, $student_type);
+            if (isset($delivery)) {
+                $outbox_count = $outbox->count;
+            }
+
+
+            $reminder = $this->StaffModel->get_navigation_count_reminder($uid, $staff_type, $student_type);
+            if (isset($delivery)) {
+                $reminder_count = $reminder->count;
+            }
+
+
+            
+            $request_count = array (
+                'pending'    =>     $pending_count,
+                'delivery'   =>     $delivery_count,
+                'outbox'     =>     $outbox_count,
+                'reminder'   =>     $reminder_count,
+            );
+            
+
+            echo json_encode($request_count);
+
+        }
+
+
+        public function getReminderCountPopup() {
+
+            $uid = $_SESSION["UID"];
+            $staff_type = $_SESSION["staff_type"];
+
+            if ($staff_type == 1) {
+                $staff_type = "staff_id_ric";
+                $student_type = 1;
+            }
+
+            if ($staff_type == 2) {
+                $staff_type = "staff_id_frontline";
+                $student_type = 2;
+            }
+
             $this->load->model('StaffModel');
-            $result = $this->StaffModel->get_count_request($query);
+            $reminder = $this->StaffModel->get_navigation_count_reminder($uid, $staff_type, $student_type);
 
-            $countRequest = 0;
+            $count = 0;
+            if(isset($reminder)) {
+                $count = $reminder->count;
+            }
 
-            foreach($result as $res):
-                $countRequest++;
-            endforeach;
+            echo $count;
 
-            echo $request_title." (".$countRequest.")";
+        }
+
+
+        public function getStaffDetails() {
+            
+            $uid = $_SESSION["UID"];
+
+            $this->load->model('StaffModel');
+            $staff = $this->StaffModel->get_staff_details($uid);
+
+
+            $staff_name = $staff->staff_fname;
+           
+
+            $myName = explode(' ',trim($staff_name));
+            echo 'Good day, '.ucwords($myName[0]).'!';
 
         }
 
 
 
-
-
-
-
-        public function getAllRequest() {
-
+        public function getListDocument() {
 
             $uid = $_SESSION['UID'];
             $staff_type = $_SESSION["staff_type"];
@@ -114,42 +153,59 @@
             }
 
 
+
+
+            // REQUEST STATUS
+            // 0 - Completed
+            // 1 - Pending
+            // 2 - On delivery
+            // 3 - Declined
+            
+
             // for record-in-charge
-                
+                $outbox_stats = "0";
             if ($request_type == 1) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND course_tbl.course_id =  request_tbl.course_id ORDER BY request_tbl.date_created ASC";
+                $req_status = "0, 1, 2, 3";
 
                 $message = "There are no requests yet!";
-                $undraw_icon = "undraw_new_message_re_fp03.svg";
+                $undraw_icon = "";
+                $outbox_stats = "0,1";
             }
 
             elseif ($request_type == 2) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status = '1' AND course_tbl.course_id =  request_tbl.course_id ORDER BY request_tbl.date_created ASC";
+                $req_status = "1";
 
                 $message = "There are no pending requests yet!";
-                $undraw_icon = "undraw_personal_file_re_5joy.svg";
+                $undraw_icon = "";
             }
 
             elseif ($request_type == 3) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status = '2' AND course_tbl.course_id =  request_tbl.course_id ORDER BY request_tbl.date_created ASC";
+                $req_status = "2";
 
                 $message = "There are no on delivery requests yet!";
-                $undraw_icon = "undraw_delivery_address_re_cjca.svg";
+                $undraw_icon = "";
             }
 
             elseif ($request_type == 4) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, course_tbl WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN (0, 3) AND course_tbl.course_id =  request_tbl.course_id  ORDER BY request_tbl.date_created ASC";
-                
-                $message = "There are no arhives yet!";
-                $undraw_icon = "undraw_collecting_re_lp6p.svg";
+                $req_status = "0";
+
+                $message = "There are no sent documents yet!";
+                $undraw_icon = "";
             }
+
+            elseif ($request_type == 5) {
+                $req_status = "3";
                 
-        
-            
+                $message = "There are no declined request yet!";
+                $undraw_icon = "";
+            }
+
+
+            $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN ($req_status) AND tbl_course.course_id =  request_tbl.course_id AND request_tbl.outbox_status IN (".$outbox_stats.") ORDER BY request_tbl.date_created ASC";
 
 
             $this->load->model('StaffModel');
-            $requests = $this->StaffModel->all_request($query);
+            $requests = $this->StaffModel->get_requests($query);
 
 
             $requestCount = 0;
@@ -165,12 +221,17 @@
                 $middlename = $request->middlename;
                 $lastname = $request->lastname;
                 $suffix = $request->suffix;
-                $fullname = $firstname." ".$middlename." ".$lastname." ".$suffix;
+                $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
                 $email = $request->email;
-                $purpose = $request->purpose;
+                $purpose = ucwords('| '.$request->purpose);
                 $status = $request->status;
 
-                $course_acro = $request->course_acronym;
+                $add_message = "";
+                if (!empty($request->message)) {
+                    $add_message = '| '.$request->message;
+                }
+
+                $course_name = $request->course_name;
 
                 if ($status == 0) {
                     $statusColor = "bg-success";
@@ -189,58 +250,65 @@
 
 
 
-                $countDocument = 0;
-                $document = "";
-
+                $document = array();
 
                 $this->load->model('StaffModel');
                 $documents = $this->StaffModel->get_documents($id);
 
                 foreach($documents as $doc):
-                    $document = $doc->document_name;
-                    $countDocument++;
+                    array_push($document, $doc->document_name);
                 endforeach;
 
-                if($countDocument > 1) {
-                    $document = "Multiple Request";
-                }
-
-
+                $requested_docs = implode(', ', $document);
 
 
                 $this->load->model('StaffModel');
                 $notes_result = $this->StaffModel->get_notes($id);
 
+                $note_text = "";
                 if(isset($notes_result)) {
                     $noteIcon = "visible";
+                    $note_text = $notes_result->notes;
                 } else {
                     $noteIcon = "invisible";
                 }
 
-                echo    '<div class="document-wrapper">
-                                <div class="d-none">
-                                    <input type="text" class="form-control getRequestID" id="getRequestID" value='.$id.'>
-                                    <input type="text" class="form-control getEmail" id="getEmail" value='.$email.'>
+                echo    '<div class="request-card">
+
+                            <div class="d-none">
+                                <input type="text" class="form-control getRequestID" id="getRequestID" value='.$id.'>
+                                <input type="text" class="form-control getEmail" id="getEmail" value='.$email.'>
+                            </div>
+                            
+
+                            <div class="date-status">
+                                <p class="date">Mar 21</p>
+                                <div class="status-holder">
+                                    <p class="status '.$statusColor.'">'.$statusText.'</p>
                                 </div>
-                                <div class="request-info">
-                                    <p class="name">'.$fullname.'</p>
-                                    <p class="course">'.$course_acro.'</p>
-                                    <div class="request-info-overflow">
-                                        <p class="document">'.$document.'</p>
-                                        <p class="purpose">'.$purpose.'</p>
-                                    </div>
-                                </div>
-                                <div class="request-status-date">
-                                    <p class="date">'.$date.'</p>
-                                    <div class="note-status-wrapper">
-                                        <i class="bx bxs-label '.$noteIcon.'"></i>
-                                        <div class="status-wrapper">
-                                            <p class="status '.$statusColor.'">'.$statusText.'</p>
+                                
+                                <div class="notes-wrapper '.$noteIcon.'">
+                                    <p class="notes"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: rgb(185, 184, 184);transform: msFilter"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8l8-8V5a2 2 0 0 0-2-2zm-7 16v-7h7l-7 7z"></path></svg></p>
+                                    <div class="notes-text-wrapper">
+                                        <i class="fas fa-caret-up"></i>
+                                        <div class="notes-text">
+                                            <p><b>Note</b>: '.$note_text.'</p>
                                         </div>
                                     </div>
                                     
                                 </div>
-                            </div>';
+                            </div>
+                            <div class="name-college-content">
+                                <p class="name">'.$fullname.'</p>
+                                <p class="course">('.$course_name.')</p>
+                                <p class="dash">-</p>
+                                <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
+                            </div>
+                            <p class="date-desktop">'.$date.'</p>
+                        </div>';
+
+
+
             endforeach;
 
             
@@ -248,318 +316,8 @@
             if($requestCount == 0) {
                 echo '<div class="no-request-wrapper">
                         <p>'.$message.'</p>
-                        <div class="img-wrapper-result">
-                            <img src="'.base_url('/assets/styles/resources/'.$undraw_icon).'" alt="undraw_new_message_re_fp03.svg">
-                        </div>
                     </div>';
             }
-
-            
-        }
-
-
-
-        public function getRequest () {
-
-            $request_id = $this->input->post('request_id');
-            
-            $this->load->model('StaffModel');
-            $request = $this->StaffModel->request($request_id);
-
-            if (isset($request)) {
-                $getDate = new DateTime($request->date_created);
-                $date = date_format($getDate, 'M d Y, g:i:s A');
-                $dateAgo = $this->time_elapsed_string($request->date_created);
-
-                $identity = $request->identity_file;
-
-                $undraw_icon = "undraw_collecting_re_lp6p.svg";
-                $extIdentity = explode(".", $identity);
-                $mainExtIdentity = strtolower(end($extIdentity));
-                $identity_file = "";
-                $display_file_design = "";
-
-
-
-                if($mainExtIdentity == "pdf") {
-                    $identity_file = '<iframe src="'.base_url('/assets/uploads/identities/'.$identity).'"></iframe>';
-                    $display_file_design = '<i class="bx bxs-file-pdf"></i>';
-                } else {
-                    $identity_file = '<img src="'.base_url('/assets/uploads/identities/'.$identity).'" alt="'.$identity.'">';
-                    $display_file_design = '<i class="bx bxs-file-image"></i>';
-                }
-
-
-
-                $remarks = $request->remarks;
-
-
-                $status = $request->status;
-
-
-                $showSendDocumentBtn = "";
-                $showSetDeliveryBtn = "";
-                $showDeclineBtn = "";
-                $showSetDeliveredBtn = "";
-
-                $showNotes = "";
-                
-                $showDateCompleted = "";
-                $textDateCompleted = "";
-
-                $showRemarks = "";
-
-
-                if ($status == 0) {
-                    $showSendDocumentBtn = "d-none";
-                    $showSetDeliveryBtn = "d-none";
-                    $showDeclineBtn = "d-none";
-                    $showNotes = "readonly";
-                    $showDateCompleted = "d-block";
-                    $textDateCompleted = "Date Completed: ";
-                    $showRemarks = "d-none";
-                    $showSetDeliveredBtn = "d-none";
-                } else if($status == 1) {
-                    $showSendDocumentBtn = "d-block";
-                    $showSetDeliveryBtn = "d-block";
-                    $showDeclineBtn = "d-block";
-                    $showDateCompleted = "d-none";
-                    $showRemarks = "d-none";
-                    $showSetDeliveredBtn = "d-none";
-                } else if ($status == 2) {
-                    $showSendDocumentBtn = "d-none";
-                    $showSetDeliveryBtn = "d-none";
-                    $showDeclineBtn = "d-block";
-                    $showDateCompleted = "d-none";
-                    $showRemarks = "d-none";
-                    $showSetDeliveredBtn = "d-block";
-                } else if ($status == 3) {
-                    $showSendDocumentBtn = "d-none";
-                    $showSetDeliveryBtn = "d-none";
-                    $showDeclineBtn = "d-none";
-                    $showNotes = "readonly";
-                    $showDateCompleted = "d-block";
-                    $textDateCompleted = "Date Declined: ";
-                    $showRemarks = "d-block";
-                    $showSetDeliveredBtn = "d-none";
-                }
-
-
-
-                $student_no = $request->student_no;
-                $stud_no_text = "";
-
-                if(!empty($student_no)) {
-                    $stud_no_text = '<div class="form-group mb-3">
-                                        <label for="">Student ID</label>
-                                        <input type="text" class="form-control" value="18-2079" readonly>
-                                    </div>';
-                }
-
-
-                $firstname = $request->firstname;
-                $middlename = $request->middlename;
-                $lastname = $request->lastname;
-                $suffix = $request->suffix;
-                $fullname = $firstname." ".$middlename." ".$lastname." ".strtoupper($suffix);
-
-                $course = $request->course_name;
-                $year = $request->year;
-
-                $email = $request->email;
-                $contact = $request->contact_no;
-                $address = $request->address;
-
-                $message = $request->message;
-
-                $payment = $request->payment_file;
-
-
-                $extPayment = explode(".", $payment);
-                $mainExtPayment = strtolower(end($extPayment));
-                $payment_file = "";
-                $display_file_design_payment = "";
-                $payment_show = '<i class="bx bxs-file-blank"></i> <a href="#" class="toggleOpenPayment" id="toggleOpenPayment">Click here to view payment</a>';
-                if($mainExtPayment == "png" || $mainExtPayment == "jpg" || $mainExtPayment == "jpeg") {
-                    $payment_file = '<img src="'.base_url('/assets/uploads/payments/'.$payment).'" alt="'.$payment.'">';
-                    $display_file_design_payment = '<i class="bx bxs-file-image"></i>';
-                } else if($mainExtPayment == "pdf") {
-                    $payment_file = '<iframe src="'.base_url('/assets/uploads/payments/'.$payment).'"></iframe>';
-                    $display_file_design_payment = '<i class="bx bxs-file-pdf"></i>';
-                } else {
-                    $payment_file = '';
-                    $payment_show = "<b class='fst-itatlic m-0'>Not Applicable</b>";
-                    $display_file_design_payment = '';
-                }
-
-                $purpose = $request->purpose;
-                $delivery = $request->delivery_option;
-                $date_completed = $request->date_completed;
-
-
-
-                $documentsRequested = "";
-                $temp_doc = "";
-
-                $documents = $this->StaffModel->document_requested($request_id);
-
-                foreach($documents as $document):
-
-                    $temp_doc = "";
-
-                    if ($document->document_pages > 0) {
-                        $pageText = "page";
-                        if($document->document_pages > 1) {
-                            $pageText = "pages";
-                        }
-                        $temp_doc = '<p>x'.$document->document_copies.' '.$document->document_name.' ('.$document->document_pages.' '.$pageText.')</p>';
-                    } else {
-                        $temp_doc = '<p>x'.$document->document_copies.' '.$document->document_name.'</p>';
-                    }
-
-                    $showDocumentUpload = "";
-                    if(!empty($documents->document_upload)) {
-                    
-                        $showDocumentUpload = '<i class="bx bxs-file-blank fs-18 me-2"></i> <a href="./assets/uploads/requirements/'.$documents->document_upload.'" download="'.$documents->document_upload.'">Download file requirement</a>';
-                    
-                    }
-
-
-                    $documentsRequested .= '<div class="document-wrap">
-                                                '.$temp_doc.'
-                                                <div class="d-flex align-items-center">
-                                                    '.$showDocumentUpload.'
-                                                </div>
-                                            </div>';
-
-
-                endforeach;
-
-                
-
-                $note = "";
-                $showNoteTextarea = "";
-
-                $read_note = $this->StaffModel->get_notes($request_id);
-
-
-                if (isset($read_note)) {
-                    $note = $read_note->notes;
-                    $showNoteTextarea = "d-block";
-                } else {
-
-                    if ($status == 0 || $status == 3) {
-                        $showNoteTextarea = "d-none";
-                    } else {
-                        $showNoteTextarea = "d-block";
-                    }
-
-                }
-
-
-                echo '<div class="action-buttons px-3">
-                        <div class="back-notes">
-                            <form class="formNotes '.$showNoteTextarea.'">
-                                <div class="form-group">
-                                    <input type="text" class="form-control getRequestID d-none" name="getRequestID" value="'.$request_id.'">
-                                    <textarea name="getNotes" id="getNotes" cols="70" rows="2" class="form-control p-3 getNotes" placeholder="Add notes" '.$showNotes.'>'.$note.'</textarea>
-                                </div>
-                            </form>
-                            <p class="poppins m-0 '.$showRemarks.'"><b>REASON OF DECLINE: </b>'.$remarks.'</p>
-                        </div>
-                        <div class="actions">
-                            <button class="btn btn-success toggleOpenModalSendDocument '.$showSendDocumentBtn.'" type="button" id="toggleOpenModalSendDocument"><i class="bx bxs-envelope"></i><p>Send document</p></button>
-                            <button class="btn btn-primary toggleOpenOnDelivery '.$showSetDeliveryBtn.'" type="button" id="toggleOpenOnDelivery"><i class="bx bx-package"></i><p>Set as on delivery</p></button>
-                            <button class="btn btn-primary toggleOpenDelivered '.$showSetDeliveredBtn.'" type="button" id="toggleOpenOnDelivery"><i class="bx bxs-check-circle"></i><p>Set as delivered</p></button>
-                            <button class="btn btn-danger toggleOpenDecline '.$showDeclineBtn.'" type="button" id="toggleOpenDecline"><i class="bx bxs-trash"></i><p>Decline Request</p></button>
-                            <p class="poppins m-0 '.$showDateCompleted.'"><b>'.$textDateCompleted.'</b>'.$date_completed.'</p>
-                        </div>
-                    </div>
-                    <div class="request-review">
-                    
-                        <div class="flex-back-date">
-                            <i class="bx bx-arrow-back toggleBackRequest" id="toggleBackRequest"></i>
-                            <div class="date-wrapper">
-                                <p class="date-time"><b>'.$date.'</b> ('.$dateAgo.')</p>
-                            </div>
-                        </div>
-                        <div class="personal-info-wrapper">
-                            <h4 class="request-title">Personal Information</h4>
-                            <div class="form-group mb-3">
-                                <label for="">Identitication</label>
-                                <div class="img-wrapper">
-                                    '.$display_file_design.' <a href="#" class="toggleOpenIdentity" id="toggleOpenIdentity">Click here to view identity</a>
-                                </div>
-                            </div>
-                            '.$stud_no_text.'
-                            <div class="form-group mb-3">
-                                <label for="">Full Name</label>
-                                <input type="text" class="form-control text-capitalize" value="'.$fullname.'" readonly>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Course</label>
-                                <input type="text" class="form-control text-capitalize" value="'.$course.'" readonly>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">year</label>
-                                <input type="text" class="form-control text-capitalize" value="'.$year.'" readonly>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Email</label>
-                                <input type="text" class="form-control" value="'.$email.'" readonly>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Phone No.</label>
-                                <input type="text" class="form-control" value="'.$contact.'" readonly>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Address</label>
-                                <textarea name="" id="" class="form-control text-capitalize" cols="30" rows="4" readonly>'.$address.'</textarea>
-                            </div>
-                        </div>
-                        <div class="request-info-wrapper">
-                            <h4 class="request-title">Nature of Request</h4>
-                            <div class="form-group mb-3">
-                                <label for="">Payment File</label>
-                                <div class="img-wrapper">
-                                '.$payment_show.'
-                                </div>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Purpose</label>
-                                <input type="text" class="form-control text-capitalize" value="'.$purpose.'" readonly>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Delivery Opt.</label>
-                                <input type="text" class="form-control text-capitalize" value="'.$delivery.'" readonly>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Message</label>
-                                <textarea name="" id="" class="form-control" cols="30" rows="7" readonly>'.$message.'</textarea>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="">Requests</label>
-                                <div class="document-list-requested">
-                                    '.$documentsRequested.'
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                    <div class="modal-view-identity">
-                        <i class="bx bx-x toggleCloseIdentity"></i>
-                        '.$identity_file.'
-                    </div>
-                    <div class="modal-view-payment">
-                        <i class="bx bx-x toggleClosePayment"></i>
-                        '.$payment_file.'
-                    </div>';
-
-
-
-            }
-
-            
 
         }
 
@@ -595,12 +353,756 @@
             return $string ? implode(', ', $string) . ' ago' : 'just now';
         }
 
+        public function getReminderRequest() {
+
+            $uid = $_SESSION['UID'];
+            $student_type = $_SESSION["staff_type"];
+
+            if ($student_type == 1) {
+                $staff = 'staff_id_ric';
+            }
+
+            if ($student_type == 2) {
+                $staff = 'staff_id_frontline';
+            }
+
+            $message = "There are no reminders yet!";
+            $undraw_icon = "";
 
 
-        public function insertNotes() {
+            $this->load->model('StaffModel');
+            $requests = $this->StaffModel->get_remind_requests($uid, $staff, $student_type);
+
+            $requestCount = 0;
+
+            foreach($requests as $request):
+                $requestCount = 1;
+
+                $id = $request->request_id;
+                $getDate = new DateTime($request->date_created);
+                $date = date_format($getDate, 'M d');
+
+                $firstname = $request->firstname;
+                $middlename = $request->middlename;
+                $lastname = $request->lastname;
+                $suffix = $request->suffix;
+                $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
+                $email = $request->email;
+                $purpose = ucwords('| '.$request->purpose);
+                $status = $request->status;
+
+                $add_message = "";
+                if (!empty($request->message)) {
+                    $add_message = '| '.$request->message;
+                }
+
+                $course_name = $request->course_name;
+
+                if ($status == 0) {
+                    $statusColor = "bg-success";
+                    $statusText = "Completed";
+                } else if($status == 1) {
+                    $statusColor = "bg-secondary";
+                    $statusText = "Pending";
+                } else if ($status == 2) {
+                    $statusColor = "bg-primary";
+                    $statusText = "On Delivery";
+                } else if ($status == 3) {
+                    $statusColor = "bg-danger";
+                    $statusText = "Declined";
+                }
+
+
+
+
+                $document = array();
+
+                $this->load->model('StaffModel');
+                $documents = $this->StaffModel->get_documents($id);
+
+                foreach($documents as $doc):
+                    array_push($document, $doc->document_name);
+                endforeach;
+
+                $requested_docs = implode(', ', $document);
+
+
+                $this->load->model('StaffModel');
+                $notes_result = $this->StaffModel->get_notes($id);
+
+                $note_text = "";
+                if(isset($notes_result)) {
+                    $noteIcon = "visible";
+                    $note_text = $notes_result->notes;
+                } else {
+                    $noteIcon = "invisible";
+                }
+
+                echo    '<div class="request-card">
+
+                            <div class="d-none">
+                                <input type="text" class="form-control getRequestID" id="getRequestID" value='.$id.'>
+                                <input type="text" class="form-control getEmail" id="getEmail" value='.$email.'>
+                            </div>
+                            
+
+                            <div class="date-status">
+                                <p class="date">Mar 21</p>
+                                <div class="status-holder">
+                                    <p class="status '.$statusColor.'">'.$statusText.'</p>
+                                </div>
+                                
+                                <div class="notes-wrapper '.$noteIcon.'">
+                                    <p class="notes"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: rgb(185, 184, 184);transform: msFilter"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8l8-8V5a2 2 0 0 0-2-2zm-7 16v-7h7l-7 7z"></path></svg></p>
+                                    <div class="notes-text-wrapper">
+                                        <i class="fas fa-caret-up"></i>
+                                        <div class="notes-text">
+                                            <p><b>Note</b>: '.$note_text.'</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="name-college-content">
+                                <p class="name">'.$fullname.'</p>
+                                <p class="course">('.$course_name.')</p>
+                                <p class="dash">-</p>
+                                <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
+                            </div>
+                            <p class="date-desktop">'.$date.'</p>
+                        </div>';
+
+
+
+            endforeach;
+
             
-            $request_id = $this->input->post('getRequestID');
-            $note  = $this->input->post('getNotes');
+
+            if($requestCount == 0) {
+                echo '<div class="no-request-wrapper">
+                        <p>'.$message.'</p>
+                    </div>';
+            }
+
+
+        }
+
+
+
+        public function getOutboxRequest() {
+            
+            $uid = $_SESSION['UID'];
+            $student_type = $_SESSION["staff_type"];
+
+            if ($student_type == 1) {
+                $staff = 'staff_id_ric';
+            }
+
+            if ($student_type == 2) {
+                $staff = 'staff_id_frontline';
+            }
+
+            $message = "There are no reminders yet!";
+            $undraw_icon = "";
+
+
+            $this->load->model('StaffModel');
+            $requests = $this->StaffModel->get_outbox_requests($uid, $staff, $student_type);
+
+            $requestCount = 0;
+
+            foreach($requests as $request):
+                $requestCount = 1;
+
+                $id = $request->request_id;
+                $getDate = new DateTime($request->date_created);
+                $date = date_format($getDate, 'M d');
+
+                $firstname = $request->firstname;
+                $middlename = $request->middlename;
+                $lastname = $request->lastname;
+                $suffix = $request->suffix;
+                $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
+                $email = $request->email;
+                $purpose = ucwords('| '.$request->purpose);
+                $status = $request->status;
+
+                $add_message = "";
+                if (!empty($request->message)) {
+                    $add_message = '| '.$request->message;
+                }
+
+                $course_name = $request->course_name;
+
+                if ($status == 0) {
+                    $statusColor = "bg-success";
+                    $statusText = "Completed";
+                } else if($status == 1) {
+                    $statusColor = "bg-secondary";
+                    $statusText = "Pending";
+                } else if ($status == 2) {
+                    $statusColor = "bg-primary";
+                    $statusText = "On Delivery";
+                } else if ($status == 3) {
+                    $statusColor = "bg-danger";
+                    $statusText = "Declined";
+                }
+
+
+                $document = array();
+
+                $this->load->model('StaffModel');
+                $documents = $this->StaffModel->get_documents($id);
+
+                foreach($documents as $doc):
+                    array_push($document, $doc->document_name);
+                endforeach;
+
+                $requested_docs = implode(', ', $document);
+
+
+                $this->load->model('StaffModel');
+                $notes_result = $this->StaffModel->get_notes($id);
+
+                $note_text = "";
+                if(isset($notes_result)) {
+                    $noteIcon = "visible";
+                    $note_text = $notes_result->notes;
+                } else {
+                    $noteIcon = "invisible";
+                }
+
+                echo    '<div class="request-card">
+
+                            <div class="d-none">
+                                <input type="text" class="form-control getRequestID" id="getRequestID" value='.$id.'>
+                                <input type="text" class="form-control getEmail" id="getEmail" value='.$email.'>
+                            </div>
+                            
+
+                            <div class="date-status">
+                                <p class="date">Mar 21</p>
+                                <div class="status-holder">
+                                    <p class="status '.$statusColor.'">'.$statusText.'</p>
+                                </div>
+                                
+                                <div class="notes-wrapper '.$noteIcon.'">
+                                    <p class="notes"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: rgb(185, 184, 184);transform: msFilter"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8l8-8V5a2 2 0 0 0-2-2zm-7 16v-7h7l-7 7z"></path></svg></p>
+                                    <div class="notes-text-wrapper">
+                                        <i class="fas fa-caret-up"></i>
+                                        <div class="notes-text">
+                                            <p><b>Note</b>: '.$note_text.'</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="name-college-content">
+                                <p class="name">'.$fullname.'</p>
+                                <p class="course">('.$course_name.')</p>
+                                <p class="dash">-</p>
+                                <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
+                            </div>
+                            <p class="date-desktop">'.$date.'</p>
+                        </div>';
+
+
+
+            endforeach;
+
+            
+
+            if($requestCount == 0) {
+                echo '<div class="no-request-wrapper">
+                        <p>'.$message.'</p>
+                    </div>';
+            }
+        }
+
+
+        public function get_search_request() {
+            $uid = $_SESSION['UID'];
+            $student_type = $_SESSION["staff_type"];
+            $name = $this->input->post('getSearchName');
+
+            if ($student_type == 1) {
+                $staff = 'staff_id_ric';
+            }
+
+            if ($student_type == 2) {
+                $staff = 'staff_id_frontline';
+            }
+
+            $message = "There are no result for \"".$name."\"!";
+            $undraw_icon = "";
+
+
+            $this->load->model('StaffModel');
+            $requests = $this->StaffModel->get_search($uid, $staff, $student_type, $name);
+
+            $requestCount = 0;
+
+            foreach($requests as $request):
+                $requestCount = 1;
+
+                $id = $request->request_id;
+                $getDate = new DateTime($request->date_created);
+                $date = date_format($getDate, 'M d');
+
+                $firstname = $request->firstname;
+                $middlename = $request->middlename;
+                $lastname = $request->lastname;
+                $suffix = $request->suffix;
+                $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
+                $email = $request->email;
+                $purpose = ucwords('| '.$request->purpose);
+                $status = $request->status;
+
+                $add_message = "";
+                if (!empty($request->message)) {
+                    $add_message = '| '.$request->message;
+                }
+
+                $course_name = $request->course_name;
+
+                if ($status == 0) {
+                    $statusColor = "bg-success";
+                    $statusText = "Completed";
+                } else if($status == 1) {
+                    $statusColor = "bg-secondary";
+                    $statusText = "Pending";
+                } else if ($status == 2) {
+                    $statusColor = "bg-primary";
+                    $statusText = "On Delivery";
+                } else if ($status == 3) {
+                    $statusColor = "bg-danger";
+                    $statusText = "Declined";
+                }
+
+
+                $document = array();
+
+                $this->load->model('StaffModel');
+                $documents = $this->StaffModel->get_documents($id);
+
+                foreach($documents as $doc):
+                    array_push($document, $doc->document_name);
+                endforeach;
+
+                $requested_docs = implode(', ', $document);
+
+
+                $this->load->model('StaffModel');
+                $notes_result = $this->StaffModel->get_notes($id);
+
+                $note_text = "";
+                if(isset($notes_result)) {
+                    $noteIcon = "visible";
+                    $note_text = $notes_result->notes;
+                } else {
+                    $noteIcon = "invisible";
+                }
+
+                echo    '<div class="request-card">
+
+                            <div class="d-none">
+                                <input type="text" class="form-control getRequestID" id="getRequestID" value='.$id.'>
+                                <input type="text" class="form-control getEmail" id="getEmail" value='.$email.'>
+                            </div>
+                            
+
+                            <div class="date-status">
+                                <p class="date">Mar 21</p>
+                                <div class="status-holder">
+                                    <p class="status '.$statusColor.'">'.$statusText.'</p>
+                                </div>
+                                
+                                <div class="notes-wrapper '.$noteIcon.'">
+                                    <p class="notes"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="fill: rgb(185, 184, 184);transform: msFilter"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8l8-8V5a2 2 0 0 0-2-2zm-7 16v-7h7l-7 7z"></path></svg></p>
+                                    <div class="notes-text-wrapper">
+                                        <i class="fas fa-caret-up"></i>
+                                        <div class="notes-text">
+                                            <p><b>Note</b>: '.$note_text.'</p>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="name-college-content">
+                                <p class="name">'.$fullname.'</p>
+                                <p class="course">('.$course_name.')</p>
+                                <p class="dash">-</p>
+                                <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
+                            </div>
+                            <p class="date-desktop">'.$date.'</p>
+                        </div>';
+
+
+
+            endforeach;
+
+            
+
+            if($requestCount == 0) {
+                echo '<div class="no-request-wrapper">
+                        <p>'.$message.'</p>
+                    </div>';
+            }
+        }
+
+
+
+
+        public function getRequestReview() {
+
+            $request_id = $this->input->post('request_id');
+            
+            $this->load->model('StaffModel');
+            $request = $this->StaffModel->getRequestReview($request_id);
+
+            if (isset($request)) {
+                $getDate = new DateTime($request->date_created);
+                $date = date_format($getDate, 'M d Y, g:i:s A');
+                $dateAgo = $this->time_elapsed_string($request->date_created);
+
+                $identity = $request->identity_file;
+
+                
+                $extIdentity = explode(".", $identity);
+                $mainExtIdentity = strtolower(end($extIdentity));
+                $identity_file = "";
+                $display_file_design = "";
+
+
+
+                if($mainExtIdentity == "pdf") {
+                    $identity_file = '<iframe src="'.base_url('/assets/uploads/identities/'.$identity).'"></iframe>';
+                    $display_file_design = '<i class="fas fa-file-pdf"></i>';
+                } else {
+                    $identity_file = '<img src="'.base_url('/assets/uploads/identities/'.$identity).'" alt="'.$identity.'">';
+                    $display_file_design = '<i class="fad fa-image"></i>';
+                }
+
+
+
+                $remarks = $request->remarks;
+
+
+                $status = $request->status;
+
+
+                $showSendDocumentBtn = "";
+                $showSetDeliveryBtn = "";
+                $showDeclineBtn = "";
+                $showSetDeliveredBtn = "";
+
+                $showNotes = "";
+                
+                $showDateCompleted = "";
+                $textDateCompleted = "";
+
+                $showRemarks = "";
+
+
+                if ($status == 0) {
+                    $showSendDocumentBtn = "d-none";
+                    $showSetDeliveryBtn = "d-none";
+                    $showDeclineBtn = "d-none";
+                    $showNotes = "readonly";
+                    $showDateCompleted = "d-block";
+                    $textDateCompleted = "Date Completed: ";
+                    $showRemarks = "d-none";
+                    $showSetDeliveredBtn = "d-none";
+                } else if($status == 1) {
+                    $showSendDocumentBtn = "";
+                    $showSetDeliveryBtn = "";
+                    $showDeclineBtn = "";
+                    $showDateCompleted = "d-none";
+                    $showRemarks = "d-none";
+                    $showSetDeliveredBtn = "d-none";
+                } else if ($status == 2) {
+                    $showSendDocumentBtn = "d-none";
+                    $showSetDeliveryBtn = "d-none";
+                    $showDeclineBtn = "";
+                    $showDateCompleted = "d-none";
+                    $showRemarks = "d-none";
+                    $showSetDeliveredBtn = "";
+                } else if ($status == 3) {
+                    $showSendDocumentBtn = "d-none";
+                    $showSetDeliveryBtn = "d-none";
+                    $showDeclineBtn = "d-none";
+                    $showNotes = "readonly";
+                    $showDateCompleted = "d-block";
+                    $textDateCompleted = "Date Declined: ";
+                    $showRemarks = "d-block";
+                    $showSetDeliveredBtn = "d-none";
+                }
+
+
+
+                $student_no = $request->student_no;
+                $stud_no_text = "";
+
+                if(!empty($student_no)) {
+                    $stud_no_text = '<div class="form-group mb-2">
+                                        <label class="form-label">Student ID</label>
+                                        <input type="text" class="form-control" value="'.$student_no.'" readonly disabled>
+                                    </div>';
+                }
+
+
+                $firstname = $request->firstname;
+                $middlename = $request->middlename;
+                $lastname = $request->lastname;
+                $suffix = $request->suffix;
+                $fullname = $firstname." ".$middlename." ".$lastname." ".strtoupper($suffix);
+
+                $course = $request->course_name;
+                $year = $request->year;
+
+                $email = $request->email;
+                $contact = $request->contact_no;
+                $address = strtoupper($request->barangay.', '.$request->city.', '.$request->province.', '.$request->region);
+
+                $message = $request->message;
+
+                $payment = $request->payment_file;
+
+
+                $extPayment = explode(".", $payment);
+                $mainExtPayment = strtolower(end($extPayment));
+                $payment_file = "";
+                $display_file_design_payment = "";
+                if($mainExtPayment == "png" || $mainExtPayment == "jpg" || $mainExtPayment == "jpeg") {
+                    $payment_file = '<img src="'.base_url('/assets/uploads/payments/'.$payment).'" alt="'.$payment.'">';
+                    $display_file_design_payment = '<i class="fad fa-image"></i>';
+                    
+                    $payment_show = '<a href="#" class="toggleOpenPayment" id="toggleOpenPayment">'.$display_file_design_payment.' Click here to view payment</a>';
+                } else if($mainExtPayment == "pdf") {
+                    $payment_file = '<iframe src="'.base_url('/assets/uploads/payments/'.$payment).'"></iframe>';
+                    $display_file_design_payment = '<i class="fas fa-file-pdf"></i>';
+
+                    $payment_show = '<a href="#" class="toggleOpenPayment" id="toggleOpenPayment">'.$display_file_design_payment.' Click here to view payment</a>';
+                } else {
+                    $payment_file = '';
+                    $payment_show = "<b class='fst-itatlic m-0'>Not Applicable</b>";
+                    $display_file_design_payment = '';
+                }
+
+                $purpose = $request->purpose;
+                $delivery = $request->delivery_option;
+                $date_completed = $request->date_completed;
+
+                $dateEnd = new DateTime($request->date_completed);
+                $dateCompleted = date_format($dateEnd, 'M d Y, g:i:s A');
+
+
+                $documentsRequested = "";
+                $temp_doc = "";
+
+                $documents = $this->StaffModel->get_documents($request_id);
+
+
+                foreach($documents as $document):
+
+                    $temp_doc = "";
+
+                    if ($document->document_pages > 0) {
+                        $pageText = "page";
+                        if($document->document_pages > 1) {
+                            $pageText = "pages";
+                        }
+                        $temp_doc = '<p class="request">x'.$document->document_copies.' '.$document->document_name.' ('.$document->document_pages.' '.$pageText.')</p>';
+                    } else {
+                        $temp_doc = '<p class="request">x'.$document->document_copies.' '.$document->document_name.'</p>';
+                    }
+
+                    $showDocumentUpload = "";
+                    if(!empty($documents->document_upload)) {
+                        $showDocumentUpload = '<a href="./assets/uploads/requirements/'.$documents->document_upload.'" download="'.$documents->document_upload.'"><i class="bx bxs-file-blank fs-18 me-2"></i> Download file requirement</a>';
+                    }
+
+
+                    $documentsRequested .= ' <div class="request-wrapper-content">
+                                                '.$temp_doc.'
+                                                '.$showDocumentUpload.'
+                                            </div>';
+
+
+                endforeach;
+               
+                
+
+                $note = "";
+                $showNoteTextarea = "";
+
+                $read_note = $this->StaffModel->get_notes($request_id);
+
+
+                if (isset($read_note)) {
+                    $note = $read_note->notes;
+                    $showNoteTextarea = "block !important";
+                    $note_button_text = "Remove Notes";
+                } else {
+                    $showNoteTextarea = "none !important";
+                    $note_button_text = "Add Notes";
+                }
+
+                echo '<div class="action-button-wrapper">
+                        <div class="action-main">
+                            <button type="button" class="btn-send-document btn btn-success poppins '.$showSendDocumentBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <i class="fas fa-paper-plane"></i> Send Document
+                            </button> 
+                            
+                            <button type="button" class="btn-deliver btn-primary btn poppins '.$showSetDeliveryBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                                <i class="fas fa-truck"></i> Set request as on delivery
+                            </button>
+
+                            <button type="button" class="btn-deliver btn-primary btn poppins '.$showSetDeliveredBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal4">
+                                <i class="fas fa-truck"></i> Set request as delivered
+                            </button>
+            
+                            <button type="button" class="btn-deliver btn-danger btn poppins '.$showDeclineBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+                                <i class="fas fa-times-circle"></i> Decline request</button>
+                            </button>
+                        </div>
+            
+                        <div class="action-other">
+                            <button class="btn-addNotes btn-light toggleNotes" id="toggleNotes"><i class="fas fa-sticky-note"></i> <p class="m-0">'.$note_button_text.'</p></button>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    <div class="showNotesContent" style="display: '.$showNoteTextarea.'">
+                        <div class="flex-note-title-edit">
+                            <b>Notes</b>
+                        </div>
+                        <form id="formNotes">
+                            <input type="text" class="form-control d-none requestID" name="requestID" value="'.$request_id.'">
+                            <textarea class="notes-content form-control notesContent" id="notesContent" name="notesContent" rows="3" placeholder="Type your notes here ...">'.$note.'</textarea>
+                        </form>
+                    </div>
+            
+                    
+                    <b class="poppins text-secondary">'.$date.' ('.$dateAgo.')</b>
+
+                    <div class="review-request">
+            
+                        <div class="personal-information-wrapper">
+                            <h3 class="wrapper-title">Personal Information</h3>
+            
+
+                            <div class="form-group mb-3">
+                                <label for="">Identitication</label>
+                                <div class="img-wrapper poppins fs-16">
+                                    <a href="#" class="toggleOpenIdentity" id="toggleOpenIdentity">'.$display_file_design.' Click here to view identity</a>
+                                </div>
+                            </div>
+
+                            '.$stud_no_text.'
+            
+                            <div class="form-group mb-2">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control text-uppercase" value="'.$fullname.'" readonly disabled>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                                <label class="form-label">Course</label>
+                                <input type="text" class="form-control text-capitalize" value="'.$course.'" readonly disabled>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                                <label class="form-label">Year</label>
+                                <input type="text" class="form-control text-capitalize" value="'.$year.'" readonly disabled>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                                <label class="form-label">Email</label>
+                                <input type="text" class="form-control" value="'.$email.'" readonly disabled>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                                <label class="form-label">Phone</label>
+                                <input type="text" class="form-control" value="'.$contact.'" readonly disabled>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                                <label class="form-label">Address</label>
+                                <textarea name="" id="" class="form-control text-capitalize" rows="3" readonly disabled>'.$address.'</textarea>
+                            </div>
+            
+                        </div>
+            
+            
+                        <div class="nature-request-wrapper">
+                            <h3 class="wrapper-title">Nature of Request</h3>
+            
+                            <div class="form-group mb-3">
+                                <label for="">Payment File</label>
+                                <div class="img-wrapper poppins fs-16">'.$payment_show.'</div>
+                            </div>
+
+                            <div class="form-group mb-2">
+                                <label for="" class="form-label">purpose</label>
+                                <input type="text" class="form-control text-capitalize" value="'.$purpose.'" readonly disabled>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                                <label for="" class="form-label">delivery opt.</label>
+                                <input type="text" class="form-control text-capitalize" value="'.$delivery.'" readonly disabled>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                                <label class="form-label">message</label>
+                                <textarea name="" id="" class="form-control text-capitalize" rows="8" readonly disabled>'.$message.'</textarea>
+                            </div>
+            
+                            <div class="form-group mb-2">
+                            
+                                <label for="" class="form-label">Document Requested</label>
+
+                                '.$documentsRequested.'
+
+                            </div>
+                            
+                        </div>
+            
+                    </div>
+
+
+
+                    <div class="remarks-wrapper mt-3">
+                        <p class="poppins '.$showDateCompleted.'"><b>'.$textDateCompleted.'</b> '.$dateCompleted.'</p>
+
+                        <div class="'.$showRemarks.'">
+                            <b class="poppins">Remarks</b>
+                            <p class="poppins"></p>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                    <div class="modal-view-identity">
+                        <i class="fas fa-times toggleCloseIdentity"></i>
+                        '.$identity_file.'
+                    </div>
+                    
+                    <div class="modal-view-payment">
+                        <i class="fas fa-times toggleClosePayment"></i>
+                        '.$payment_file.'
+                    </div>';
+
+            }
+        }
+
+
+
+
+
+        public function notes() {
+            $request_id = $this->input->post('requestID');
+            $note  = $this->input->post('notesContent');
 
             $this->load->model('StaffModel');
 
@@ -616,28 +1118,21 @@
                 $note_result = $this->StaffModel->get_notes($request_id);
 
                 if (!isset($note_result)) {
-
                     $this->StaffModel->insert_notes($note_data);
-
                 } else {
-                    $this->StaffModel->insert_notes($note_data);
+                    $this->StaffModel->update_notes($request_id, $note_data);
                 }
-
-
             }
-            
 
         }
 
 
 
         public function mailDeclineRequest() {
-
             $uid = $this->session->UID;
 
-
             $this->load->model('StaffModel');
-            $staff = $this->StaffModel->get_staff($uid);
+            $staff = $this->StaffModel->get_staff_details($uid);
             
             if (isset($staff)) {
                 $firstname = $staff->staff_fname;
@@ -652,10 +1147,10 @@
             $message = $this->input->post('getReason');
 
             $status = 3;
+            $outbox_status = 0;
 
-            $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname);
+            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
             
-
             $documents = $this->StaffModel->get_documents($request_id);
 
             $documentRequested = [];
@@ -666,17 +1161,13 @@
             endforeach;
 
             $docs = implode(", ", $documentRequested);
-
-
-
-
-
-            $request = $this->StaffModel->request($request_id);
+            $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
             }
+
 
             $today_date = date_create($date);
             $date_subject = date_format($today_date, "md-is");
@@ -687,6 +1178,25 @@
             } else {
                 $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the frontline services (<a href='mailto:fakeemail.oadfls@clsu2.edu.ph'>fakeemail.oadfls@clsu2.edu.ph</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
             }
+
+
+            $body_message = "<div style='display:flex; align-items: center;'>
+                                <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
+                                <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
+                            </div>
+                            
+                            <br>
+                            <p style='line-height: 1.8; margin: 0;'>In response to your request, we are sorry to inform you that we won't be able to assess the document/s you have requested <b>(".$docs.")</b> at this point of time.</p>
+                            <br>
+                            <b>Reason:</b>
+                            <p style='line-height: 1.8; margin: 0;'>".$message."</p>
+                            <br>
+                            ".$inquiryMsg."
+                            <br>
+                            <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
+                                
+                            <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
+
 
 
             $mail = new PHPMailer(true);
@@ -710,38 +1220,27 @@
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Requested document has been declined [".$date_subject."]";
                 $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
-                $mail->Body    =    "<div style='display:flex; align-items: center;'>
-                                        <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                        <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                    </div>
-                                    
-                                    <br>
-                                    <p style='line-height: 1.8; margin: 0;'>In response to your request, we are sorry to inform you that we won't be able to assess the document/s you have requested <b>(".$docs.")</b> at this point of time.</p>
-                                    <br>
-                                    <b>Reason:</b>
-                                    <p style='line-height: 1.8; margin: 0;'>".$message."</p>
-                                    <br>
-                                    ".$inquiryMsg."
-                                    <br>
-                                    <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                        
-                                    <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
-
+                $mail->Body    =    $body_message;
                             
-
                 if(!$mail->send()) {
-                    echo "There was a problem sending your inquiry.";
+                        
+                    $outbox_status = 1;
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                    
+                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                
+                } else {
+                    echo "Request has been declined!";
                 }
                 
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+                $outbox_status = 1;
+                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
             }
 
-
-
         }
-
-
 
 
 
@@ -750,16 +1249,10 @@
         public function mailOnDelivery() {
 
             $uid = $this->session->UID;
-            
-            $request_id = $this->input->post('setRequestID');
-            $email = $this->input->post('setEmail');
-            $message = $this->input->post('getMessage');
-            $status = 2;
-
 
             $this->load->model('StaffModel');
-
-            $staff = $this->StaffModel->get_staff($uid);
+            $staff = $this->StaffModel->get_staff_details($uid);
+            
             if (isset($staff)) {
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
@@ -767,13 +1260,17 @@
                 $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
                 $staff_email = $staff->staff_email;
             }
-
-            $this->StaffModel->updateRequest($request_id, $message, $status);
             
+            $request_id = $this->input->post('setRequestID');
+            $email = $this->input->post('setEmail');
+            $message = $this->input->post('getRemarks');
 
+            $status = 2;
+            $outbox_status = 0;
+
+            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+            
             $documents = $this->StaffModel->get_documents($request_id);
-
-            
 
             $documentRequested = "";
 
@@ -785,7 +1282,8 @@
 
 
 
-            $request = $this->StaffModel->request($request_id);
+            $request = $this->StaffModel->getRequestReview($request_id);
+            // echo $request;
             if (isset($request)) {
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -900,14 +1398,23 @@
                             
 
                 if(!$mail->send()) {
-                    echo "There was a problem sending your inquiry.";
+                    $outbox_status = 1;
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                    
+                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                } else {
+                    echo "Request was successfully set to On Delivery.";
                 }
                 
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+                $outbox_status = 1;
+                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
             }
 
         }
+
 
 
 
@@ -923,7 +1430,7 @@
             $this->load->model('StaffModel');
 
 
-            $staff = $this->StaffModel->get_staff($uid);
+            $staff = $this->StaffModel->get_staff_details($uid);
             if (isset($staff)) {
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
@@ -933,7 +1440,8 @@
             }
 
 
-            $this->StaffModel->updateRequest($request_id, $message, $status);
+            $outbox_status = 0;
+            $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
             
 
             $documents = $this->StaffModel->get_documents($request_id);
@@ -947,7 +1455,7 @@
 
 
 
-            $request = $this->StaffModel->request($request_id);
+            $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -1070,23 +1578,26 @@
                 $mail->Body = $body;
 
 
-
-
-                            
-
                 if(!$mail->send()) {
-                    echo "There was a problem sending your inquiry.";
+                    
+                    $outbox_status = 1;
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                    
+                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                
+                } else {
+                    echo "Requested document/s was successfully sent!";
                 }
                 
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+                $outbox_status = 1;
+                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
             }
 
 
         }
-
-
-
 
 
 
@@ -1098,16 +1609,15 @@
             $request_id = $this->input->post('setRequestID');
             $email = $this->input->post('setEmail');
             $message = $this->input->post('getMessage');
-            $files = $_FILES['files']['name'];    
+            $files = $_FILES['files']['name'];
             $countFiles = count($files);
             $filenamesArr = [];
-
 
             $status = 0;
 
             $this->load->model('StaffModel');
 
-            $staff = $this->StaffModel->get_staff($uid);
+            $staff = $this->StaffModel->get_staff_details($uid);
             if (isset($staff)) {
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
@@ -1117,9 +1627,10 @@
             }
 
 
-            $this->StaffModel->updateRequest($request_id, $message, $status);
+            $outbox_status = 0;
+            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
 
-            $request = $this->StaffModel->request($request_id);
+            $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -1200,10 +1711,11 @@
 
 
                 if(!$mail->send()) {
-                    echo "There was a problem sending your inquiry.";
-                } else {
 
-                    $this->StaffModel->updateRequest($request_id, $message, $status);
+                    $outbox_status = 1;
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+                    
+                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
 
                     for($i=0 ; $i<$countFiles ; $i++) {
                         if(file_exists("./assets/uploads/tmp_uploaded_files/".$filenamesArr[$i])) {
@@ -1211,14 +1723,39 @@
                         }
                     }
 
+                } else {
+
+                    $outbox_status = 0;
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+                    for($i=0 ; $i<$countFiles ; $i++) {
+                        if(file_exists("./assets/uploads/tmp_uploaded_files/".$filenamesArr[$i])) {
+                            unlink("./assets/uploads/tmp_uploaded_files/".$filenamesArr[$i]);
+                        }
+                    }
+
+                    echo "Requested document/s was successfully sent!";
+
                 }
                 
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+
+                for($i=0 ; $i<$countFiles ; $i++) {
+                    if(file_exists("./assets/uploads/tmp_uploaded_files/".$filenamesArr[$i])) {
+                        unlink("./assets/uploads/tmp_uploaded_files/".$filenamesArr[$i]);
+                    }
+                }
+
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+                $outbox_status = 1;
+                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
             }
 
 
         }
+
+
 
 
 

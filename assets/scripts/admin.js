@@ -60,11 +60,7 @@ $(document).ready(function() {
             confirmButtonText: 'Logout'
         }).then((result) => {
             if (result.isConfirmed) {
-            //   Swal.fire(
-            //     'Deleted!',
-            //     'Your file has been deleted.',
-            //     'success'
-            //   )
+                window.location.replace(window.location.origin + '/drms_ojt/staff_logout');
             }
         })
 
@@ -102,7 +98,6 @@ $(document).ready(function() {
                     url: window.location.origin + '/drms_ojt/admin/dashboard_employee_status',
                     type: 'GET',
                     success: function (data) {
-                        console.log(data)
                         $('#tblEmployeeStatus tbody').empty()
                         $('#tblEmployeeStatus tbody').append(data)
                     },
@@ -155,7 +150,10 @@ $(document).ready(function() {
         
             
             $('#formCreateAccount').find('select').removeClass('is-invalid')
-            $('#formCreateAccount').find('select').removeClass('is-valid')
+            $('#formCreateAccount').find('select').removeClass('is-valid') 
+            
+            $('#c_password').attr('type', 'password')
+            $('#c_confirmpass').attr('type', 'password')
         }
 
         $('#toggleAccount').click(function() {
@@ -169,6 +167,20 @@ $(document).ready(function() {
         $('#toggleAccountClose2').click(function() {
             resetCreateAccount()
         })
+
+
+
+
+        $('#c_showPassword').change(function() {
+            if ($(this).prop('checked')) {
+                $('#c_password').attr('type', 'text')
+                $('#c_confirmpass').attr('type', 'text')
+            } else {
+                $('#c_password').attr('type', 'password')
+                $('#c_confirmpass').attr('type', 'password')
+            }
+        })
+
 
 
 
@@ -395,11 +407,20 @@ $(document).ready(function() {
                     type: 'POST',
                     data: data,
                     success: function(data) {
-                        Swal.fire(
-                            'Account created!',
-                            'You have created account for '+$('#c_givenname').val()+'.',
-                            'success'
-                        )
+                        if (data == 1) {
+                            Swal.fire(
+                                'Account created!',
+                                'You have created account for '+$('#c_givenname').val()+'.',
+                                'success'
+                            )
+                        } else {
+                            Swal.fire(
+                                'Account is already existed!',
+                                'Account for '+$('#c_givenname').val()+' was not created.',
+                                'error'
+                            )
+                        }
+                       
                         
                         resetCreateAccount()
                         displayStaffAccounts()
@@ -483,7 +504,6 @@ $(document).ready(function() {
             let staff_type = $(this).parent().parent().parent().find('.set_stafftype').val()
             let acc_status = $(this).parent().parent().parent().find('.set_status').val()
             let firstname = $(this).parent().parent().parent().find('.set_givenname').val()
-            let password = $(this).parent().parent().parent().find('.set_password').val()
 
             $('#u_getStaffID').val(id)
             $('#u_givenname').val(firstname)
@@ -493,7 +513,6 @@ $(document).ready(function() {
             $('#u_email').val(email)
             $('#u_stafftype').val(staff_type)
             $('#u_status').val(acc_status)
-            $('#u_password').val(password)
 
             $('#modalUpdateAccount').toggle()
 
@@ -515,6 +534,9 @@ $(document).ready(function() {
             
             $("#formUpdateAccount").find('select').removeClass('is-invalid')
             $("#formUpdateAccount").find('select').removeClass('is-valid')
+
+            $('#u_password').attr('type', 'password')
+            $('#u_confirmpass').attr('type', 'password')
         }
 
         $('#toggleAccountUpdateClose').click(function() {
@@ -530,7 +552,15 @@ $(document).ready(function() {
 
 
         
-
+        $('#u_showPassword').change(function() {
+            if ($(this).prop('checked')) {
+                $('#u_password').attr('type', 'text')
+                $('#u_confirmpass').attr('type', 'text')
+            } else {
+                $('#u_password').attr('type', 'password')
+                $('#u_confirmpass').attr('type', 'password')
+            }
+        })
 
 
 
@@ -758,13 +788,20 @@ $(document).ready(function() {
                     type: 'POST',
                     data: data,
                     success: function(data) {
-                        console.log(data)
-                        Swal.fire(
-                            'Account updated',
-                            data,
-                            'success'
-                        )
-            
+                        if (data == 1) {
+                            Swal.fire(
+                                'Account updated!',
+                                'You have successfully updated the account',
+                                'success'
+                            )
+                        } else {
+                            Swal.fire(
+                                'Update failed!',
+                                $('#u_email').val()+' is already taken.',
+                                'error'
+                            )
+                        }
+                        
                         resetUpdateAccount()
                         displayStaffAccounts()
 
@@ -1333,7 +1370,6 @@ $(document).ready(function() {
                                 'Your file has been deleted.',
                                 'success'
                             )
-                            console.log(data)
 
                             displayCourses()
                             // $('#modalUpdateCourses').toggle()

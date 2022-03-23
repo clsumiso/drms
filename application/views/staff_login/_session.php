@@ -1,5 +1,5 @@
 <?php
     if(isset($_SESSION["UID"])) {
-        header("Location: staff/");
+        header("Location: ".base_url('/staff'));
     }
 ?>

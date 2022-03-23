@@ -11,6 +11,28 @@ $(document).ready(function() {
     // $('#getAddress').val('Umingan, Pangasinan')
 
 
+    window.onload = function() {
+        var btnRelease = document.getElementById('<%= btnRelease.ClientID %>')
+                        
+        //Find the button set null value to click event and alert will not appear for that specific button
+
+        function setGlobal() {
+            window.onbeforeunload = null
+        }
+        $(btnRelease).click(setGlobal)
+
+        // Alert will not appear for all links on the page
+        $('a').click(function() {
+            window.onbeforeunload = null
+
+        })
+        window.onbeforeunload = function() {
+                return 'Are you sure you want to leave this page?'
+        }
+        
+    }
+      
+
 
 
     // Reusable functions for validations
@@ -29,6 +51,12 @@ $(document).ready(function() {
         return /^\d+$/.test(num)
     }
 
+    function studentID(data){
+        return /^[0-9-]*$/.test(data)
+    }
+
+
+    
     function validateImg(file) {
         var ext = file.split(".")
         ext = ext[ext.length-1].toLowerCase()
@@ -174,51 +202,60 @@ $(document).ready(function() {
     $('#getStudentID').change(function() {
         $(this).parent().parent().find('.error-msg').remove()
 
-        if($(this).val()) {
-            if($(this).val().charAt(2) === '-') {
-                if($(this).val().length == 7) {
-                    // success code
-                    $(this).removeClass('is-invalid')
+        if ($(this).val()) {
+
+            if (studentID($(this).val())) {
+                
+                if(digitOnly($(this).val().charAt(0)) && digitOnly($(this).val().charAt(1)) && $(this).val().charAt(2) === '-' && digitOnly($(this).val().charAt(3)) && digitOnly($(this).val().charAt(4)) && digitOnly($(this).val().charAt(5)) && digitOnly($(this).val().charAt(1))  &digitOnly($(this).val().charAt(6))) {
+                    if($(this).val().length == 7) {
+                        // success code
+                        $(this).removeClass('is-invalid')
+                    } else {
+                        // error code
+                        $(this).parent().append("<p class='error-msg text-danger'>ID must contain 6 digits and 1 dash</p>")
+                        $(this).addClass('is-invalid')
+                    }
                 } else {
                     // error code
-                    $(this).parent().append("<p class='error-msg text-danger'>ID must contain 6 digits and 1 dash</p>")
+                    $(this).parent().append("<p class='error-msg text-danger'>Invalid format!</p>")
                     $(this).addClass('is-invalid')
                 }
+
             } else {
-                // error code
                 $(this).parent().append("<p class='error-msg text-danger'>Invalid format!</p>")
                 $(this).addClass('is-invalid')
             }
+
         } else {
-            // error code
             $(this).parent().append("<p class='error-msg text-danger'>Field cannot be blank!</p>")
             $(this).addClass('is-invalid')
         }
+
     })
 
-    $('#getStudentID').bind({
-        keydown: function(e) {
-            if (e.shiftKey === true ) {
-                if (e.which == 9) {
-                    return true
-                }
-                return false
-            }
-            if (e.which >= 8 && e.which <= 57) {
-                return true
-            }
-            if(e.which >= 96 && e.which <= 105) {
-                return true
-            }
-            if(e.which == 189) {
-                return true
-            }
-            if (e.which==32) {
-                return false
-            }
-            return false
-        }
-    })
+    // $('#getStudentID').bind({
+    //     keydown: function(e) {
+    //         if (e.shiftKey === true ) {
+    //             if (e.which == 9) {
+    //                 return true
+    //             }
+    //             return false
+    //         }
+    //         if (e.which >= 8 && e.which <= 57) {
+    //             return true
+    //         }
+    //         if(e.which >= 96 && e.which <= 105) {
+    //             return true
+    //         }
+    //         if(e.which == 189) {
+    //             return true
+    //         }
+    //         if (e.which==32) {
+    //             return false
+    //         }
+    //         return false
+    //     }
+    // })
 
     $('#getFirstname').change(function() {
         $(this).parent().parent().find('.error-msg').remove()
@@ -828,6 +865,7 @@ $(document).ready(function() {
     }
 
 
+
     function validatePage2() {
 
         // counts total validated inputs
@@ -846,28 +884,37 @@ $(document).ready(function() {
             $('.validate-identity-upload').append('<div class="validate-identity-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
         }
 
-        // validates student ID
-        if($('#getStudentID').val()) {
-            if($('#getStudentID').val().charAt(2) === '-') {
-                if($('#getStudentID').val().length == 7) {
-                    // success code
-                    $('#getStudentID').removeClass('is-invalid')
-                    countValidatePage2++
+
+        if ($('#getStudentID').val()) {
+
+            if (studentID($('#getStudentID').val())) {
+                
+                if(digitOnly($('#getStudentID').val().charAt(0)) && digitOnly($('#getStudentID').val().charAt(1)) && $('#getStudentID').val().charAt(2) === '-' && digitOnly($('#getStudentID').val().charAt(3)) && digitOnly($('#getStudentID').val().charAt(4)) && digitOnly($('#getStudentID').val().charAt(5)) && digitOnly($('#getStudentID').val().charAt(1))  &digitOnly($('#getStudentID').val().charAt(6))) {
+                    if($('#getStudentID').val().length == 7) {
+                        // success code
+                        $('#getStudentID').removeClass('is-invalid')
+                        countValidatePage2++
+                    } else {
+                        // error code
+                        $('#getStudentID').parent().append("<p class='error-msg text-danger'>ID must contain 6 digits and 1 dash</p>")
+                        $('#getStudentID').addClass('is-invalid')
+                    }
                 } else {
                     // error code
-                    $('#getStudentID').parent().append("<p class='error-msg text-danger'>ID must contain 6 digits and 1 dash</p>")
+                    $('#getStudentID').parent().append("<p class='error-msg text-danger'>Invalid format!</p>")
                     $('#getStudentID').addClass('is-invalid')
                 }
+        
             } else {
-                // error code
                 $('#getStudentID').parent().append("<p class='error-msg text-danger'>Invalid format!</p>")
                 $('#getStudentID').addClass('is-invalid')
             }
+        
         } else {
-            // error code
             $('#getStudentID').parent().append("<p class='error-msg text-danger'>Field cannot be blank!</p>")
             $('#getStudentID').addClass('is-invalid')
         }
+
 
         // Validates First Name
         if($('#getFirstname').val()) {
@@ -944,6 +991,7 @@ $(document).ready(function() {
             }
         }
 
+        
         // Validates Year
         if($('#getSchoolYear').val()) {
             if($('#getSchoolYear').val() != 0) {
@@ -1231,7 +1279,8 @@ $(document).ready(function() {
         $('#final_getyear').text($('#getSchoolYear').find('option:selected').text())
         $('#final_getemail').text($('#getEmail').val())
         $('#final_getphone').text('+63'+$('#getPhone').val())
-        $('#final_getaddress').text($('#getAddress').val())
+        let complete_address = $('#barangay').find('option:selected').text()+', '+$('#city').find('option:selected').text()+', '+$('#province').find('option:selected').text()+', '+$('#region').find('option:selected').text()
+        $('#final_getaddress').text(complete_address)
 
         let paymentUploadTemp = ""
         if($('#getPaymentUpload').val()) {
@@ -1408,7 +1457,7 @@ $(document).ready(function() {
             var city_code = $(this).val();
             $('#barangay').ph_locations('fetch_list', [{"city_code": city_code}]);
         }
-    };
+    }
 
     $(function(){
         $('#region').on('change', my_handlers.fill_provinces);
@@ -1422,9 +1471,28 @@ $(document).ready(function() {
 
         $('#region').ph_locations('fetch_list');
         
-    });
+    })
 
 
+
+    $('#selectSuffix').change(function() {
+
+        $('#getSuffix').addClass('d-none')
+        $('#getSuffix').val('')
+
+        if ($(this).val() == 0) {
+            $('#getSuffix').val('')
+        } else {
+            if ($(this).val() == 6) {
+                $('#getSuffix').val('')
+                $('#getSuffix').removeClass('d-none')
+            } else {
+                let suffix = $(this).find('option:selected').text()
+                $('#getSuffix').val(suffix)
+            }
+        }
+
+    })
 
 
 })

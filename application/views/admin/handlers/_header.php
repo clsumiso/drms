@@ -4,10 +4,6 @@
         <div class="page-title-search">
             <h2 class="page-title desktop">Handlers</h2>
 
-            <div class="form-search">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search">
-            </div>  
         </div>
        
 

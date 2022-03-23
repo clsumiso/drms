@@ -1,14 +1,25 @@
 $(document).ready(function() {
 
-    // dummy data
-    // $('#getStudentID').val('18-2079')
-    // $('#getFirstname').val('darwin')
-    // $('#getMiddlename').val('bulgado')
-    // $('#getLastname').val('labiste')
-    // $('#getSuffix').val('')
-    // $('#getEmail').val('labiste.darwin@clsu2.edu.ph')
-    // $('#getPhone').val('9278285895')
-    // $('#getAddress').val('Umingan, Pangasinan')
+    window.onload = function() {
+        var btnRelease = document.getElementById('<%= btnRelease.ClientID %>')
+                        
+        //Find the button set null value to click event and alert will not appear for that specific button
+
+        function setGlobal() {
+            window.onbeforeunload = null
+        }
+        $(btnRelease).click(setGlobal)
+
+        // Alert will not appear for all links on the page
+        $('a').click(function() {
+            window.onbeforeunload = null
+
+        })
+        window.onbeforeunload = function() {
+                return 'Are you sure you want to leave this page?'
+        }
+        
+    }
 
     // Reusable functions for validations
     function validateEmail(email) {
@@ -82,7 +93,7 @@ $(document).ready(function() {
                                                             '<div class="form-group col-lg-7 mb-3">'+
                                                                 '<select name="getDocument" id="getDocument" class="form-select getDocument">'+
                                                                     '<option value="0">-- Select a document --</option>'+
-                                                                    '<option value="1">Certification of Units Earneds</option>'+
+                                                                    '<option value="1">Certification of Units Earned</option>'+
                                                                     '<option value="2">Certification of Course Description</option>'+
                                                                     '<option value="3">Certification of Graduation with Ranking</option>'+
                                                                     '<option value="4">Certification of Graduation with Academic Honors</option>'+
@@ -152,6 +163,19 @@ $(document).ready(function() {
     $(document).on('click', '.btn-remove', function() {
         appendedDocuments--
         $(this).parent().parent().parent().remove()
+
+        let type = $(this).parent().parent().parent().find('.getFType').val()
+        console.log(type)
+        if (type == 7 || type == 8 || type == 9) {
+            countTotalUploaded--
+        }
+
+        if (type == 3) {
+            if($(this).parent().parent().parent().find('.checkboxTORBoard').prop('checked')) {
+                countTotalUploaded--
+            }
+        }
+
         updateTablePayment()
     })
 
@@ -228,29 +252,7 @@ $(document).ready(function() {
         }
     })
 
-    $('#getStudentID').bind({
-        keydown: function(e) {
-            if (e.shiftKey === true ) {
-                if (e.which == 9) {
-                    return true
-                }
-                return false
-            }
-            if (e.which >= 8 && e.which <= 57) {
-                return true
-            }
-            if(e.which >= 96 && e.which <= 105) {
-                return true
-            }
-            if(e.which == 189) {
-                return true
-            }
-            if (e.which==32) {
-                return false
-            }
-            return false
-        }
-    })
+    
 
     $('#getFirstname').change(function() {
         $(this).parent().parent().find('.error-msg').remove()
@@ -473,6 +475,7 @@ $(document).ready(function() {
         $(this).parent().parent().parent().find('.getFUploads').click()
     })
 
+    let countTotalUploaded = 0;
     // PAGE THREE
     $(document).on('change', '.getDocument', function() {
         
@@ -510,7 +513,7 @@ $(document).ready(function() {
         if($(this).val() == 0) {
             $(this).addClass('is-invalid') 
         } else if ($(this).val() == 8) {
-            
+            countTotalUploaded++
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showDescription">'+
                                                             '<b class="text-uppercase poppins">Be advised</b>'+
                                                             '<p class="poppins">Please attach a clear scanned copy of the Affidavit of Loss (Lost Diploma) or Affidavit of Destruction.</p>'+
@@ -556,6 +559,8 @@ $(document).ready(function() {
                                                             '</div>'+
                                                         '</div>')
         } else if ($(this).val() == 10 || $(this).val() == 11) {
+            
+            countTotalUploaded++
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showDescription">'+
                                                             '<b class="text-uppercase poppins">Be advised</b>'+
                                                             '<p class="poppins m-0">Please attach a clear scanned copy (PDF) of your TOR and Diploma.</p>'+
@@ -564,7 +569,7 @@ $(document).ready(function() {
                                                         
                                                         '<div class="row showUploadButton">'+
                                                             '<div class="form-group mt-0 mb-1 printValidationUploadedFileRequirement">'+
-                                                                    
+                                                                
                                                             '</div>'+
 
                                                             '<div class="form-group">'+
@@ -572,7 +577,10 @@ $(document).ready(function() {
                                                                 '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf file is accepted</p>'+
                                                             '</div>'+
                                                         '</div>')
-        } else if ($(this).val() == 12) {                                                
+                                                        
+        } else if ($(this).val() == 12) {                             
+            
+            countTotalUploaded++                   
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showDescription">'+
                                                             '<b class="text-uppercase poppins">Be advised</b>'+
                                                             '<p class="poppins m-0 mt-2">Please attach a clear scanned copy of the document(PDF) to be authenticated.</p>'+
@@ -687,6 +695,8 @@ $(document).ready(function() {
 
     $(document).on('click', '.checkboxTORBoard', function() {
         if($(this).prop('checked')) {
+            
+            countTotalUploaded++  
             $(this).parent().parent().parent().parent().append('<div class="check-wrapper-tor">'+
                                                                     '<b class="poppins mb-2">Please attach image (For Board Exam Only)</b>'+
                                                                     '<p class="poppins m-0 mb-2">A. Passport size picture.</p>'+
@@ -707,6 +717,7 @@ $(document).ready(function() {
                                                                     '</div>'+
                                                                 '</div>')
         } else {
+            countTotalUploaded--  
             $(this).parent().parent().parent().parent().find('.check-wrapper-tor').remove()
         }
     })
@@ -1147,7 +1158,6 @@ $(document).ready(function() {
         }
     }
 
-
     function validatePage3() {
 
         let countValidatePage3 = 0
@@ -1157,6 +1167,7 @@ $(document).ready(function() {
         let countSemester = 0
         let countYear = 0
         let countOther = 0
+        let countUploaded = 0;
 
         let countTotalDocument = 0
         let countTotalCopies = 0
@@ -1238,7 +1249,26 @@ $(document).ready(function() {
             }
         })
 
+
+        $('.getFUploads').each(function() {
+            if($(this).val()) {
+                countUploaded++
+            }
+        })
+
         if((countTotalDocument == countDocument) && (countTotalCopies == countCopies) && (countTotalSemester == countSemester) && (countTotalYear == countYear) && (countTotalPages == countPages) && (countTotalOther == countOther)) {        
+            countValidatePage3++
+        }
+
+        console.log(countTotalUploaded+" = "+countUploaded)
+
+        if (countTotalUploaded != countUploaded) {   
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please check all the required files needed to be uploaded!'
+            })
+        } else {
             countValidatePage3++
         }
 
@@ -1254,7 +1284,7 @@ $(document).ready(function() {
         }
        
 
-        if(countValidatePage3 == 2) {
+        if(countValidatePage3 == 3) {
             $('#documentRequestContentPage').css('display', 'none')
             $('#purposeDeliveryContentPage').css('display', 'block')
             $('#pageFour').addClass('active-page')
@@ -1324,7 +1354,8 @@ $(document).ready(function() {
         $('#final_getyear').text($('#getSchoolYear').find('option:selected').text())
         $('#final_getemail').text($('#getEmail').val())
         $('#final_getphone').text('+63'+$('#getPhone').val())
-        $('#final_getaddress').text($('#getAddress').val())
+        let complete_address = $('#barangay').find('option:selected').text()+', '+$('#city').find('option:selected').text()+', '+$('#province').find('option:selected').text()+', '+$('#region').find('option:selected').text()
+        $('#final_getaddress').text(complete_address)
 
         $('#setPaymentUpload').text($('#getPaymentUpload').get(0).files.item(0).name)
         $('#setPurpose').text($('#getPurposeFinal').val())
@@ -1343,6 +1374,8 @@ $(document).ready(function() {
                 let copiesDoc = $(this).parent().parent().parent().find('.getFCopies').val()
                 let pagesDoc = $(this).parent().parent().parent().find('.getFPages').val()
                 let uploadsDocCheck = $(this).parent().parent().parent().find('.getFUploads').val()
+
+
 
                 
                 let page = "page"
@@ -1535,7 +1568,7 @@ $(document).ready(function() {
             var city_code = $(this).val();
             $('#barangay').ph_locations('fetch_list', [{"city_code": city_code}]);
         }
-    };
+    }
 
     $(function(){
         $('#region').on('change', my_handlers.fill_provinces);
@@ -1549,7 +1582,27 @@ $(document).ready(function() {
 
         $('#region').ph_locations('fetch_list');
         
-    });
+    })
 
+
+
+    $('#selectSuffix').change(function() {
+
+        $('#getSuffix').addClass('d-none')
+        $('#getSuffix').val('')
+
+        if ($(this).val() == 0) {
+            $('#getSuffix').val('')
+        } else {
+            if ($(this).val() == 6) {
+                $('#getSuffix').val('')
+                $('#getSuffix').removeClass('d-none')
+            } else {
+                let suffix = $(this).find('option:selected').text()
+                $('#getSuffix').val(suffix)
+            }
+        }
+
+    })
 
 })

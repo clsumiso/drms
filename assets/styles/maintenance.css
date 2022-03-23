@@ -1,0 +1,53 @@
+@import url(global.css) ;
+
+body {
+    background-color: #fff;
+}
+
+.maintenance-wrapper {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 500px;
+    padding: 55px 25px;
+    /* background-color: #fff; */
+}
+
+.logo-wrapper {
+    margin: auto;
+}
+
+.logo-wrapper img {
+    width: 250px;
+    animation: spin3D 5s infinite;
+}
+
+.description-wrapper h1 {
+    font-family: var(--poppins);
+    color: var(--dark-green);
+    font-size: 35px;
+    line-height: 1.3;
+}
+
+.description-wrapper p {
+    font-size: 18px;
+    font-family: var(--poppins);
+}
+
+@media only screen and (min-width: 820px) {
+    
+    .maintenance-wrapper {
+        flex-direction: row-reverse;
+        max-width: 900px;
+        padding: 65px 65px;
+        align-items: center;
+        gap: 55px;
+        border-radius: 6px;
+        /* box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.3); */
+    }
+
+}

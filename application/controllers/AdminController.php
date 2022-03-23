@@ -12,6 +12,7 @@
     class AdminController extends CI_Controller {
         
         public function index() {
+            $this->load->view('admin/_session');
             $this->load->view('admin/dashboard/_head');
             $this->load->view('admin/dashboard/_css');
             $this->load->view('admin/dashboard/_header');
@@ -22,6 +23,7 @@
     
 
         public function accountManagement() {
+            $this->load->view('admin/_session');
             $this->load->view('admin/accounts/_head');
             $this->load->view('admin/accounts/_css');
             $this->load->view('admin/accounts/_header');
@@ -34,6 +36,7 @@
 
 
         public function courseManagement() {
+            $this->load->view('admin/_session');
             $this->load->view('admin/courses/_head');
             $this->load->view('admin/courses/_css');
             $this->load->view('admin/courses/_header');
@@ -48,6 +51,7 @@
 
 
         public function handlersManagement() {
+            $this->load->view('admin/_session');
             $this->load->view('admin/handlers/_head');
             $this->load->view('admin/handlers/_css');
             $this->load->view('admin/handlers/_header');
@@ -58,6 +62,7 @@
 
 
         public function feedbackManagement() {
+            $this->load->view('admin/_session');
             $this->load->view('admin/feedbacks/_head');
             $this->load->view('admin/feedbacks/_css');
             $this->load->view('admin/feedbacks/_header');
@@ -68,6 +73,7 @@
 
 
         public function reportManagement() {
+            $this->load->view('admin/_session');
             $this->load->view('admin/reports/_head');
             $this->load->view('admin/reports/_css');
             $this->load->view('admin/reports/_header');
@@ -81,6 +87,7 @@
 
 
         public function maintenanceManagement() {
+            $this->load->view('admin/_session');
             $this->load->view('admin/maintenance/_head');
             $this->load->view('admin/maintenance/_css');
             $this->load->view('admin/maintenance/_header');
@@ -288,7 +295,7 @@
                     if ($status == 1) {
                         $status_text = "Active";
                         $status_color = "text-success";
-                    } 
+                    }
 
                     if ($status == 2) {
                         $status_text = "Disabled";
@@ -300,7 +307,10 @@
                     if($logged == '0000-00-00 00:00:00') {
                         $log = "N/A";
                     } else {
-                        $log = $staff->last_logged;
+                        $last_logged = $staff->last_logged;
+
+                        $temp_log = date_create($last_logged);
+                        $log = date_format($temp_log, "M. d, Y - h:i a");
                     }
     
                     echo '<tr>
@@ -313,7 +323,6 @@
                                 <input type="text" name="set_email" id="set_email" class="form-control set_email" value="'.$email.'">
                                 <input type="text" name="set_stafftype" id="set_stafftype" class="form-control set_stafftype" value="'.$staff_type.'">
                                 <input type="text" name="set_status" id="set_status" class="form-control set_status" value="'.$status.'">
-                                <input type="text" name="set_password" id="set_password" class="form-control set_password" value="'.$password.'">
                             </td>
                             <td><div class="user-type '.$staff_bg.'">'.$staff_type_text.'</div></td>
                             <td class="text-capitalize">'.$fname.' '.$mname.' '.$lname.'</td>
@@ -350,26 +359,38 @@
             $password  = $this->input->post('c_password');
             $today = date('Y-m-d H:i:s');
 
-            $staff = array(
-                "staff_fname"       =>  $givenname,
-                "staff_mname"       =>  $middlename,
-                "staff_lname"       =>  $lastname,
-                "staff_email"       =>  $email,
-                "staff_username"    =>  $username,
-                "staff_password"    =>  $password,
-                "staff_type"        =>  $usertype,
-                "account_status"    =>  $status,
-                "date_created"      =>  $today
-
-            );
 
             $this->load->model('AdminModel');
-            $this->AdminModel->createAccount($staff);
+
+            $staff_check = $this->AdminModel->checkAccount($email);
+
+            if(!isset($staff_check)) {
+
+                $staff = array(
+                    "staff_fname"       =>  $givenname,
+                    "staff_mname"       =>  $middlename,
+                    "staff_lname"       =>  $lastname,
+                    "staff_email"       =>  $email,
+                    "staff_username"    =>  $username,
+                    "staff_password"    =>  $password,
+                    "staff_type"        =>  $usertype,
+                    "account_status"    =>  $status,
+                    "date_created"      =>  $today
+                );
+
+                $this->AdminModel->createAccount($staff);
+                echo "1";
+            } else {
+                echo "0";
+            }
+
+            
 
         }
 
 
         public function updateStaffAccount() {
+
             $id = $this->input->post('u_getStaffID');
             $givenname  = strtolower($this->input->post('u_givenname'));
             $middlename  = strtolower($this->input->post('u_middlename'));
@@ -378,22 +399,46 @@
             $email  = $this->input->post('u_email');
             $usertype  = $this->input->post('u_stafftype');
             $status  = $this->input->post('u_status');
-            // $password  = password_hash($this->input->post('u_password'), PASSWORD_DEFAULT);
+            $password  = $this->input->post('u_password');
 
-            $staff = array(
-                "staff_fname"       =>  $givenname,
-                "staff_mname"       =>  $middlename,
-                "staff_lname"       =>  $lastname,
-                "staff_email"       =>  $email,
-                "staff_username"    =>  $username,
-                // "staff_password"    =>  $password,
-                "staff_type"        =>  $usertype,
-                "account_status"    =>  $status
-
-            );
 
             $this->load->model('AdminModel');
-            $this->AdminModel->updateAccount($id, $staff);
+            $staff_check = $this->AdminModel->checkAccount($email);
+
+            if(!isset($staff_check)) {
+
+                if (empty($password)) {
+                    $staff = array(
+                        "staff_fname"       =>  $givenname,
+                        "staff_mname"       =>  $middlename,
+                        "staff_lname"       =>  $lastname,
+                        "staff_email"       =>  $email,
+                        "staff_username"    =>  $username,
+                        "staff_type"        =>  $usertype,
+                        "account_status"    =>  $status
+                    );
+                } else {
+                    $staff = array(
+                        "staff_fname"       =>  $givenname,
+                        "staff_mname"       =>  $middlename,
+                        "staff_lname"       =>  $lastname,
+                        "staff_email"       =>  $email,
+                        "staff_username"    =>  $username,
+                        "staff_password"    =>  $password,
+                        "staff_type"        =>  $usertype,
+                        "account_status"    =>  $status
+                    );
+                }
+    
+                $this->AdminModel->updateAccount($id, $staff);
+
+                echo "1";
+            } else {
+                echo "0";
+            }
+
+            
+
         }
 
 

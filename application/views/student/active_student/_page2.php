@@ -52,7 +52,17 @@
                     <div class="form-group mb-3 col-lg-3">
                         <label for="getSuffix" class="form-label d-flex">Name Suffix</label>
                         <div class="icon-input">
-                            <input type="text"class="form-control" id="getSuffix" name="getSuffix" autocomplete="off">
+                            <select name="selectSuffix" id="selectSuffix" class="form-select selectSuffix mb-2">
+                                <option value="0">No suffix</option>
+                                <option value="1">JR</option>
+                                <option value="2">SR</option>
+                                <option value="3">II</option>
+                                <option value="4">III</option>
+                                <option value="5">IV</option>
+                                <option value="6">Other, please specify</option>
+                            </select>
+
+                            <input type="text"class="form-control getSuffix d-none" id="getSuffix" name="getSuffix" autocomplete="off" placeholder="Please specify...">
                         </div>
                     </div>
                 </div>

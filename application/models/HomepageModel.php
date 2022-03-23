@@ -18,5 +18,5 @@ class HomepageModel extends CI_Model
         $this->db->insert('feedback_tbl', $feedback);
         
     }
-
+	
 }

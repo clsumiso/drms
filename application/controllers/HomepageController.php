@@ -98,5 +98,11 @@
             $this->session->unset_userdata('user');
 
         }
+
+
+        
+        public function maintenance() {
+            $this->load->view('maintenance');
+        }
     
     }

@@ -518,7 +518,7 @@
                                         <br>
                                         <p style='line-height: 1.5; margin: 0;'>Good day, ".ucwords($firstname)."!</p>
                                         <br>
-                                        <p style='line-height: 1.5; margin: 0;'>This is to inform you that your request has been forwarded to the respective record-in-charge (RIC). You will be duly inform regarding the process of the documents you have requested.</p>
+                                        <p style='line-height: 1.5; margin: 0;'>This is to inform you that your request has been forwarded to the respective frontline. You will be duly inform regarding the process of the documents you have requested.</p>
                                         <br>
                                         <p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective frontline".$email_contact_frontline." or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
                                         <br>

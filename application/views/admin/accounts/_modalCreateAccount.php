@@ -62,15 +62,22 @@
                     </div>
                 
                     <div class="row">
-                        <div class="form-group col-lg-5 mb-3">
+                        <div class="form-group col-lg-5 mb-sm-3 mb-lg-2">
                             <label for="c_password" class="form-label">Password</label>
                             <input type="password" id="c_password" name="c_password" class="form-control" autocomplete="off">
                         </div>
 
-                        <div class="form-group col-lg-5 mb-3">
+                        <div class="form-group col-lg-5 mb-sm-3 mb-lg-2">
                             <label for="c_confirmpass" class="form-label">Confirm Password</label>
                             <input type="password" id="c_confirmpass" name="c_confirmpass" class="form-control" autocomplete="off">
                         </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="c_showPassword">
+                        <label class="form-check-label" for="c_showPassword">
+                            Show passwords
+                        </label>
                     </div>
 
                 </div>

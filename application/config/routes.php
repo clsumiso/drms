@@ -52,9 +52,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 $route = array (
+
     'default_controller'                => 'homepageController',
     'email-us'                          => 'homepageController/email_us',
     'feedback'                          => 'homepageController/feedback',
+    'maintenance'                       => 'homepageController/maintenance',
 
     'student/active'                    => 'studentController/active_student',
     'student/active_request'            => 'studentController/insert_active_request',
@@ -68,16 +70,24 @@ $route = array (
     'login'                             => 'loginController',
     'staff_login'                       => 'loginController/login',
     'staff_logout'                      => 'loginController/logout',
+    'admin_login'                       => 'loginController/loginAdmin',
+    'admin_signinAdmin'                 => 'loginController/signinAdmin',
     
     'staff'                             => 'staffController',
-    'staff/count_request'               => 'staffController/getCountRequest',
-    'staff/get_all_requests'            => 'staffController/getAllRequest',
-    'staff/get_request'                 => 'staffController/getRequest',
-    'staff/notes'                       => 'staffController/insertNotes',
-    'staff/decline_request'             => 'staffController/mailDeclineRequest',
-    'staff/ondelivery_request'          => 'staffController/mailOnDelivery',
-    'staff/delivered_request'           => 'staffController/mailDelivered',
-    'staff/send_document'               => 'staffController/mailSendDocument',
+    'staff/getStaffName'                => 'staffController/getStaffDetails',
+    'staff/getRemindPop'                => 'staffController/getReminderCountPopup',
+    'staff/navCount'                    => 'staffController/getNavigationCount',
+    'staff/getRequest'                  => 'staffController/getListDocument',
+    'staff/getReminderRequest'          => 'staffController/getReminderRequest',
+    'staff/getOutboxRequest'            => 'staffController/getOutboxRequest',
+    'staff/review'                      => 'staffController/getRequestReview',
+    'staff/notes'                       => 'staffController/notes',
+    'staff/getSearch'                   => 'staffController/get_search_request',
+    'staff/declineRequest'              => 'staffController/mailDeclineRequest',
+    'staff/ondeliveryRequest'           => 'staffController/mailOnDelivery',
+    'staff/deliveredRequest'            => 'staffController/mailDelivered',
+    'staff/sendDocumentRequest'         => 'staffController/mailSendDocument',
+
 
     'admin'                             => 'adminController',
     'admin/accounts'                    => 'adminController/accountManagement',

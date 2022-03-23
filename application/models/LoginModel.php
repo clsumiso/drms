@@ -18,6 +18,18 @@ class LoginModel extends CI_Model
         $query = $this->db->query('SELECT * FROM staff_account_tbl;');
         return $query->result();
         
+    
+    
     }
-
+    public function admin_login() {
+        $query = $this->db->query('SELECT * FROM admin_account_tbl;');
+        return $query->result();
+    }
+    
+    public function updateStaffLoggedOnStatus($id, $date) {
+        $this->db->set('last_logged', $date);
+        $this->db->where('staff_id', $id);
+        $this->db->update('staff_account_tbl');
+    }
+    
 }

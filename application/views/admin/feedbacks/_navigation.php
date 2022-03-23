@@ -11,9 +11,7 @@
             <i class="fas fa-times" id="toggleMenuClose"></i>
         </div>
 
-        <div class="search-mobile-wrapper">
-            <input type="text" placeholder="Search">
-        </div>
+    
 
         <ul>
             <li>

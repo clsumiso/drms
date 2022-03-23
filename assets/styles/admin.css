@@ -161,6 +161,7 @@ ul li a {
     padding: 15px 0 15px 25px;
     color: #4d6c87;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 ul li a:hover {
@@ -351,17 +352,8 @@ ul li a p span {
     opacity: 1;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
     transition: all .3s;
-    /* animation: animateWidgetCards .8s ease-in-out; */
 } 
 
-@keyframes animateWidgetCards {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
 
 .widget-card:hover {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0);

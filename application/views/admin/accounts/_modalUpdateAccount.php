@@ -16,29 +16,29 @@
                     <div class="row">
                         <div class="form-group col-lg-4 mb-3">
                             <label for="u_givenname" class="form-label">Given name</label>
-                            <input type="text" name="u_givenname" id="u_givenname" class="form-control">
+                            <input type="text" name="u_givenname" id="u_givenname" class="form-control" autocomplete="off">
                         </div>
 
                         <div class="form-group col-lg-4 mb-3">
                             <label for="u_middlename" class="form-label">Middle name</label>
-                            <input type="text" name="u_middlename" id="u_middlename" class="form-control">
+                            <input type="text" name="u_middlename" id="u_middlename" class="form-control" autocomplete="off">
                         </div>
 
                         <div class="form-group col-lg-4 mb-3">
                             <label for="u_lastname" class="form-label">Last name</label>
-                            <input type="text" name="u_lastname" id="u_lastname" class="form-control">
+                            <input type="text" name="u_lastname" id="u_lastname" class="form-control" autocomplete="off">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-lg-5 mb-3">
                             <label for="u_username" class="form-label">Username</label>
-                            <input type="text" name="u_username" id="u_username" class="form-control" readonly>
+                            <input type="text" name="u_username" id="u_username" class="form-control" readonly autocomplete="off">
                         </div>
 
                         <div class="form-group col-lg-7 mb-3">
                             <label for="u_email" class="form-label">Email Address</label>
-                            <input type="text" name="u_email" id="u_email" class="form-control">
+                            <input type="text" name="u_email" id="u_email" class="form-control" autocomplete="off">
                         </div>
                     </div>
 
@@ -64,17 +64,28 @@
                         </div>
                     </div>
                     
-                    <!-- <div class="row">
-                        <div class="form-group col-lg-5 mb-3">
+                    <hr>
+                    <b>Note:</b>
+                    <p>You staff requests to change password, admin may insert new password. Otherwise, leave the input below blank.</p>
+
+                    <div class="row">
+                        <div class="form-group col-lg-5 mb-sm-3 mb-lg-2">
                             <label for="u_password" class="form-label">Password</label>
-                            <input type="password" id="u_password" name="u_password" class="form-control">
+                            <input type="password" id="u_password" name="u_password" class="form-control" autocomplete="off" autocomplete="off">
                         </div>
 
-                        <div class="form-group col-lg-5 mb-3">
+                        <div class="form-group col-lg-5 mb-sm-3 mb-lg-2">
                             <label for="u_confirmpass" class="form-label">Confirm Password</label>
-                            <input type="password" id="u_confirmpass" name="u_confirmpass" class="form-control">
+                            <input type="password" id="u_confirmpass" name="u_confirmpass" class="form-control" autocomplete="off" autocomplete="off">
                         </div>
-                    </div> -->
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="u_showPassword">
+                        <label class="form-check-label" for="u_showPassword">
+                            Show passwords
+                        </label>
+                    </div>
 
                 </div>
 
