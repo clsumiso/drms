@@ -10,7 +10,7 @@
                     </div>
                     <div class="modal-body">
 
-                            <p class="modal-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam voluptatum repellat quibusdam, dolore earum dolores dolor repudiandae rem vero, ad itaque vitae libero eaque nesciunt.</p>
+                            <p class="modal-description">-	If the delivery option is through email address, kindly enclose all the requested documents to complete the transaction. To include additional message, you can use the provided text box below.</p>
 
                             <div class="form-group">
                                 <input type="text" class="form-control mb-3 setRequestIDModal d-none" name="setRequestID" value="" placeholder="Email Address">

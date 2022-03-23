@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 19, 2022 at 09:34 AM
+-- Generation Time: Mar 23, 2022 at 10:04 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -20,6 +20,25 @@ SET time_zone = "+00:00";
 --
 -- Database: `drms_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin_account_tbl`
+--
+
+CREATE TABLE `admin_account_tbl` (
+  `id` int(11) NOT NULL,
+  `admin` varchar(255) NOT NULL,
+  `pass` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `admin_account_tbl`
+--
+
+INSERT INTO `admin_account_tbl` (`id`, `admin`, `pass`) VALUES
+(1, 'admin', 'admin');
 
 -- --------------------------------------------------------
 
@@ -46,14 +65,6 @@ CREATE TABLE `course_handler_tbl` (
   `staff_id_ric` int(11) NOT NULL DEFAULT 0,
   `staff_id_frontline` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `course_handler_tbl`
---
-
-INSERT INTO `course_handler_tbl` (`course_handler_id`, `course_id`, `staff_id_ric`, `staff_id_frontline`) VALUES
-(1, 1, 1, 12),
-(2, 27, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -135,6 +146,7 @@ CREATE TABLE `request_tbl` (
   `course_id` int(11) NOT NULL,
   `remarks` text DEFAULT NULL,
   `status` int(1) NOT NULL DEFAULT 1,
+  `outbox_status` int(11) NOT NULL DEFAULT 0,
   `payment_file` varchar(255) DEFAULT NULL,
   `purpose` varchar(255) NOT NULL,
   `delivery_option` varchar(255) NOT NULL,
@@ -162,24 +174,6 @@ CREATE TABLE `staff_account_tbl` (
   `last_logged` datetime NOT NULL,
   `date_created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `staff_account_tbl`
---
-
-INSERT INTO `staff_account_tbl` (`staff_id`, `staff_fname`, `staff_mname`, `staff_lname`, `staff_email`, `staff_username`, `staff_password`, `staff_type`, `account_status`, `last_logged`, `date_created`) VALUES
-(1, 'nicole jane', 'jim', 'lim', 'lim.nicole@clsu2.edu.ph', 'lim.nicole', 'Lim123!', 1, 1, '0000-00-00 00:00:00', '2022-03-17 00:18:01'),
-(2, 'jeselle', 'vidal', 'dasalia', 'dasalia.jeselle@clsu2.edu.ph', 'dasalia.jeselle', 'Dasalia123!', 1, 1, '0000-00-00 00:00:00', '2022-03-17 00:18:52'),
-(3, 'angela', 'nague', 'aglipay', 'aglipay.angela@clsu2.edu.ph', 'aglipay.angela', 'Aglipay123!', 1, 1, '0000-00-00 00:00:00', '2022-03-17 00:19:49'),
-(4, 'angel ann', 'tabale', 'ramos', 'ramos.angel@clsu2.edu.ph', 'ramos.angel', 'Ramos123!', 1, 0, '0000-00-00 00:00:00', '2022-03-17 00:20:33'),
-(5, 'khrystine', 'gaveria', 'bravo', 'bravo.khrystine@clsu2.edu.ph', 'bravo.khrystine', 'Bravo123!', 1, 0, '0000-00-00 00:00:00', '2022-03-17 00:21:36'),
-(6, 'carty king', 'correa', 'paglinawan', 'paglinawan.carty@clsu2.edu.ph', 'paglinawan.carty', 'Paglinawan123!', 1, 0, '0000-00-00 00:00:00', '2022-03-17 00:22:33'),
-(7, 'daniel john', 'lipan', 'basada', 'basada.daniel@clsu2.edu.ph', 'basada.daniel', 'Basada123!', 1, 0, '0000-00-00 00:00:00', '2022-03-17 00:23:57'),
-(9, 'harvey renzo', 'dela cruz', 'reyes', 'reyes.harvey@clsu2.edu.ph', 'reyes.harvey', 'Reyes123!', 1, 0, '0000-00-00 00:00:00', '2022-03-17 00:33:39'),
-(10, 'darwin', 'bulgado', 'labiste', 'labiste.darwin@clsu2.edu.ph', 'labiste.darwin', 'Darwin123!', 2, 0, '0000-00-00 00:00:00', '2022-03-17 00:43:00'),
-(11, 'phoebe joy', 'laugo', 'peneyra', 'peneyra.phoebe@clsu2.edu.ph', 'peneyra.phoebe', 'Phoebe123!', 2, 0, '0000-00-00 00:00:00', '2022-03-17 00:43:46'),
-(12, 'christine dee', 'villanueva', 'sarmiento', 'sarmiento.christine@clsu2.edu.ph', 'sarmiento.christine', 'Christine123!', 2, 0, '0000-00-00 00:00:00', '2022-03-17 00:48:13'),
-(13, 'angel ann', 'tabale', 'ramos', 'ramos.angel@clsu2.edu.ph', 'ramos.angel', 'Angel123!', 3, 0, '0000-00-00 00:00:00', '2022-03-17 00:50:16');
 
 -- --------------------------------------------------------
 
@@ -322,6 +316,12 @@ INSERT INTO `tbl_course` (`course_id`, `college_id`, `course_name`, `course_desc
 --
 
 --
+-- Indexes for table `admin_account_tbl`
+--
+ALTER TABLE `admin_account_tbl`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `course_handler_tbl`
 --
 ALTER TABLE `course_handler_tbl`
@@ -380,10 +380,16 @@ ALTER TABLE `tbl_course`
 --
 
 --
+-- AUTO_INCREMENT for table `admin_account_tbl`
+--
+ALTER TABLE `admin_account_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `course_handler_tbl`
 --
 ALTER TABLE `course_handler_tbl`
-  MODIFY `course_handler_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `course_handler_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `document_request_tbl`
@@ -419,7 +425,7 @@ ALTER TABLE `request_tbl`
 -- AUTO_INCREMENT for table `staff_account_tbl`
 --
 ALTER TABLE `staff_account_tbl`
-  MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_college`
