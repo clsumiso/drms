@@ -352,7 +352,7 @@
             $givenname  = strtolower($this->input->post('c_givenname'));
             $middlename  = strtolower($this->input->post('c_middlename'));
             $lastname  = strtolower($this->input->post('c_lastname'));
-            $username  = $this->input->post('c_username');
+            $username  = strtolower($this->input->post('c_username'));
             $email  = $this->input->post('c_email');
             $usertype  = $this->input->post('c_stafftype');
             $status  = $this->input->post('c_status');
@@ -395,7 +395,7 @@
             $givenname  = strtolower($this->input->post('u_givenname'));
             $middlename  = strtolower($this->input->post('u_middlename'));
             $lastname  = strtolower($this->input->post('u_lastname'));
-            $username  = $this->input->post('u_username');
+            $username  = strtolower($this->input->post('u_username'));
             $email  = $this->input->post('u_email');
             $usertype  = $this->input->post('u_stafftype');
             $status  = $this->input->post('u_status');

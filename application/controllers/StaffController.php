@@ -502,7 +502,7 @@
                 $staff = 'staff_id_frontline';
             }
 
-            $message = "There are no reminders yet!";
+            $message = "There are no outbox yet!";
             $undraw_icon = "";
 
 
