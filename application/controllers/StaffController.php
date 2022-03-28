@@ -1338,7 +1338,7 @@
                                         </div>
                                         
                                         <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day! This is to inform you that your requests have been processed. Documents will be preparing to be drop at the CLSU main gate. You will be duly inform regarding the claiming details of the document/s.</p>
+                                        <p style='line-height: 1.8; margin: 0;'>Good day! This is to inform you that your requests has been processed. Documents will be preparing to be drop at the CLSU main gate. You will be duly inform regarding the claiming details of the document/s.</p>
                                         <br>
                                         <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
                                         <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
@@ -1357,7 +1357,7 @@
                                         </div>
                                         
                                         <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your requests had been processed. Documents will be preparing to be drop and pick by the courier. You will be duly inform regarding the claiming details of the document/s.</p>
+                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your requests has been processed. Documents will be preparing to be drop and pick by the courier. You will be duly inform regarding the claiming details of the document/s.</p>
                                         <br>
                                         <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
                                         <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
@@ -1376,7 +1376,7 @@
                                         </div>
                                         
                                         <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your requests had been processed. You will be duly inform regarding the claiming details of the document/s.</p>
+                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your requests has been processed. You will be duly inform regarding the claiming details of the document/s.</p>
                                         <br>
                                         <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
                                         <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
@@ -1510,7 +1510,7 @@
                                         </div>
                                         
                                         <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document is ready to claim at the CLSU main gate (drop box). Claiming hours will be available at 10:00am - 11:00am and 3:00pm - 5:00pm.</p>
+                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document/s has been released and already dropped to the courier. Please wait for further notice and delivery of your document/s.</p>
                                         <br>
                                         <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
                                         <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
@@ -1529,7 +1529,8 @@
                                         </div>
                                         
                                         <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document/s has been released and already dropped to the courier. Please wait for further notice and delivery of your document/s.</p>
+                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document is ready to claim at the CLSU main gate (drop box). Claiming hours will be available at 10:00am - 11:00am and 3:00pm - 5:00pm.</p>
+                                        
                                         <br>
                                         <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
                                         <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
@@ -1552,11 +1553,13 @@
                                             <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
                                         </div>
                                         
+
                                         <br>
                                         <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document/s has been released. 
                                         To claim your requested document/s: </p>
-                                        <p style='line-height: 1.8; margin: 0;'>The delivery option for the drop box will be available at the CLSU Main gate. Claiming hours will be 10:00 am - 11:00am and 3:00 pm - 5:00 pm.</p>
-                                        <p style='line-height: 1.8; margin: 0;'>The delivery option for the courier, document/s has already been dropped. Kindly wait for further notice and delivery of your document/s.</p>
+                                        <p style='line-height: 1.8; margin: 0;'>The delivery option for the drop box will be available at the CLSU Main gate. Claiming hours will be at 10:00 am - 11:00am and 3:00 pm - 5:00 pm.</p>
+                                        <p style='line-height: 1.8; margin: 0;'>The delivery option for the courier, the document/s has been dropped. Kindly wait for further notice and delivery of your document/s.
+                                        </p>
                                         <br>
                                         <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
                                         <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>

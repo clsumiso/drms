@@ -15,11 +15,9 @@ class LoginModel extends CI_Model
 
     public function staff_login() {
         
-        $query = $this->db->query('SELECT * FROM staff_account_tbl;');
+        $query = $this->db->query('SELECT * FROM staff_account_tbl WHERE account_status = "1"');
         return $query->result();
         
-    
-    
     }
     public function admin_login() {
         $query = $this->db->query('SELECT * FROM admin_account_tbl;');

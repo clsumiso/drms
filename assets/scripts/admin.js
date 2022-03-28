@@ -140,7 +140,6 @@ $(document).ready(function() {
 
 
         function resetCreateAccount() {
-            $('#modalCreateAccount').toggle()
             $("#formCreateAccount").trigger("reset")
 
             $('#formCreateAccount').find('.account-validation').remove()
@@ -155,10 +154,6 @@ $(document).ready(function() {
             $('#c_password').attr('type', 'password')
             $('#c_confirmpass').attr('type', 'password')
         }
-
-        $('#toggleAccount').click(function() {
-            $('#modalCreateAccount').toggle()
-        })
 
         $('#toggleAccountClose').click(function() {
             resetCreateAccount()
@@ -183,25 +178,32 @@ $(document).ready(function() {
 
 
 
-
-
         // Account Management
 
         $('#c_givenname').keyup(function() {
             let g_name = $('#c_givenname').val()
-            let givenname = g_name.split(' ')[0] 
+            let givenname = g_name.split(' ')[0].toLowerCase()
 
-            $('#c_username').val($('#c_lastname').val() +"." +givenname)
+            $('#c_username').val($('#c_lastname').val().toLowerCase() +"." +givenname)
         })
 
         $('#c_lastname').keyup(function() {
             let g_name = $('#c_givenname').val()
-            let givenname = g_name.split(' ')[0] 
+            let givenname = g_name.split(' ')[0].toLowerCase()
 
-            $('#c_username').val($('#c_lastname').val() +"." +givenname)
+            $('#c_username').val($('#c_lastname').val().toLowerCase() +"." +givenname)
         })
 
-
+        $('#c_staffID').change(function() {
+            $(this).parent().find('.account-validation').remove()
+            if ($('#c_staffID').val()) {
+                    $('#c_staffID').removeClass('is-invalid')
+                    $('#c_staffID').addClass('is-valid')
+            } else {
+                $('#c_staffID').addClass('is-invalid')
+                $('#c_staffID').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
+            }
+        })
 
         $('#c_givenname').change(function() {
             $(this).parent().find('.account-validation').remove()
@@ -253,6 +255,20 @@ $(document).ready(function() {
         })
 
 
+        $('#c_username').change(function() {
+            
+            $(this).parent().find('.account-validation').remove()
+
+            if ($(this).val()) {
+                $('#c_username').removeClass('is-invalid')
+                $('#c_username').addClass('is-valid')
+            } else {
+                $('#c_username').addClass('is-invalid')
+                $('#c_username').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Invalid email format</p>')
+            }
+
+        })
+
         $('#c_email').change(function() {
             $(this).parent().find('.account-validation').remove()
             if (validateEmail($('#c_email').val())) {
@@ -294,13 +310,24 @@ $(document).ready(function() {
         })
 
 
-
         $('#formCreateAccount').submit(function(e) {
+
+            console.log('asdslajkhdsakjbdb')
 
             e.preventDefault()
             $('.account-validation').remove()
 
             let countValidation = 0
+
+            if ($('#c_staffID').val()) {
+                $('#c_staffID').removeClass('is-invalid')
+                $('#c_staffID').addClass('is-valid')
+                countValidation++
+            } else {
+                $('#c_staffID').addClass('is-invalid')
+                $('#c_staffID').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
+            }
+
 
             if ($('#c_givenname').val()) {
                 if (validateName($('#c_givenname').val())) {
@@ -344,6 +371,16 @@ $(document).ready(function() {
             } else {
                 $('#c_lastname').addClass('is-invalid')
                 $('#c_lastname').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
+            }
+
+
+            if ($('#c_username').val()) {
+                $('#c_username').removeClass('is-invalid')
+                $('#c_username').addClass('is-valid')
+                countValidation++
+            } else {
+                $('#c_username').addClass('is-invalid')
+                $('#c_username').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Invalid email format</p>')
             }
 
 
@@ -398,32 +435,51 @@ $(document).ready(function() {
                 }
             }
 
-
-            if(countValidation == 7) {
-
+            if(countValidation == 9) {
                 let data = $(this).serialize()
                 $.ajax ({
                     url: window.location.origin + '/drms_ojt/admin/create_account',
                     type: 'POST',
                     data: data,
                     success: function(data) {
-                        if (data == 1) {
-                            Swal.fire(
+                        console.log(data)
+                        if (data == 0) {
+                            Swal.fire (
                                 'Account created!',
-                                'You have created account for '+$('#c_givenname').val()+'.',
+                                'You have created account for '+$('#c_givenname').val().toUpperCase()+'.',
                                 'success'
                             )
-                        } else {
+
+                            $('#toggleAccountClose2').click()
+                            resetCreateAccount()
+                            displayStaffAccounts()
+
+                        }  else if (data == 1) {
+
                             Swal.fire(
-                                'Account is already existed!',
-                                'Account for '+$('#c_givenname').val()+' was not created.',
+                                'Email already existed!',
+                                'Account for '+$('#c_givenname').val().toUpperCase()+' was not created.',
                                 'error'
                             )
+
+                        }   else if (data == 2) {
+
+                            Swal.fire(
+                                'Email already existed!',
+                                'Account for '+$('#c_givenname').val().toUpperCase()+' was not created.',
+                                'error'
+                            )
+
+                        } else {
+
+                            Swal.fire(
+                                'There was a problem creating an account!',
+                                'Account for '+$('#c_givenname').val().toUpperCase()+' was not created.',
+                                'error'
+                            )
+
                         }
                        
-                        
-                        resetCreateAccount()
-                        displayStaffAccounts()
 
                     },
                     error: function(status, xhr, error) {
@@ -678,6 +734,8 @@ $(document).ready(function() {
 
         $('#formUpdateAccount').submit(function(e) {
 
+            console.log('asldkjhnsakidjsbaikjdbs')
+
             e.preventDefault()
             $('.account-validation').remove()
         
@@ -767,7 +825,7 @@ $(document).ready(function() {
             //     $('#u_password').addClass('is-invalid')
             //     $('#u_password').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
             // }
-        
+            
             // if ($('#u_password').val()) {
             //     if ($('#u_confirmpass').val() == $('#u_password').val()) {
             //         $('#u_confirmpass').removeClass('is-invalid')
@@ -788,19 +846,8 @@ $(document).ready(function() {
                     type: 'POST',
                     data: data,
                     success: function(data) {
-                        if (data == 1) {
-                            Swal.fire(
-                                'Account updated!',
-                                'You have successfully updated the account',
-                                'success'
-                            )
-                        } else {
-                            Swal.fire(
-                                'Update failed!',
-                                $('#u_email').val()+' is already taken.',
-                                'error'
-                            )
-                        }
+
+
                         
                         resetUpdateAccount()
                         displayStaffAccounts()
@@ -966,6 +1013,7 @@ $(document).ready(function() {
 
 
         $('#formUpdateCollege').submit(function(e) {
+
 
             e.preventDefault()
 

@@ -39,7 +39,7 @@ header .user-type {
     font-family: var(--poppins);
     text-transform: capitalize;
     font-weight: 600;
-    margin: 0;
+    margin: 0 0 10px;
 }
 
 .page-title.desktop {
@@ -307,7 +307,7 @@ ul li a p span {
 .custom-container {
     position: relative;
     padding: 0 25px 15px;
-    top: 60px;
+    top: 40px;
 }
 
 .wrapper-title {
@@ -686,7 +686,7 @@ ul li a p span {
     color: #fff;
 }
 
-.modal {
+/* .modal {
     display: none;
     position: fixed;
     top: 0;
@@ -722,7 +722,7 @@ ul li a p span {
 #toggleAccountClose:hover,
 #toggleAccountUpdateClose:hover {
     color: #000;
-}
+} */
 
 
 
@@ -1242,7 +1242,7 @@ ul li a p span {
     font-size: 28px;
 }
 
-.modal-report-wrapper p.report-description {
+p.report-description {
     font-family: var(--poppins);
     font-weight: 400;
     font-size: 16px;

@@ -423,6 +423,11 @@ $(document).ready(function() {
         }
 
 
+        resetSendDocForm()
+        resetDeclineForm()
+        resetOnDeliveryForm()
+        resetDeliveredForm()
+
     }
 
     navActive()
@@ -468,6 +473,11 @@ $(document).ready(function() {
             $('#navReminders').click()
             navActive()
         }
+
+        resetSendDocForm()
+        resetDeclineForm()
+        resetOnDeliveryForm()
+        resetDeliveredForm()
     }
 
 
@@ -522,6 +532,54 @@ $(document).ready(function() {
         }
     })
 
+
+
+    $('#formSearchRequest2').submit(function(e) {
+        e.preventDefault()
+        
+        if ($('#searchName2').val()) {
+
+            $('#navAllRequest').removeClass('active')
+            $('#navPendingRequest').removeClass('active')
+            $('#navDeliveryRequest').removeClass('active')
+            $('#navSentRequest').removeClass('active')
+            $('#navDeclinedRequest').removeClass('active')
+            $('#navReminders').removeClass('active')
+            $('#navDrafts').removeClass('active')
+            $('#navOutbox').removeClass('active')
+            
+            let data = $(this).serialize()
+
+            $.ajax ({
+                url: window.location.origin + '/drms_ojt/staff/getSearch',
+                type: 'POST',
+                data: data,
+                success: function(data) {
+
+                    $(document).prop('title', 'Search Result')
+                    $('.page-title').text('Search Result')
+
+                    $('.request-container').empty()
+                    $('.request-container').append(data)
+
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr)
+                    console.log(status)
+                    console.log(error)
+                }
+            })
+
+        }
+
+    })
+
+
+    $('#searchName2').keyup(function() {
+        if (!$(this).val()) {
+            navigationClick()
+        }
+    })
 
 
 
@@ -732,7 +790,27 @@ $(document).ready(function() {
     $(document).on('click', '.toggleClosePayment', function() {
         $('.modal-view-payment').fadeOut()
     })
+   
+   
 
+    function resetSendDocForm() {
+        maxFileUpload = 0
+        $('.file-attach-wrapper').empty()
+        $('#formSendDocument').trigger('reset')
+    }
+
+
+    function resetDeclineForm() {
+        $('#formDecline').trigger('reset')
+    }
+
+    function resetOnDeliveryForm() {
+        $('#formOnDelivery').trigger('reset')
+    }
+
+    function resetDeliveredForm() {
+        $('#formDelivered').trigger('reset')
+    }
 
 
 
@@ -775,12 +853,13 @@ $(document).ready(function() {
                             
                             $("#webLoader").fadeOut()
 
-
                             Swal.fire(
                                 'Declined!',
                                 data,
                                 'success'
                             )
+
+                            resetDeclineForm()
 
                         },
                         error: function(xhr, status, error) {
@@ -831,6 +910,8 @@ $(document).ready(function() {
                     'success'
                 )
 
+                resetOnDeliveryForm()
+
             },
             error: function(xhr, status, error) {
                 console.log(xhr)
@@ -874,6 +955,9 @@ $(document).ready(function() {
                     data,
                     'success'
                 )
+
+                resetDeliveredForm()
+
             },
             error: function(xhr, status, error) {
                 console.log(xhr)
@@ -922,6 +1006,9 @@ $(document).ready(function() {
                         data,
                         'success'
                     )
+
+                    resetSendDocForm()
+
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr)

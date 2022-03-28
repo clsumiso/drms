@@ -10,7 +10,7 @@
                     </div>
                     <div class="modal-body">
 
-                        <p class="modal-description">-	If the personal information and nature of request are found to have incorrect details and/or the requested documents are not available, declining the request would be possible. Kindly specify the reason why the request is opting to be decline.</p>
+                        <p class="modal-description">If the personal information and nature of request are found to have incorrect details and/or the requested documents are not available, declining the request would be possible. Kindly specify the reason why the request is opting to be decline.</p>
 
                         <div class="form-group">
                             <input type="text" class="form-control mb-3 setRequestIDModal d-none" name="setRequestID" value="" placeholder="Email Address">

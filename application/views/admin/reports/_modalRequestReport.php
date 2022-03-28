@@ -1,36 +1,36 @@
-    <div class="modal" id="modalRequestReport">
-
-        <div class="modal-report-wrapper">
-
-            <div class="d-flex align-items-center justify-content-between">
-                <h3 class="report-title">Document Requests Report</h3>
-                <i class="fas fa-times closeReport" id="closeRequestReport"></i>
-            </div>
-            <p class="report-description mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium possimus consequatur aliquam suscipit qui, harum error porro saepe, fuga, corporis molestiae? Maiores vel non asperiores voluptatum?</p>
-            
-            <form action="" class="mt-4">
-
-                <div class="row">
-                    <div class="form-group col-lg-6 mb-3">
-                        <label for="" class="form-label">From</label>
-                        <input type="date" name="" id="" class="form-control">
+    <div class="modal fade" id="formRequestReport" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Document Requests Report</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <div class="form-group col-lg-6 mb-3">
-                        <label for="" class="form-label">To</label>
-                        <input type="date" name="" id="" class="form-control">
+                    
+
+                    <div class="modal-body">
+
+                        <p class="report-description">Allows the generation of data reports exclusively for the documents requested. Kindly specify the date range you want to generate</p>
+
+                        <div class="row">
+                            <div class="form-group col-lg-6 mb-3">
+                                <label for="" class="form-label">From</label>
+                                <input type="date" name="" id="" class="form-control">
+                            </div>
+
+                            <div class="form-group col-lg-6 mb-3">
+                                <label for="" class="form-label">To</label>
+                                <input type="date" name="" id="" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Generate PDF</button>
+                        <button type="button" class="btn btn-success">Generate XLS</button>
                     </div>
                 </div>
-                
-                <hr>
-
-                <div class="button-report-wrapper mt-3">
-                    <button class="btn btn-primary px-4" type="button">Generate PDF</button>
-                    <button class="btn btn-success px-4" type="button">Generate XLS</button>
-                </div>
-
             </form>
-
         </div>
-
     </div>

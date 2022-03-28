@@ -18,12 +18,6 @@
 
             <div class="login-buttons-wrapper mt-5">
                 <button class="btn btn-success poppins w-100 p-3" id="btnLoginEmployees" name="btnLoginAdmin" type="submit">Login as Administrator</button>
-                <div class="divider">
-                    <span></span>
-                    <p>or</p>
-                    <span></span>
-                </div>
-                <!-- <button class="btn btn-primary poppins w-100 p-3" id="btnLoginDean" name="btnLoginDean" type="submit">Dean</button> -->
             </div>
 
             <p class="poppins text-center text-muted">Copyright © 2021. All rights reserve.</p>

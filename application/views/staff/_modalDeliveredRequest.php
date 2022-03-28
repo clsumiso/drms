@@ -10,7 +10,7 @@
                     </div>
                     <div class="modal-body">
 
-                        <p class="modal-description">-	If the requested documents have been dropped to the courier or at the CLSU Main Gate drop box, you can set the request as delivered. To include additional message, you can use the provided text box below.</p>
+                        <p class="modal-description">If the requested documents have been dropped to the courier or at the CLSU Main Gate drop box, you can set the request as delivered. To include additional message, you can use the provided text box below.</p>
 
                         <div class="form-group">
                             <input type="text" class="form-control mb-3 setRequestIDModal d-none" name="setRequestID" value="" placeholder="Email Address">

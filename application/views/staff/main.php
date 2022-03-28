@@ -5,9 +5,6 @@
         <div class="request-list-wrapper-contents">
             <div class="request-container mt-3">
 
-                
-    
-    
             </div>
         </div>
 

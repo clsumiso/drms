@@ -3,7 +3,7 @@
 
         
         <h3 class="wrapper-title m-0 mb-1">Review Feedbacks</h3>
-        <p class="page-description mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, eos quidem repudiandae cumque facere laudantium, fugiat ipsum earum hic pariatur non iure ducimus asperiores quis inventore modi error repellat odio soluta animi dolore deleniti numquam. Eius doloremque laboriosam architecto laudantium quidem expedita, quos dolorum nemo mollitia nihil ab qui dolorem quam culpa facilis ullam rem!</p>
+        <p class="page-description mb-4">Review Feedbacks provides the collection of the received performance feedback of the system from the users. It specifies and allows the viewing of the total ratings that serves as the overall performance measurement of the system. </p>
 
         
         

@@ -591,7 +591,8 @@ ul li a p span {
     position: absolute;
     top: 0;
     margin-bottom: 150px;
-    width: 100%;
+    width: 90%;
+    margin-top: 50px;
 }
 
 .action-button-wrapper {
@@ -601,6 +602,7 @@ ul li a p span {
     gap: 8px;    
     margin-bottom: 25px;
     margin-top: 25px;
+    width: 100%;
 }
 
 .action-button-wrapper button {
@@ -610,6 +612,7 @@ ul li a p span {
     border-radius: 5px;
     font-family: var(--poppins);
     width: 100%;
+    max-width: 300px;
     margin-bottom: 5px;
 }
 
@@ -706,9 +709,22 @@ button.btn-addNotes {
 }
 
 
+@media only screen and (min-width: 768px) {
+
+    .request-review-wrapper {
+        width: 95%;
+    }
+}
+
+
 @media only screen and (min-width: 1500px) {
 
     
+    .request-review-wrapper {
+        width: 100%;
+        margin-top: 0;
+    }
+
     .action-button-wrapper {
         justify-content: space-between;
         width: 100%;
@@ -725,6 +741,8 @@ button.btn-addNotes {
         max-width: 1500px;
         gap: 50px;
     }
+
+    
 
     .personal-information-wrapper {
         width: 50%;
@@ -877,9 +895,10 @@ button.btn-addNotes {
     position: absolute;
     top: 15px;
     right: 15px;
-    font-size: 55px;
+    font-size: 25px;
     color: #fff;
     cursor: pointer;
+    z-index: 5;
 }
 
 .modal-view-identity .toggleCloseIdentity:hover,

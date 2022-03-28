@@ -231,10 +231,10 @@
                     echo '<tr>
                                 <td>'.$fullname.'</td>
                                 <td>'.$staff_type.'</td>
-                                <td>'.$monthy_count.'</td>
-                                <td>'.$completed_count.'</td>
-                                <td>'.$pending_count.'</td>
-                                <td>'.$declined_count.'</td>
+                                <td class="fw-bold">'.$monthy_count.'</td>
+                                <td class="fw-bold">'.$completed_count.'</td>
+                                <td class="fw-bold">'.$pending_count.'</td>
+                                <td class="fw-bold">'.$declined_count.'</td>
                             </tr>';
 
 
@@ -315,14 +315,14 @@
     
                     echo '<tr>
                             <td class="d-none">
-                                <input type="text" name="getStaffID" class="getStaffID" id="getStaffID" value="'.$id.'">
-                                <input type="text" name="set_givenname" id="set_givenname" class="form-control set_givenname" value="'.$fname.'">
-                                <input type="text" name="set_midllename" id="set_midllename" class="form-control set_midllename" value="'.$mname.'">
-                                <input type="text" name="set_lastname" id="set_lastname" class="form-control set_lastname" value="'.$lname.'">
-                                <input type="text" name="set_username" id="set_username" class="form-control set_username" value="'.$username.'">
-                                <input type="text" name="set_email" id="set_email" class="form-control set_email" value="'.$email.'">
-                                <input type="text" name="set_stafftype" id="set_stafftype" class="form-control set_stafftype" value="'.$staff_type.'">
-                                <input type="text" name="set_status" id="set_status" class="form-control set_status" value="'.$status.'">
+                                <input type="text" name="getStaffID" class="form-control getStaffID" value="'.$id.'">
+                                <input type="text" name="set_givenname" class="form-control set_givenname" value="'.$fname.'">
+                                <input type="text" name="set_midllename" class="form-control set_midllename" value="'.$mname.'">
+                                <input type="text" name="set_lastname" class="form-control set_lastname" value="'.$lname.'">
+                                <input type="text" name="set_username" class="form-control set_username" value="'.$username.'">
+                                <input type="text" name="set_email" class="form-control set_email" value="'.$email.'">
+                                <input type="text" name="set_stafftype" class="form-control set_stafftype" value="'.$staff_type.'">
+                                <input type="text" name="set_status" class="form-control set_status" value="'.$status.'">
                             </td>
                             <td><div class="user-type '.$staff_bg.'">'.$staff_type_text.'</div></td>
                             <td class="text-capitalize">'.$fname.' '.$mname.' '.$lname.'</td>
@@ -331,7 +331,7 @@
                             <td>'.$log.'</td>
                             <td>
                                 <div class="d-flex flex-row mb-3 gap-2">
-                                    <button class="btn btn-primary btnEdit" id="btnEdit"><i class="fas fa-pen"></i></button>
+                                    <button type="button" class="btn btn-primary btnEdit" data-bs-toggle="modal" data-bs-target="#formAccUpdate"><i class="fas fa-pen"></i></button>
                                     <button class="btn btn-danger btnDelete" id="btnDelete"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
@@ -339,7 +339,6 @@
     
                 endforeach;
             }
-
             
 
         }
@@ -349,6 +348,7 @@
         
         public function createStaffAccount() {
 
+            $staff_id = $this->input->post('c_staffID');
             $givenname  = strtolower($this->input->post('c_givenname'));
             $middlename  = strtolower($this->input->post('c_middlename'));
             $lastname  = strtolower($this->input->post('c_lastname'));
@@ -362,29 +362,35 @@
 
             $this->load->model('AdminModel');
 
-            $staff_check = $this->AdminModel->checkAccount($email);
+            $staff_check = $this->AdminModel->checkAccount($staff_id);
+            $staff_email_check = $this->AdminModel->checkAccountEmail($email);
 
-            if(!isset($staff_check)) {
-
-                $staff = array(
-                    "staff_fname"       =>  $givenname,
-                    "staff_mname"       =>  $middlename,
-                    "staff_lname"       =>  $lastname,
-                    "staff_email"       =>  $email,
-                    "staff_username"    =>  $username,
-                    "staff_password"    =>  $password,
-                    "staff_type"        =>  $usertype,
-                    "account_status"    =>  $status,
-                    "date_created"      =>  $today
-                );
-
-                $this->AdminModel->createAccount($staff);
+            if(isset($staff_check)) {
                 echo "1";
             } else {
-                echo "0";
+
+                if(isset($staff_email_check)) {
+                    echo "2";
+                } else {
+                    $staff = array(
+                        "staff_id"          =>  $staff_id,
+                        "staff_fname"       =>  $givenname,
+                        "staff_mname"       =>  $middlename,
+                        "staff_lname"       =>  $lastname,
+                        "staff_email"       =>  $email,
+                        "staff_username"    =>  $username,
+                        "staff_password"    =>  $password,
+                        "staff_type"        =>  $usertype,
+                        "account_status"    =>  $status,
+                        "date_created"      =>  $today
+                    );
+    
+                    $this->AdminModel->createAccount($staff);
+                    echo "0";
+                }
+
             }
 
-            
 
         }
 

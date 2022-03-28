@@ -2,12 +2,9 @@
         <h2 class="page-title mobile">Colleges & Courses</h2>
 
         <h3 class="wrapper-title m-0 mb-1">College and Course Management</h3>
-        <p class="page-description mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, eos quidem repudiandae cumque facere laudantium, fugiat ipsum earum hic pariatur non iure ducimus asperiores quis inventore modi error repellat odio soluta animi dolore deleniti numquam. Eius doloremque laboriosam architecto laudantium quidem expedita, quos dolorum nemo mollitia nihil ab qui dolorem quam culpa facilis ullam rem!</p>
+        <p class="page-description mb-4">College and Courses Management provides the overall lists of the courses and the courses offered in the University. </p>
 
-        <!-- <div class="button-create-wrapper">
-            <button class="btn btn-primary px-5" type="button" id="btnAddColleges">Add Colleges</button>
-            <button class="btn btn-success px-5" type="button" id="btnAddCourses">Add Courses</button>
-        </div> -->
+    
         
         <hr>
 

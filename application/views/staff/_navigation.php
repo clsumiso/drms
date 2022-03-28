@@ -10,7 +10,10 @@
         </div>
 
         <div class="search-mobile-wrapper">
-            <input type="text" placeholder="Search">
+            <form id="formSearchRequest2">
+                <input type="text" name="getSearchName" id="searchName2" placeholder="Search name" autocomplete="off">
+                <button class="btn btn-primary d-none">Search</button>
+            </form>
         </div>
 
         <ul>

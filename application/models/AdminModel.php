@@ -20,7 +20,7 @@ class AdminModel extends CI_Model
 	}
 
 	public function display_employee_status() {
-		$query = $this->db->get('staff_account_tbl');
+		$query = $this->db->query("SELECT * FROM staff_account_tbl ORDER BY staff_type");
 		return $query->result();
 	}
 
@@ -39,7 +39,12 @@ class AdminModel extends CI_Model
         return $query->result();
 	}
 
-	public function checkAccount($email) {
+	public function checkAccount($id) {
+		$query = $this->db->query("SELECT * FROM staff_account_tbl WHERE staff_id = '".$id."'");
+		return $query->row();
+	}
+
+	public function checkAccountEmail($email) {
 		$query = $this->db->query("SELECT * FROM staff_account_tbl WHERE staff_email = '".$email."'");
 		return $query->row();
 	}
