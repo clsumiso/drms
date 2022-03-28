@@ -1,7 +1,7 @@
             <div class="request-form-contents" id="purposeDeliveryContentPage">
 
                 <p class="page-title">purpose of request</p>
-                <p class="default-text">Please select the type of document corresponding with the number of copies you want to request. Other documents will require additional information to process the document (e.g. school year, semester).</p>
+                <p class="default-text">Please select the purpose of your request.</p>
 
                 <div class="form-group col-lg-4">
                     <select name="getPurpose" id="getPurpose" class="form-select">

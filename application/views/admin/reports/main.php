@@ -3,7 +3,7 @@
 
         
         <h3 class="wrapper-title m-0 mb-1">Generate Reports</h3>
-        <p class="page-description mb-4">-	Generate Reports allows generation and obtaining the different report data from the staff, document request and feedback in an excel and pdf format. The formats available includes the list reports for detailed information. For each report, the administrator is able to select the appropriate category used in generating the report through selecting reporting periods and the period type.</p>
+        <p class="page-description mb-4">Generate Reports allows generation and obtaining the different report data from the staff, document request and feedback in an excel and pdf format. The formats available includes the list reports for detailed information. For each report, the administrator is able to select the appropriate category used in generating the report through selecting reporting periods and the period type.</p>
 
         <div class="wrap-reports mt-5">
 

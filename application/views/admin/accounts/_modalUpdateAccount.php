@@ -63,7 +63,7 @@
                         
                         <hr>
                         <b>Note:</b>
-                        <p>You staff requests to change password, admin may insert new password. Otherwise, leave the input below blank.</p>
+                        <p>Your staff requests to change password, admin may insert new password. Otherwise, leave the input below blank.</p>
 
                         <div class="row">
                             <div class="form-group col-lg-5 mb-sm-3 mb-lg-2">
