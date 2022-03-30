@@ -136,7 +136,7 @@
             $identity['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
             $identity['file_name'] = $fileIdentityNewName;
             $identity['file_ext_tolower'] = TRUE;
-            $identity['max_size']     = '3024';
+            // $identity['max_size']     = '3024';
             $identity['upload_path'] = './assets/uploads/identities/';
 
             $this->load->library('upload', $identity);
@@ -359,7 +359,7 @@
             $identity['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
             $identity['file_name'] = $fileIdentityNewName;
             $identity['file_ext_tolower'] = TRUE;
-            $identity['max_size']     = '3024';
+            // $identity['max_size']     = '3024';
             $identity['upload_path'] = './assets/uploads/identities/';
 
             $this->load->library('upload', $identity);
