@@ -805,7 +805,6 @@ $(document).ready(function() {
                 request_id: request_id
             },
             success: function(data) {
-                console.log(data)
                 $('.request-list-wrapper-contents').hide()
                 $('.request-review-wrapper').fadeIn()
                 
