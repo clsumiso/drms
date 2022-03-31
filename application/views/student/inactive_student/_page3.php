@@ -84,7 +84,7 @@
                 </div>
 
                 
-                <input type="text" id="getTotalPayment" class="form-control" name="getTotalPayment">
+                <input type="text" id="getTotalPayment" class="form-control d-none" name="getTotalPayment">
                 <input type="file" name="getPaymentUpload" id="getPaymentUpload" class="form-control d-none w-25">
                 <button class="btn btn-primary poppins custom-button" type="button" id="btnUploadPayment"><i class="bx bx-upload me-2 fw-bold fs-18"></i>Upload your receipt</button>
                 <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, and png files are acceptable.</p>
