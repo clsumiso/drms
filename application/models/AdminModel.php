@@ -20,7 +20,7 @@ class AdminModel extends CI_Model
 	}
 
 	public function display_employee_status() {
-		$query = $this->db->query("SELECT * FROM staff_account_tbl, course_handler_tbl WHERE course_handler_tbl.staff_id_ric = staff_account_tbl.staff_id OR course_handler_tbl.staff_id_frontline = staff_account_tbl.staff_id ORDER BY staff_account_tbl.staff_type");
+		$query = $this->db->query("SELECT * FROM staff_account_tbl, course_handler_tbl WHERE course_handler_tbl.staff_id_ric = staff_account_tbl.staff_id OR course_handler_tbl.staff_id_frontline = staff_account_tbl.staff_id GROUP BY staff_account_tbl.staff_id ORDER BY staff_account_tbl.staff_type");
 		return $query->result();
 	}
 
