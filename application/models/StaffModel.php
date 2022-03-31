@@ -79,7 +79,6 @@ class StaffModel extends CI_Model
 
         $query = $this->db->query("SELECT * FROM request_tbl JOIN requestor_info_tbl WHERE request_tbl.request_id = '".$rid."' AND requestor_info_tbl.request_id = '".$rid."'");
 
-        // return "SELECT * FROM request_tbl JOIN requestor_info_tbl WHERE request_tbl.request_id = '".$rid."' AND requestor_info_tbl.request_id = '".$rid."'";
         return $query->row();
         
     }

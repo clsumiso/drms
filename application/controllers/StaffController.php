@@ -1080,6 +1080,11 @@
                             </div>
 
                             '.$stud_no_text.'
+
+                            <div class="form-group d-none mb-2">
+                                <label class="form-label">Request ID</label>
+                                <input type="text" class="form-control text-uppercase requestIDUniq" value="'.$request_id.'" readonly disabled>
+                            </div>
             
                             <div class="form-group mb-2">
                                 <label class="form-label">Full Name</label>
