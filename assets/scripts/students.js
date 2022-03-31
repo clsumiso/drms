@@ -120,7 +120,8 @@ $(document).ready(function() {
                                                                 '<input type="text" class="form-control mb-3 getFCopies" name="document['+appendedDocuments+'][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_type]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+    
-                                                            '</div>'+
+                                                                '<input type="text" class="form-control mb-3 getFCost" name="document['+appendedDocuments+'][document_cost]" id="getFCost" placeholder="Document Type" value="0" readonly></input>'+    
+                                                                '</div>'+
                                                         '</div>'+
 
                                                         '<div class="row btnRemoveWrapper2">'+
@@ -649,6 +650,8 @@ $(document).ready(function() {
                 let addDataDocument = ""
                 let page = 0
 
+                let singleDocCost = 0
+
                 switch (documentName) {
                     case '1':
                     case '2':
@@ -661,7 +664,10 @@ $(document).ready(function() {
                         documentRequested.push('x'+documentCopies+' '+addDataDocument)
                         if(documentSemester != 0 && documentSchoolYear !=0) {
                             flag = 1
+
+
                             totalDocumentPayment = documentCopies * 50.00
+                            singleDocCost = totalDocumentPayment
                             totalPayment += totalDocumentPayment
                             $('#tablePayment').append('<div class="summary">'+
                                                             '<div class="document">'+
@@ -677,7 +683,6 @@ $(document).ready(function() {
                             $(this).parent().parent().parent().find('.getFCopies').val(documentCopies)
                             $(this).parent().parent().parent().find('.getFPages').val(page)
                         }
-                       
                     break
     
                     case '3':
@@ -688,7 +693,10 @@ $(document).ready(function() {
                     case '11':
                     case '12':
                         flag = 1
+                        
+
                         totalDocumentPayment = documentCopies * 50.00
+                        singleDocCost = totalDocumentPayment
                         totalPayment += totalDocumentPayment
                         addDataDocument = documentNameText
                         documentRequested.push('x'+documentCopies+' '+addDataDocument)
@@ -711,7 +719,9 @@ $(document).ready(function() {
                     case '6':
                     case '7':
                         flag = 1
+
                         totalDocumentPayment = documentCopies * 0.00
+                        singleDocCost = totalDocumentPayment
                         totalPayment += totalDocumentPayment
                         addDataDocument = documentNameText
                         documentRequested.push('x'+documentCopies+' '+addDataDocument)
@@ -746,6 +756,10 @@ $(document).ready(function() {
                             documentRequested.push('x'+documentCopies+' '+addDataDocument+' ('+documentPages+' '+textPage+')')
                             flag = 1
                             totalDocumentPayment = (parseFloat(documentCopies) * 100.00) * documentPages
+
+                            
+                            singleDocCost = totalDocumentPayment
+
                             totalPayment += totalDocumentPayment
                             $('#tablePayment').append('<div class="summary">'+
                                                             '<div class="document">'+
@@ -764,8 +778,11 @@ $(document).ready(function() {
                     break
                 }
 
+                $(this).parent().parent().parent().find('.getFCost').val(singleDocCost)
             } 
+            
         })
+
 
         if(flag == 1) {
             $('#tablePayment').append('<div class="total">'+
@@ -777,6 +794,15 @@ $(document).ready(function() {
                                                 '<p>₱ '+totalPayment.toFixed(2)+'</p>'+
                                             '</div>'+
                                         '</div>')
+        }
+
+
+        if (totalPayment == 0) {
+            // does not need payment
+            $('#getTotalPayment').val('0')
+        } else {
+            // need payment
+            $('#getTotalPayment').val('1')
         }
        
     }
@@ -1197,19 +1223,18 @@ $(document).ready(function() {
             countValidatePage3++
         }
 
-        if(totalPayment > 0) {
-            if(validateImg($('#getPaymentUpload').val())) {
-                countValidatePage3++
-            } else {            
-            $('.validate-payment-upload').empty()
-                $('.validate-payment-upload').append('<div class="validate-payment-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
-            }
-        } else {
-            countValidatePage3++
-        }
-       
+        // if(totalPayment > 0) {
+        //     if(validateImg($('#getPaymentUpload').val())) {
+        //         countValidatePage3++
+        //     } else {            
+        //     $('.validate-payment-upload').empty()
+        //         $('.validate-payment-upload').append('<div class="validate-payment-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
+        //     }
+        // } else {
+        //     countValidatePage3++
+        // }
 
-        if(countValidatePage3 == 2) {
+        if(countValidatePage3 == 1) {
             $('#documentRequestContentPage').css('display', 'none')
             $('#purposeDeliveryContentPage').css('display', 'block')
             $('#pageFour').addClass('active-page')
@@ -1256,8 +1281,6 @@ $(document).ready(function() {
             countValidatePage4++
         }
 
-
-
         if(countValidatePage4 == 3) {
             $('#purposeDeliveryContentPage').css('display', 'none')
             $('#formReviewContentPage').css('display', 'block')
@@ -1283,11 +1306,23 @@ $(document).ready(function() {
         $('#final_getaddress').text(complete_address)
 
         let paymentUploadTemp = ""
-        if($('#getPaymentUpload').val()) {
-            paymentUploadTemp = $('#getPaymentUpload').get(0).files.item(0).name
+        
+
+
+        if (totalPayment == 0) {
+            // does not need payment
+            paymentUploadTemp = "Request does not require payment"
         } else {
-            paymentUploadTemp = "Does not need payment"
+            // need payment
+            if($('#getPaymentUpload').val()) {
+                paymentUploadTemp = $('#getPaymentUpload').get(0).files.item(0).name
+            } else {
+                paymentUploadTemp = "Payment is not yet uploaded"
+            }
+
         }
+
+
         $('#setPaymentUpload').text(paymentUploadTemp)
         $('#setPurpose').text($('#getPurposeFinal').val())
         $('#setDelivery').text($('#getDeliveryFinal').val())

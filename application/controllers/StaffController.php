@@ -14,19 +14,28 @@
     class StaffController extends CI_Controller {
 
         public function index() {
-            $this->load->view('staff/_session');
-            $this->load->view('staff/_head');
-            $this->load->view('staff/_css');
-            $this->load->view('staff/_pageLoader');
-            $this->load->view('staff/_header');
-            $this->load->view('staff/_navigation');
-            $this->load->view('staff/main');
-            $this->load->view('staff/_modalCreateSendDocument');
-            $this->load->view('staff/_modalOnDeliveryRequest');
-            $this->load->view('staff/_modalDeliveredRequest');
-            $this->load->view('staff/_modalDeliveredRequest');
-            $this->load->view('staff/_modalDeclineRequest');
-            $this->load->view('staff/_script');
+
+            $this->load->model('SystemMaintenanceModel', 'maintenance');
+            $result = $this->maintenance->getMaintenanceStatus();
+
+            if($result->status == 1) {
+                $this->load->view("maintenance");
+            } else {
+                $this->load->view('staff/_session');
+                $this->load->view('staff/_head');
+                $this->load->view('staff/_css');
+                $this->load->view('staff/_pageLoader');
+                $this->load->view('staff/_header');
+                $this->load->view('staff/_navigation');
+                $this->load->view('staff/main');
+                $this->load->view('staff/_modalCreateSendDocument');
+                $this->load->view('staff/_modalOnDeliveryRequest');
+                $this->load->view('staff/_modalDeliveredRequest');
+                $this->load->view('staff/_modalDeliveredRequest');
+                $this->load->view('staff/_modalDeclineRequest');
+                $this->load->view('staff/_script');
+            }
+            
         }
 
 
@@ -78,12 +87,18 @@
             }
 
 
+            $incomplete = $this->StaffModel->get_navigation_count($uid, $staff_type, $student_type, '4');
+            if (isset($incomplete)) {
+                $pending_incomplete = $incomplete->count;
+            }
+
             
             $request_count = array (
                 'pending'    =>     $pending_count,
                 'delivery'   =>     $delivery_count,
                 'outbox'     =>     $outbox_count,
                 'reminder'   =>     $reminder_count,
+                'incomplete' =>     $pending_incomplete,
             );
             
 
@@ -165,7 +180,7 @@
             // for record-in-charge
                 $outbox_stats = "0";
             if ($request_type == 1) {
-                $req_status = "0, 1, 2, 3";
+                $req_status = "0, 1, 2, 3, 4";
 
                 $message = "There are no requests yet!";
                 $undraw_icon = "";
@@ -196,7 +211,14 @@
             elseif ($request_type == 5) {
                 $req_status = "3";
                 
-                $message = "There are no declined request yet!";
+                $message = "There are no declined requests yet!";
+                $undraw_icon = "";
+            }
+
+            elseif ($request_type == 9) {
+                $req_status = "4";
+                
+                $message = "There are no incomplete requests yet!";
                 $undraw_icon = "";
             }
 
@@ -215,7 +237,9 @@
 
                 $id = $request->request_id;
                 $getDate = new DateTime($request->date_created);
-                $date = date_format($getDate, 'M d');
+                $time = date_format($getDate, 'g:i A');
+                $date = date_format($getDate, 'M d, Y');
+
 
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
@@ -233,6 +257,7 @@
 
                 $course_name = $request->course_name;
 
+                
                 if ($status == 0) {
                     $statusColor = "bg-success";
                     $statusText = "Completed";
@@ -245,6 +270,9 @@
                 } else if ($status == 3) {
                     $statusColor = "bg-danger";
                     $statusText = "Declined";
+                } else if ($status == 4) {
+                    $statusColor = "bg-light border text-danger";
+                    $statusText = "Incomplete";
                 }
 
 
@@ -304,7 +332,10 @@
                                 <p class="dash">-</p>
                                 <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
                             </div>
-                            <p class="date-desktop">'.$date.'</p>
+                            <div class="date-desktop-wrapper">
+                                <p class="date-desktop">'.$time.'</p>
+                                <p class="date-desktop">'.$date.'</p>
+                            </div>
                         </div>';
 
 
@@ -380,7 +411,8 @@
 
                 $id = $request->request_id;
                 $getDate = new DateTime($request->date_created);
-                $date = date_format($getDate, 'M d');
+                $time = date_format($getDate, 'g:i A');
+                $date = date_format($getDate, 'M d, Y');
 
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
@@ -410,6 +442,9 @@
                 } else if ($status == 3) {
                     $statusColor = "bg-danger";
                     $statusText = "Declined";
+                } else if ($status == 4) {
+                    $statusColor = "bg-light border text-danger";
+                    $statusText = "Incomplete";
                 }
 
 
@@ -469,7 +504,10 @@
                                 <p class="dash">-</p>
                                 <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
                             </div>
-                            <p class="date-desktop">'.$date.'</p>
+                            <div class="date-desktop-wrapper">
+                                <p class="date-desktop">'.$time.'</p>
+                                <p class="date-desktop">'.$date.'</p>
+                            </div>
                         </div>';
 
 
@@ -516,7 +554,8 @@
 
                 $id = $request->request_id;
                 $getDate = new DateTime($request->date_created);
-                $date = date_format($getDate, 'M d');
+                $time = date_format($getDate, 'g:i A');
+                $date = date_format($getDate, 'M d, Y');
 
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
@@ -546,6 +585,9 @@
                 } else if ($status == 3) {
                     $statusColor = "bg-danger";
                     $statusText = "Declined";
+                } else if ($status == 4) {
+                    $statusColor = "bg-light border text-danger";
+                    $statusText = "Incomplete";
                 }
 
 
@@ -603,7 +645,10 @@
                                 <p class="dash">-</p>
                                 <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
                             </div>
-                            <p class="date-desktop">'.$date.'</p>
+                            <div class="date-desktop-wrapper">
+                                <p class="date-desktop">'.$time.'</p>
+                                <p class="date-desktop">'.$date.'</p>
+                            </div>
                         </div>';
 
 
@@ -677,6 +722,9 @@
                 } else if ($status == 3) {
                     $statusColor = "bg-danger";
                     $statusText = "Declined";
+                } else if ($status == 4) {
+                    $statusColor = "bg-light border text-danger";
+                    $statusText = "Incomplete";
                 }
 
 
@@ -736,13 +784,9 @@
                             </div>
                             <p class="date-desktop">'.$date.'</p>
                         </div>';
-
-
-
             endforeach;
 
             
-
             if($requestCount == 0) {
                 echo '<div class="no-request-wrapper">
                         <p>'.$message.'</p>
@@ -774,15 +818,14 @@
                 $display_file_design = "";
 
 
-
+                
                 if($mainExtIdentity == "pdf") {
                     $identity_file = '<iframe src="'.base_url('/assets/uploads/identities/'.$identity).'"></iframe>';
-                    $display_file_design = '<i class="fas fa-file-pdf"></i>';
+                    $display_file_design = '<i class="fa-solid fa-file-pdf"></i>';
                 } else {
                     $identity_file = '<img src="'.base_url('/assets/uploads/identities/'.$identity).'" alt="'.$identity.'">';
-                    $display_file_design = '<i class="fad fa-image"></i>';
+                    $display_file_design = '<i class="fa-solid fa-images"></i>';
                 }
-
 
 
                 $remarks = $request->remarks;
@@ -813,6 +856,7 @@
                     $textDateCompleted = "Date Completed: ";
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "d-none";
+                    $showPaymentBtn = "d-none";
                 } else if($status == 1) {
                     $showSendDocumentBtn = "";
                     $showSetDeliveryBtn = "";
@@ -820,6 +864,7 @@
                     $showDateCompleted = "d-none";
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "d-none";
+                    $showPaymentBtn = "d-none";
                 } else if ($status == 2) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
@@ -827,6 +872,7 @@
                     $showDateCompleted = "d-none";
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "";
+                    $showPaymentBtn = "d-none";
                 } else if ($status == 3) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
@@ -836,6 +882,15 @@
                     $textDateCompleted = "Date Declined: ";
                     $showRemarks = "d-block";
                     $showSetDeliveredBtn = "d-none";
+                    $showPaymentBtn = "d-none";
+                } else if ($status == 4) {
+                    $showSendDocumentBtn = "d-none";
+                    $showSetDeliveryBtn = "d-none";
+                    $showDeclineBtn = "";
+                    $showDateCompleted = "d-none";
+                    $showRemarks = "d-none";
+                    $showSetDeliveredBtn = "d-none";
+                    $showPaymentBtn = "";
                 }
 
 
@@ -867,27 +922,47 @@
                 $message = $request->message;
 
                 $payment = $request->payment_file;
-
-
-                $extPayment = explode(".", $payment);
-                $mainExtPayment = strtolower(end($extPayment));
+                
+                $payment_show = "";
                 $payment_file = "";
                 $display_file_design_payment = "";
-                if($mainExtPayment == "png" || $mainExtPayment == "jpg" || $mainExtPayment == "jpeg") {
-                    $payment_file = '<img src="'.base_url('/assets/uploads/payments/'.$payment).'" alt="'.$payment.'">';
-                    $display_file_design_payment = '<i class="fad fa-image"></i>';
-                    
-                    $payment_show = '<a href="#" class="toggleOpenPayment" id="toggleOpenPayment">'.$display_file_design_payment.' Click here to view payment</a>';
-                } else if($mainExtPayment == "pdf") {
-                    $payment_file = '<iframe src="'.base_url('/assets/uploads/payments/'.$payment).'"></iframe>';
-                    $display_file_design_payment = '<i class="fas fa-file-pdf"></i>';
 
-                    $payment_show = '<a href="#" class="toggleOpenPayment" id="toggleOpenPayment">'.$display_file_design_payment.' Click here to view payment</a>';
+                if ($payment == "0" || $payment == "1") {
+
+                    if ($payment == 0) {
+                        $payment_file = '';
+                        $payment_show = "<b class='fst-itatlic m-0'>Request does not require payment</b>";
+                        $display_file_design_payment = '';
+                    }
+                    if ($payment == 1) {
+                        $payment_file = '';
+                        $payment_show = "<b class='fst-itatlic m-0'>Payment is not yet uploaded</b>";
+                        $display_file_design_payment = '';
+                    }
+
+
                 } else {
-                    $payment_file = '';
-                    $payment_show = "<b class='fst-itatlic m-0'>Not Applicable</b>";
-                    $display_file_design_payment = '';
+                    
+                    $extPayment = explode(".", $payment);
+                    $mainExtPayment = strtolower(end($extPayment));
+                   
+                    if($mainExtPayment == "pdf") {
+
+                        $payment_file = '<iframe src="'.base_url('/assets/uploads/payments/'.$payment).'"></iframe>';
+                        $display_file_design_payment = '<i class="fa-solid fa-file-pdf"></i>';
+                        $payment_show = '<a href="#" class="toggleOpenPayment" id="toggleOpenPayment">'.$display_file_design_payment.' Click here to view payment</a>';
+
+                       
+                    } else {
+
+                        $payment_file = '<img src="'.base_url('/assets/uploads/payments/'.$payment).'" alt="'.$payment.'">';
+                        $display_file_design_payment = '<i class="fa-solid fa-images"></i>';
+                        $payment_show = '<a href="#" class="toggleOpenPayment" id="toggleOpenPayment">'.$display_file_design_payment.' Click here to view payment</a>';
+                        
+                    }
+                   
                 }
+                
 
                 $purpose = $request->purpose;
                 $delivery = $request->delivery_option;
@@ -952,7 +1027,7 @@
                         <div class="action-main">
                             <button type="button" class="btn-send-document btn btn-success poppins '.$showSendDocumentBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="fas fa-paper-plane"></i> Send Document
-                            </button> 
+                            </button>
                             
                             <button type="button" class="btn-deliver btn-primary btn poppins '.$showSetDeliveryBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal2">
                                 <i class="fas fa-truck"></i> Set request as on delivery
@@ -960,6 +1035,10 @@
 
                             <button type="button" class="btn-deliver btn-primary btn poppins '.$showSetDeliveredBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal4">
                                 <i class="fas fa-truck"></i> Set request as delivered
+                            </button>
+
+                            <button type="button" class="btn-deliver btn-dark poppins '.$showPaymentBtn.' btnPaymentApprove">
+                                <i class="fa-solid fa-money-check"></i> Payment Received</button>
                             </button>
             
                             <button type="button" class="btn-deliver btn-danger btn poppins '.$showDeclineBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal3">
@@ -1001,6 +1080,11 @@
                             </div>
 
                             '.$stud_no_text.'
+
+                            <div class="form-group mb-2">
+                                <label class="form-label">Request ID</label>
+                                <input type="text" class="form-control text-uppercase requestIDUniq" value="'.$request_id.'" readonly disabled>
+                            </div>
             
                             <div class="form-group mb-2">
                                 <label class="form-label">Full Name</label>
@@ -1019,7 +1103,7 @@
             
                             <div class="form-group mb-2">
                                 <label class="form-label">Email</label>
-                                <input type="text" class="form-control" value="'.$email.'" readonly disabled>
+                                <input type="text" class="form-control emailUniq" value="'.$email.'" readonly disabled>
                             </div>
             
                             <div class="form-group mb-2">
@@ -1061,7 +1145,6 @@
                             <div class="form-group mb-2">
                             
                                 <label for="" class="form-label">Document Requested</label>
-
                                 '.$documentsRequested.'
 
                             </div>
@@ -1146,10 +1229,24 @@
             $email = $this->input->post('setEmail');
             $message = $this->input->post('getReason');
 
+            
+            $temp_status = 0;
+
+            $request = $this->StaffModel->getRequestReview($request_id);
+            if (isset($request)) {
+                $temp_status = $request->status;
+                $date = $request->date_created;
+                $student_type = $request->student_type;
+                $delivery_option = $request->delivery_option;
+            }
+
+
+
             $status = 3;
             $outbox_status = 0;
 
             $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
             
             $documents = $this->StaffModel->get_documents($request_id);
 
@@ -1161,16 +1258,8 @@
             endforeach;
 
             $docs = implode(", ", $documentRequested);
-            $request = $this->StaffModel->getRequestReview($request_id);
-            if (isset($request)) {
-                $date = $request->date_created;
-                $student_type = $request->student_type;
-                $delivery_option = $request->delivery_option;
-            }
+           
 
-
-            $today_date = date_create($date);
-            $date_subject = date_format($today_date, "md-is");
 
             $inquiryMsg = "";
             if($student_type == '1') {
@@ -1218,26 +1307,55 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Requested document has been declined [".$date_subject."]";
+                $mail->Subject = "Requested document has been declined [".$request_id."]";
                 $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
                 $mail->Body    =    $body_message;
                             
                 if(!$mail->send()) {
                         
+                    $status = $temp_status; 
                     $outbox_status = 1;
-                    $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
                     
-                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
-                
+                    $message = "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    
+                    $request_json = array (
+                        'title'     =>     "FAILED TO DECLINE REQUEST",
+                        'icon'      =>     "error",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
+
+
                 } else {
-                    echo "Request has been declined!";
+
+                    $message = "Request has been declined!";
+                    
+                    $request_json = array (
+                        'title'     =>     "SUCCESSFULLY DECLINED",
+                        'icon'      =>     "success",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
                 }
                 
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
 
+                $status = $temp_status; 
                 $outbox_status = 1;
-                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+                $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    
+                $request_json = array (
+                    'title'     =>     "FAILED TO DECLINE REQUEST",
+                    'icon'      =>     "error",
+                    'message'   =>     $message
+                );
+                
+                echo json_encode($request_json);
             }
 
         }
@@ -1264,11 +1382,7 @@
             $request_id = $this->input->post('setRequestID');
             $email = $this->input->post('setEmail');
             $message = $this->input->post('getRemarks');
-
-            $status = 2;
-            $outbox_status = 0;
-
-            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+         
             
             $documents = $this->StaffModel->get_documents($request_id);
 
@@ -1280,18 +1394,24 @@
 
 
 
-
+            $temp_status = 0;
 
             $request = $this->StaffModel->getRequestReview($request_id);
-            // echo $request;
             if (isset($request)) {
+                $temp_status = $request->status;
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
             }
 
-            $today_date = date_create($date);
-            $date_subject = date_format($today_date, "md-is");
+
+
+            $status = 2;
+            $outbox_status = 0;
+
+            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+
 
             $inquiryMsg = "";
             if($student_type == '1') {
@@ -1326,7 +1446,7 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Document is ready to be drop [".$date_subject."]";
+                $mail->Subject = "Document is ready to be drop [".$request_id."]";
                 $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
                 $body = "";
                
@@ -1398,19 +1518,49 @@
                             
 
                 if(!$mail->send()) {
+
+                    $status = $temp_status; 
                     $outbox_status = 1;
-                    $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
                     
-                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+                    $message = "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    
+                    $request_json = array (
+                        'title'     =>     "FAILED TO SET AS ON DELIVERY",
+                        'icon'      =>     "error",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
                 } else {
-                    echo "Request was successfully set to On Delivery.";
+
+                    $message = "Request was successfully set to On Delivery.";
+                    
+                    $request_json = array (
+                        'title'     =>     "SUCCESSFULLY SET ON DELIVERY",
+                        'icon'      =>     "success",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
                 }
                 
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
 
+                $status = $temp_status; 
                 $outbox_status = 1;
-                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+                $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    
+                $request_json = array (
+                    'title'     =>     "FAILED TO SET AS ON DELIVERY",
+                    'icon'      =>     "error",
+                    'message'   =>     $message
+                );
+                
+                echo json_encode($request_json);
             }
 
         }
@@ -1440,8 +1590,24 @@
             }
 
 
+            $temp_status = 0;
+
+            $request = $this->StaffModel->getRequestReview($request_id);
+            if (isset($request)) {
+                $temp_status = $request->status;
+                $date = $request->date_created;
+                $student_type = $request->student_type;
+                $delivery_option = $request->delivery_option;
+            }
+
+
+
+            $status = 0;
             $outbox_status = 0;
-            $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+
+            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+            
             
 
             $documents = $this->StaffModel->get_documents($request_id);
@@ -1453,17 +1619,6 @@
             endforeach;
 
 
-
-
-            $request = $this->StaffModel->getRequestReview($request_id);
-            if (isset($request)) {
-                $date = $request->date_created;
-                $student_type = $request->student_type;
-                $delivery_option = $request->delivery_option;
-            }
-
-            $today_date = date_create($date);
-            $date_subject = date_format($today_date, "md-is");
 
             $inquiryMsg = "";
             if($student_type == '1') {
@@ -1498,7 +1653,7 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Document is ready to be claim [".$date_subject."]";
+                $mail->Subject = "Document is ready to be claim [".$request_id."]";
                 $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
                 $body = "";
                
@@ -1583,20 +1738,49 @@
 
                 if(!$mail->send()) {
                     
+                    $status = $temp_status; 
                     $outbox_status = 1;
-                    $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
-                    
-                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
                 
+                    $message = "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    
+                    $request_json = array (
+                        'title'     =>     "FAILED TO SET AS DELIVERED",
+                        'icon'      =>     "error",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
+
                 } else {
-                    echo "Requested document/s was successfully sent!";
+
+                    $message = "Requested document/s was successfully sent!";
+                    
+                    $request_json = array (
+                        'title'     =>     "REQUEST COMPLETED",
+                        'icon'      =>     "success",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
                 }
                 
             } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
 
+                $status = $temp_status; 
                 $outbox_status = 1;
-                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+                $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    
+                $request_json = array (
+                    'title'     =>     "FAILED TO SET AS DELIVERED",
+                    'icon'      =>     "error",
+                    'message'   =>     $message
+                );
+                
+                echo json_encode($request_json);
+
             }
 
 
@@ -1630,18 +1814,24 @@
             }
 
 
-            $outbox_status = 0;
-            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+            $temp_status = 0;
 
             $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
+                $temp_status = $request->status;
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
             }
 
-            $today_date = date_create($date);
-            $date_subject = date_format($today_date, "md-is");
+
+
+            $status = 0;
+            $outbox_status = 0;
+
+            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+
 
             $inquiryMsg = "";
             if($student_type == '1') {
@@ -1676,7 +1866,7 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Document requested is complete. [".$date_subject."]";
+                $mail->Subject = "Document requested is complete. [".$request_id."]";
                 $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
                
                 $mail->Body    =    "<div style='display:flex; align-items: center;'>
@@ -1715,16 +1905,25 @@
 
                 if(!$mail->send()) {
 
+                    $status = $temp_status; 
                     $outbox_status = 1;
                     $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
-                    
-                    echo "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
 
                     for($i=0 ; $i<$countFiles ; $i++) {
                         if(file_exists("./assets/uploads/tmp_uploaded_files/".$filenamesArr[$i])) {
                             unlink("./assets/uploads/tmp_uploaded_files/".$filenamesArr[$i]);
                         }
                     }
+
+                    $message = "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                    
+                    $request_json = array (
+                        'title'     =>     "FAILED TO SEND DOCUMENT",
+                        'icon'      =>     "error",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
 
                 } else {
 
@@ -1737,7 +1936,15 @@
                         }
                     }
 
-                    echo "Requested document/s was successfully sent!";
+                    $message = "Requested document/s was successfully sent!";
+                    
+                    $request_json = array (
+                        'title'     =>     "REQUEST COMPLETED",
+                        'icon'      =>     "success",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
 
                 }
                 
@@ -1749,10 +1956,22 @@
                     }
                 }
 
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
-
+                $status = $temp_status; 
                 $outbox_status = 1;
-                $this->StaffModel->updateRequest($request_id, $message, $status, $staff_fullname, $outbox_status);
+                $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+
+
+                $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                
+                $request_json = array (
+                    'title'     =>     "FAILED TO SEND DOCUMENT",
+                    'icon'      =>     "error",
+                    'message'   =>     $message
+                );
+                
+                echo json_encode($request_json);
+
+
             }
 
 
@@ -1760,6 +1979,138 @@
 
 
 
+        public function mailApprovePayment() {
+
+            $uid = $this->session->UID;
+
+            $this->load->model('StaffModel');
+            $staff = $this->StaffModel->get_staff_details($uid);
+            
+            if (isset($staff)) {
+                $firstname = $staff->staff_fname;
+                $middlename = $staff->staff_mname;
+                $lastname = $staff->staff_lname;
+                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_email = $staff->staff_email;
+            }
+            
+            $request_id = $this->input->post('id');
+            $email = $this->input->post('email');
+
+            $temp_status = 0;
+
+            $request = $this->StaffModel->getRequestReview($request_id);
+            if (isset($request)) {
+                $temp_status = $request->status;
+                $date = $request->date_created;
+                $student_type = $request->student_type;
+                $delivery_option = $request->delivery_option;
+            }
+
+
+
+            $status = 1;
+            $outbox_status = 0;
+
+            $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+
+            $inquiryMsg = "";
+            if($student_type == '1') {
+                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_fullname." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
+            } else {
+                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the frontline services (<a href='mailto:fakeemail.oadfls@clsu2.edu.ph'>fakeemail.oadfls@clsu2.edu.ph</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
+            }
+
+
+            $body_message = "<div style='display:flex; align-items: center;'>
+                                <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
+                                <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
+                            </div>
+
+                            <br>
+                            <p style='line-height: 1.8; margin: 0;'>Good day! This is to inform you that we have already received your proof of payment. Please wait for futher notice.</p>
+                            <br>
+                            ".$inquiryMsg."
+                            <br>
+                            <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
+                                
+                            <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
+
+
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();                                            
+                $mail->Host       = 'smtp-relay.sendinblue.com';                  
+                $mail->SMTPAuth   = true;                                 
+                $mail->Username   = 'personal.darwinlabiste@gmail.com';                  
+                $mail->Password   = 'jbBL6Wd2EKQvpyqR';                         
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;           
+                $mail->Port       = 465;                                    
+
+                //Recipients 
+                $mail->ClearReplyTos();
+                $mail->addAddress($email);    
+                $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
+            
+
+                //Content
+                $mail->isHTML(true);                                 
+                $mail->Subject = "Your payment has been recevied [".$request_id."]";
+                $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
+                $mail->Body    =    $body_message;
+                            
+                if(!$mail->send()) {
+                    
+                    $status = $temp_status; 
+                    $outbox_status = 1;
+                    $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+                    
+                    $message = "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                
+                    $request_json = array (
+                        'title'     =>     "FAILED TO APPROVE PAYMENT",
+                        'icon'      =>     "error",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
+
+                } else {
+
+                    $message = "Payment is now approve. You can now proceed with the request.";
+                
+                    $request_json = array (
+                        'title'     =>     "PAYMENT RECEIVED",
+                        'icon'      =>     "success",
+                        'message'   =>     $message
+                    );
+
+                    echo json_encode($request_json);
+
+                }
+                
+            } catch (Exception $e) {
+                
+                $status = $temp_status; 
+                $outbox_status = 1;
+                $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+
+                $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+
+                $request_json = array (
+                    'title'     =>     "FAILED TO APPROVE PAYMENT",
+                    'icon'      =>     "error",
+                    'message'   =>     $message
+                );
+                
+                echo json_encode($request_json);
+
+            }
+
+        }
 
 
     }

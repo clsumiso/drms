@@ -26,6 +26,15 @@ class StudentModel extends CI_Model
     }
 
 
+    public function getNumberofRequest() {
+
+        $date = date("Y-m-d");
+        
+        $query = $this->db->query("SELECT count(*) as count FROM request_tbl WHERE date_created LIKE '".$date."%'");
+        return $query->row();
+
+    }
+
     public function insertRequestActive($request = array(), $info = array(), $document = array(), $date) {
         
         $this->db->trans_begin();
@@ -49,6 +58,8 @@ class StudentModel extends CI_Model
                 "document_type"     =>  $document[$i]['document_type'],
                 "document_copies"   =>  $document[$i]['document_copies'],
                 "document_pages"    =>  $document[$i]['document_pages'],
+                "document_upload"   =>  "NULL",
+                "document_cost"     =>  $document[$i]['document_cost'],
                 "date_created"      =>  $date
             );
             $docs[] = $temp_docs;
@@ -92,6 +103,7 @@ class StudentModel extends CI_Model
                 "document_copies"   =>  $document[$i]['document_copies'],
                 "document_pages"    =>  $document[$i]['document_pages'],
                 "document_upload"   =>  $uploads[$i],
+                "document_cost"     =>  $document[$i]['document_cost'],
                 "date_created"      =>  $date
             );
             

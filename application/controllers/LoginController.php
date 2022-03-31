@@ -5,12 +5,22 @@
     class LoginController extends CI_Controller {
 
         public function index() {
-            $this->load->view('staff_login/_session');
-            $this->load->view('staff_login/_head');
-            $this->load->view('staff_login/_css');
-            $this->load->view('staff_login/_page_loader');
-            $this->load->view('staff_login/main');
-            $this->load->view('staff_login/_script');
+
+            $this->load->model('SystemMaintenanceModel', 'maintenance');
+            $result = $this->maintenance->getMaintenanceStatus();
+
+            if($result->status == 1) {
+                $this->load->view("maintenance");
+            } else {
+                $this->load->view('staff_login/_session');
+                $this->load->view('staff_login/_head');
+                $this->load->view('staff_login/_css');
+                $this->load->view('staff_login/_page_loader');
+                $this->load->view('staff_login/main');
+                $this->load->view('staff_login/_script');
+            }
+
+            
         }
 
         public function login() {
@@ -48,12 +58,21 @@
 
 
         public function loginAdmin() {
-            $this->load->view('admin_login/_session');
-            $this->load->view('admin_login/_head');
-            $this->load->view('admin_login/_css');
-            $this->load->view('admin_login/_page_loader');
-            $this->load->view('admin_login/main');
-            $this->load->view('admin_login/_script');
+
+            $this->load->model('SystemMaintenanceModel', 'maintenance');
+            $result = $this->maintenance->getMaintenanceStatus();
+
+            if($result->status == 1) {
+                $this->load->view("maintenance");
+            } else {
+                $this->load->view('admin_login/_session');
+                $this->load->view('admin_login/_head');
+                $this->load->view('admin_login/_css');
+                $this->load->view('admin_login/_page_loader');
+                $this->load->view('admin_login/main');
+                $this->load->view('admin_login/_script');
+            }
+            
         }
 
 

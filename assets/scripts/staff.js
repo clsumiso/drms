@@ -226,6 +226,7 @@ $(document).ready(function() {
                 $('#deliveryCount').text(request.delivery)
                 $('#outboxCount').text(request.outbox)
                 $('#reminderCount').text(request.reminder)
+                $('#incompleteCount').text(request.incomplete)
 
             },
             error: function(xhr, status, error) {
@@ -247,6 +248,7 @@ $(document).ready(function() {
     function getRequestLists() {
 
         let id = $('#navID').val()
+
 
         $.ajax ({
             url: window.location.origin + '/drms_ojt/staff/getRequest',
@@ -322,6 +324,7 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
             
             $('#navAllRequest').addClass('active')
@@ -336,6 +339,7 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
             
             $('#navPendingRequest').addClass('active')
@@ -350,6 +354,7 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
             
             $('#navDeliveryRequest').addClass('active')
@@ -364,6 +369,7 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
             
             $('#navSentRequest').addClass('active')
@@ -378,8 +384,8 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
-            
             $('#navDeclinedRequest').addClass('active')
         }
 
@@ -392,6 +398,7 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
             $('#navDrafts').addClass('active')
         }
@@ -405,6 +412,7 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
             $('#navOutbox').addClass('active')
         }
@@ -418,8 +426,24 @@ $(document).ready(function() {
             $('#navReminders').removeClass('active')
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
 
             $('#navReminders').addClass('active')
+        }
+
+
+        else if ($('#navID').val() == 9) {
+            $('#navAllRequest').removeClass('active')
+            $('#navPendingRequest').removeClass('active')
+            $('#navDeliveryRequest').removeClass('active')
+            $('#navSentRequest').removeClass('active')
+            $('#navDeclinedRequest').removeClass('active')
+            $('#navReminders').removeClass('active')
+            $('#navDrafts').removeClass('active')
+            $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
+
+            $('#navIncompleteRequest').addClass('active')
         }
 
 
@@ -471,6 +495,11 @@ $(document).ready(function() {
 
         else if ($('#navID').val() == 8) {
             $('#navReminders').click()
+            navActive()
+        }
+
+        else if ($('#navID').val() == 9) {
+            $('#incompleteCount').click()
             navActive()
         }
 
@@ -740,6 +769,28 @@ $(document).ready(function() {
 
 
 
+    $('#navIncompleteRequest').click(function(e) {
+        e.preventDefault()
+        e.stopPropagation()
+        
+        $(document).prop('title', 'Incomplete Requests')
+        $('.page-title').text('Incomplete Requests')
+
+        $('#navID').val('9')
+
+        navActive()
+        getRequestLists()
+
+        $('.request-review-wrapper').hide()
+        $('.request-list-wrapper-contents').fadeIn()
+
+
+    })
+
+
+
+
+
     $(document).on('click', '.request-card', function(e) {
         let request_id = $(this).find('.getRequestID').val()
         let email = $(this).find('.getEmail').val()
@@ -754,6 +805,7 @@ $(document).ready(function() {
                 request_id: request_id
             },
             success: function(data) {
+                console.log(data)
                 $('.request-list-wrapper-contents').hide()
                 $('.request-review-wrapper').fadeIn()
                 
@@ -853,10 +905,12 @@ $(document).ready(function() {
                             
                             $("#webLoader").fadeOut()
 
+                            let request = JSON.parse(data)
+
                             Swal.fire(
-                                'Declined!',
-                                data,
-                                'success'
+                                request.title,
+                                request.message,
+                                request.icon
                             )
 
                             resetDeclineForm()
@@ -904,10 +958,12 @@ $(document).ready(function() {
                 
                 $("#webLoader").fadeOut()
 
+                let request = JSON.parse(data)
+
                 Swal.fire(
-                    'On Delivery!',
-                    data,
-                    'success'
+                    request.title,
+                    request.message,
+                    request.icon
                 )
 
                 resetOnDeliveryForm()
@@ -950,11 +1006,14 @@ $(document).ready(function() {
                 
                 $("#webLoader").fadeOut()
 
+                let request = JSON.parse(data)
+
                 Swal.fire(
-                    'Completed!',
-                    data,
-                    'success'
+                    request.title,
+                    request.message,
+                    request.icon
                 )
+
 
                 resetDeliveredForm()
 
@@ -993,6 +1052,14 @@ $(document).ready(function() {
                     $('.btn-close').click()
                 },
                 success: function(data) {
+                    let request = JSON.parse(data)
+
+                    Swal.fire(
+                        request.title,
+                        request.message,
+                        request.icon
+                    )
+
                     navigationClick()
                     navigationCount()
                 
@@ -1001,11 +1068,7 @@ $(document).ready(function() {
                     
                     $("#webLoader").fadeOut()
 
-                    Swal.fire(
-                        'Completed!',
-                        data,
-                        'success'
-                    )
+                    
 
                     resetSendDocForm()
 
@@ -1071,5 +1134,62 @@ $(document).ready(function() {
 
 
     checkReminderPopup()
+
+
+
+
+    $(document).on('click', '.btnPaymentApprove', function() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let id = $(".requestIDUniq").val()
+                let email = $(".emailUniq").val()
+                $.ajax ({
+                    url: window.location.origin + '/drms_ojt/staff/approvePayment',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        email: email
+                    }, 
+                    beforeSend: function() {
+                        $("#webLoader").fadeIn()
+                    },
+                    success: function(data) {
+
+                        navigationClick()
+                        navigationCount()
+                    
+                        $('.request-review-wrapper').hide()
+                        $('.request-list-wrapper-contents').fadeIn()
+                        
+                        $("#webLoader").fadeOut()
+
+                        let request = JSON.parse(data)
+
+                        Swal.fire (
+                            request.title,
+                            request.message,
+                            request.icon
+                        )
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr)
+                        console.log(status)
+                        console.log(error)
+                    }
+
+                })
+            
+            }
+        })
+    })
 
 })

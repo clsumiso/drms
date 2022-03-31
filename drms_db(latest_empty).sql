@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2022 at 10:04 PM
+-- Generation Time: Mar 31, 2022 at 04:06 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -53,6 +53,13 @@ CREATE TABLE `ci_sessions` (
   `data` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `ci_sessions`
+--
+
+INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
+('rl78pb20559k2t9c7q4r7vsfs8sbobc6', '::1', 1648735588, 0x5f5f63695f6c6173745f726567656e65726174657c693a313634383733353538383b);
+
 -- --------------------------------------------------------
 
 --
@@ -76,6 +83,7 @@ CREATE TABLE `document_request_tbl` (
   `document_id` int(11) NOT NULL,
   `request_id` int(11) NOT NULL,
   `document_name` varchar(255) NOT NULL,
+  `document_cost` int(11) NOT NULL,
   `document_type` int(11) NOT NULL,
   `document_copies` int(1) NOT NULL,
   `document_pages` int(1) NOT NULL,
@@ -108,6 +116,24 @@ CREATE TABLE `feedback_tbl` (
   `suggestion` text DEFAULT NULL,
   `date_created` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `maintenance_tbl`
+--
+
+CREATE TABLE `maintenance_tbl` (
+  `id` int(11) NOT NULL,
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `maintenance_tbl`
+--
+
+INSERT INTO `maintenance_tbl` (`id`, `status`) VALUES
+(1, 0);
 
 -- --------------------------------------------------------
 
@@ -346,6 +372,12 @@ ALTER TABLE `feedback_tbl`
   ADD PRIMARY KEY (`feedback_id`);
 
 --
+-- Indexes for table `maintenance_tbl`
+--
+ALTER TABLE `maintenance_tbl`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `requestor_info_tbl`
 --
 ALTER TABLE `requestor_info_tbl`
@@ -408,6 +440,12 @@ ALTER TABLE `draft_note_tbl`
 --
 ALTER TABLE `feedback_tbl`
   MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `maintenance_tbl`
+--
+ALTER TABLE `maintenance_tbl`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `requestor_info_tbl`

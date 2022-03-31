@@ -426,9 +426,13 @@ ul li a p span {
     max-width: 200px;
 }
 
-.request-card p.date-desktop {
+.date-desktop-wrapper {
     display: none;
 }
+/* 
+.request-card p.date-desktop {
+    display: none;
+} */
 
 @media only screen and (min-width: 768px) {
     .request-card {
@@ -442,7 +446,7 @@ ul li a p span {
         display: flex;
         flex-direction: row;
         align-items: center;
-        width: 80%;
+        width: 75%;
     }
 
     .request-card .date-status {
@@ -491,15 +495,21 @@ ul li a p span {
         white-space: nowrap;
     }
     
-    .request-card p.date-desktop {
-        display: block;
+    .date-desktop-wrapper { 
+        display: flex;
+        flex-direction: column;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         right: 25px;
         z-index: 99;
-        font-size: 14px;
+        font-size: 8px;
         color: #a0a0a0;
+        text-align: right;
+    }
+
+    .date-desktop-wrapper p.date-desktop {
+        font-size: 13px;
     }
 
         
@@ -635,6 +645,14 @@ button.btn-addNotes {
     width: 100%;
     max-width: 1500px;
     margin-bottom: 30px;
+}
+
+textarea.notesContent {
+    background-color: #c2d9d7;
+}
+
+textarea.notesContent:focus {
+    background-color: #c2d9d7;
 }
 
 

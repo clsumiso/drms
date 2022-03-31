@@ -1660,56 +1660,165 @@ $(document).ready(function() {
 
 
     
+    if ($('#navID').val() == 6) {
+        // Reports
+        $('#toggleStaffReport').click(function() {
+            $('#modalStaffReport').toggle()
+        })
 
-
-    // Reports
-    $('#toggleStaffReport').click(function() {
-        $('#modalStaffReport').toggle()
-    })
-
-    $('#closeStaffReport').click(function() {
-        $('#modalStaffReport').toggle()
-    })
-
-
-
-    $('#toggleRequestReport').click(function() {
-        $('#modalRequestReport').toggle()
-    })
-
-    $('#closeRequestReport').click(function() {
-        $('#modalRequestReport').toggle()
-    })
+        $('#closeStaffReport').click(function() {
+            $('#modalStaffReport').toggle()
+        })
 
 
 
-    $('#toggleFeedbackReport').click(function() {
-        $('#modalFeedbackReport').toggle()
-    })
+        $('#toggleRequestReport').click(function() {
+            $('#modalRequestReport').toggle()
+        })
 
-    $('#closeFeedbackReport').click(function() {
-        $('#modalFeedbackReport').toggle()
-    })
+        $('#closeRequestReport').click(function() {
+            $('#modalRequestReport').toggle()
+        })
 
+
+
+        $('#toggleFeedbackReport').click(function() {
+            $('#modalFeedbackReport').toggle()
+        })
+
+        $('#closeFeedbackReport').click(function() {
+            $('#modalFeedbackReport').toggle()
+        })
+
+
+        
+        $('#toggleAnnouncement').click(function() {
+            $('#modalAnnouncement').toggle()
+        })
+
+        $('#closeModalAnnouncement').click(function() {
+            $('#modalAnnouncement').toggle()
+        })
+
+    }
 
     
-    $('#toggleAnnouncement').click(function() {
-        $('#modalAnnouncement').toggle()
-    })
 
-    $('#closeModalAnnouncement').click(function() {
-        $('#modalAnnouncement').toggle()
-    })
+    if ($('#navID').val() == 7) {
+
+        let status = 0
+
+        function getMaintenanceStatus() {
+
+            $.ajax ({
+                url: window.location.origin + '/drms_ojt/admin/maintenanceStatus',
+                type: 'GET',
+                success: function(data) {
+                    if (data == 0) {
+                        $('#toggleMaintenance').addClass('btn-danger')
+                        $('#toggleMaintenance').removeClass('btn-success')
+
+                        $('#toggleMaintenance').text('Turn on maintenance')
+                        status = 1
+                    } else {
+                        $('#toggleMaintenance').addClass('btn-success')
+                        $('#toggleMaintenance').removeClass('btn-danger')
+
+                        $('#toggleMaintenance').text('Turn off maintenance')
+                        status = 0
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr)
+                    console.log(status)
+                    console.log(error)
+                }
+            })
+
+        }
+
+        getMaintenanceStatus()
+
+        $('#toggleMaintenance').click(function() {
+
+            let text = ''
+            let success_text = ''
+            let icon = ''
+            let confirm_btn = ''
+            let btn_clor = ''
+
+            if (status == 1) {
+                text            = 'Setting maintenance on will prevent staff and student to access the system. Please confirm to proceed.'
+                success_text    = 'System is now on maintenance. Staff and student will not be able to access the system until the maintenance was turned off.'
+                icon            = 'warning'
+                confirm_btn     = 'Yes, turn on maintenance'
+                btn_clor        = '#d33'
+            } else {
+                text            = 'Setting "maintenance on" will allow staff and students to access the system. Please confirm to proceed.'
+                success_text    = 'System maintenance is done. Staff and students can now access the system.'
+                icon            = 'question'
+                confirm_btn     = 'Yes, turn off maintenance'
+                btn_clor        = '#3085d6'
+            }
+
+            Swal.fire({
+                title: 'System Maintenance',
+                text: text,
+                icon: icon,
+                showCancelButton: true,
+                confirmButtonColor: btn_clor, 
+                cancelButtonColor: '#9b9b9b',
+                confirmButtonText: confirm_btn
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax ({
+                        url: window.location.origin + '/drms_ojt/admin/setMaintenanceStatus',
+                        type: 'POST',
+                        data: {
+                            status: status
+                        },
+                        beforeSend: function() {
+                            $("#webLoader").fadeIn()
+                        },
+                        success: function(data) {
+
+                            console.log(data)
+                            getMaintenanceStatus()
+                            $("#webLoader").fadeOut()
+
+                            Swal.fire(
+                                'Changes was saved',
+                                success_text,
+                                'success'
+                            )
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(xhr)
+                            console.log(status)
+                            console.log(error)
+                        }
+                    })
+                }
+            })
+
+        })
 
 
-    // Maintenance
-    tinymce.init({
-        selector: '#mytextarea',
-        height : '680',
-        margin: 'auto',
-        resize: false
-    });
 
+       
+
+
+        // Maintenance
+        tinymce.init({
+            selector: '#mytextarea',
+            height : '680',
+            margin: 'auto',
+            resize: false
+        });
+
+    }
+    
 
    
 

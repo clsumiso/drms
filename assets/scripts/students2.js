@@ -128,13 +128,15 @@ $(document).ready(function() {
 
                                                         '</div>'+
                                                     
-                                                        '<div class="row d-none">'+
+                                                        '<div class="row">'+
                                                             '<div class="form-group col-lg-8 mb-3">'+
                                                                 '<input type="text" class="form-control mb-3 getFDocuments" name="document['+appendedDocuments+'][document_name]" id="getFDocuments" placeholder="Document Name" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFCopies" name="document['+appendedDocuments+'][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
                                                                 '<input type="file" class="form-control mb-3 getFUploads" name="getFUploads[]" id="getFUploads" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_type]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+      
+                                                                '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_type]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+ 
+                                                                '<input type="text" class="form-control mb-3 getFCost" name="document['+appendedDocuments+'][document_cost]" id="getFCost" placeholder="Document Type" value="0" readonly></input>'+    
+                                                                '</div>'+     
                                                             '</div>'+
                                                         '</div>'+
 
@@ -165,7 +167,6 @@ $(document).ready(function() {
         $(this).parent().parent().parent().remove()
 
         let type = $(this).parent().parent().parent().find('.getFType').val()
-        console.log(type)
         if (type == 7 || type == 8 || type == 9) {
             countTotalUploaded--
         }
@@ -743,6 +744,7 @@ $(document).ready(function() {
                 let totalDocumentPayment = 0
                 let addDataDocument = ""
                 let page = 0
+                let singleDocCost = 0
 
                 switch (documentName) {
                     case '1':
@@ -759,6 +761,7 @@ $(document).ready(function() {
                        
                         flag = 1
                         totalDocumentPayment = documentCopies * 50.00
+                        singleDocCost = totalDocumentPayment
                         totalPayment += totalDocumentPayment
                         $('#tablePayment').append('<div class="summary">'+
                                                         '<div class="document">'+
@@ -777,6 +780,7 @@ $(document).ready(function() {
                     case '8':
                         flag = 1
                         totalDocumentPayment = documentCopies * 300.00
+                        singleDocCost = totalDocumentPayment
                         totalPayment += totalDocumentPayment
                         addDataDocument = documentNameText
                         documentRequested.push('x'+documentCopies+' '+addDataDocument)
@@ -812,6 +816,7 @@ $(document).ready(function() {
                             documentRequested.push('x'+documentCopies+' '+addDataDocument)
                             flag = 1
                             totalDocumentPayment = (parseFloat(documentCopies) * 100.00) * documentPages
+                            singleDocCost = totalDocumentPayment
                             totalPayment += totalDocumentPayment
                             $('#tablePayment').append('<div class="summary">'+
                                                             '<div class="document">'+
@@ -834,6 +839,7 @@ $(document).ready(function() {
                     case '11':
                         flag = 1
                         totalDocumentPayment = documentCopies * 200.00
+                        singleDocCost = totalDocumentPayment
                         totalPayment += totalDocumentPayment
                         addDataDocument = documentNameText
                         documentRequested.push('x'+documentCopies+' '+addDataDocument)
@@ -854,6 +860,9 @@ $(document).ready(function() {
                     break
                 }
 
+                
+                $(this).parent().parent().parent().find('.getFCost').val(singleDocCost)
+
             } 
         })
 
@@ -867,6 +876,14 @@ $(document).ready(function() {
                                                 '<p>₱ '+totalPayment.toFixed(2)+'</p>'+
                                             '</div>'+
                                         '</div>')
+        }
+
+        if (totalPayment == 0) {
+            // does not need payment
+            $('#getTotalPayment').val('0')
+        } else {
+            // need payment
+            $('#getTotalPayment').val('1')
         }
        
     }
@@ -1260,8 +1277,6 @@ $(document).ready(function() {
             countValidatePage3++
         }
 
-        console.log(countTotalUploaded+" = "+countUploaded)
-
         if (countTotalUploaded != countUploaded) {   
             Swal.fire({
                 icon: 'error',
@@ -1272,19 +1287,19 @@ $(document).ready(function() {
             countValidatePage3++
         }
 
-        if(totalPayment > 0) {
-            if(validateImg($('#getPaymentUpload').val())) {
-                countValidatePage3++
-            } else {            
-            $('.validate-payment-upload').empty()
-                $('.validate-payment-upload').append('<div class="validate-payment-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
-            }
-        } else {
-            countValidatePage3++
-        }
+        // if(totalPayment > 0) {
+        //     if(validateImg($('#getPaymentUpload').val())) {
+        //         countValidatePage3++
+        //     } else {            
+        //     $('.validate-payment-upload').empty()
+        //         $('.validate-payment-upload').append('<div class="validate-payment-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
+        //     }
+        // } else {
+        //     countValidatePage3++
+        // }
        
 
-        if(countValidatePage3 == 3) {
+        if(countValidatePage3 == 2) {
             $('#documentRequestContentPage').css('display', 'none')
             $('#purposeDeliveryContentPage').css('display', 'block')
             $('#pageFour').addClass('active-page')
@@ -1357,7 +1372,24 @@ $(document).ready(function() {
         let complete_address = $('#barangay').find('option:selected').text()+', '+$('#city').find('option:selected').text()+', '+$('#province').find('option:selected').text()+', '+$('#region').find('option:selected').text()
         $('#final_getaddress').text(complete_address)
 
-        $('#setPaymentUpload').text($('#getPaymentUpload').get(0).files.item(0).name)
+        let paymentUploadTemp = ""
+        
+
+
+        if (totalPayment == 0) {
+            // does not need payment
+            paymentUploadTemp = "Request does not require payment"
+        } else {
+            // need payment
+            if($('#getPaymentUpload').val()) {
+                paymentUploadTemp = $('#getPaymentUpload').get(0).files.item(0).name
+            } else {
+                paymentUploadTemp = "Payment is not yet uploaded"
+            }
+
+        }
+
+        $('#setPaymentUpload').text(paymentUploadTemp)
         $('#setPurpose').text($('#getPurposeFinal').val())
         $('#setDelivery').text($('#getDeliveryFinal').val())
         
@@ -1370,7 +1402,6 @@ $(document).ready(function() {
         
         $('.getDocument').each(function() {
             if($(this).val() == 9) {
-                console.log('jklnxnxz')
                 let copiesDoc = $(this).parent().parent().parent().find('.getFCopies').val()
                 let pagesDoc = $(this).parent().parent().parent().find('.getFPages').val()
                 let uploadsDocCheck = $(this).parent().parent().parent().find('.getFUploads').val()

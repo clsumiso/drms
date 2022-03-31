@@ -173,4 +173,14 @@ class AdminModel extends CI_Model
 
 
 
+	public function getMaintenanceStatus() {
+		$query = $this->db->get('maintenance_tbl');
+		return $query->row();
+	}
+
+
+	public function setMaintenanceStatus($status) {
+		$this->db->query("UPDATE maintenance_tbl SET status = '".$status."' WHERE id = '1'");
+	}
+
 }

@@ -33,6 +33,13 @@
             </li>
 
             <li>
+                <a href="" id="navIncompleteRequest">
+                    <i class="fa-solid fa-file-waveform"></i>
+                    <p>Incomplete <div class="content-counts" id="incompleteCount">0</div></p>
+                </a>
+            </li>
+
+            <li>
                 <a href="" id="navDeliveryRequest">
                     <i class="fas fa-truck"></i>
                     <p>On Delivery <div class="content-counts" id="deliveryCount">0</div></p>
@@ -55,12 +62,12 @@
 
             <hr>
             
-            <li>
+            <!-- <li>
                 <a href="" id="navDrafts">
                     <i class="fas fa-file-alt"></i>
                     <p>Drafts</p>
                 </a>
-            </li>
+            </li> -->
 
             <li>
                 <a href="" id="navOutbox">

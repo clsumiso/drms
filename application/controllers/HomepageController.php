@@ -11,16 +11,30 @@
 
     class HomepageController extends CI_Controller {
         
+        function __construct() {
+            parent::__construct();
+        }
+		
+
         public function index() {
-            $this->load->view('homepage/_head');
-            $this->load->view('homepage/_css');
-            $this->load->view('homepage/_page_loader');
-            $this->load->view('homepage/main');
-            $this->load->view('homepage/_about');
-            $this->load->view('homepage/_footer');
-            $this->load->view('homepage/_modal_email');
-            $this->load->view('homepage/_modal_feedback');
-            $this->load->view('homepage/_script');
+
+            $this->load->model('SystemMaintenanceModel', 'maintenance');
+            $result = $this->maintenance->getMaintenanceStatus();
+
+            if($result->status == 1) {
+                $this->load->view("maintenance");
+            } else {
+                $this->load->view('homepage/_head');
+                $this->load->view('homepage/_css');
+                $this->load->view('homepage/_page_loader');
+                $this->load->view('homepage/main');
+                $this->load->view('homepage/_about');
+                $this->load->view('homepage/_footer');
+                $this->load->view('homepage/_modal_email');
+                $this->load->view('homepage/_modal_feedback');
+                $this->load->view('homepage/_script');
+            }
+            
         }
 
 
@@ -97,12 +111,6 @@
             $this->HomepageModel->insert_feedback($feedback);
             $this->session->unset_userdata('user');
 
-        }
-
-
-        
-        public function maintenance() {
-            $this->load->view('maintenance');
         }
     
     }

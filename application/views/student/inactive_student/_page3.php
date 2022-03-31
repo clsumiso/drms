@@ -38,13 +38,14 @@
                         </div>
                     </div>
 
-                    <div class="row d-none">
+                    <div class="row">
                         <div class="form-group col-lg-8 mb-3">
                             <input type="text" class="form-control mb-3 getFDocuments" name="document[0][document_name]" id="getFDocuments" placeholder="Document Name" readonly>
                             <input type="text" class="form-control mb-3 getFCopies" name="document[0][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>
                             <input type="text" class="form-control mb-3 getFPages" name="document[0][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>
                             <input type="file" class="form-control mb-3 getFUploads" name="getFUploads[]" id="getFUploads" readonly>
                             <input type="text" class="form-control mb-3 getFType" name="document[0][document_type]" id="getFType" placeholder="Document Type" value="0" readonly>
+                            <input type="text" class="form-control mb-3 getFCost" name="document[0][document_cost]" id="getFCost" placeholder="Document Cost" value="" readonly>
                         </div>
                     </div>
 
@@ -70,8 +71,8 @@
                 <hr class="my-4">
 
                 <p class="page-title">PROOF OF PAYMENT</p>
-                <p class="default-text">The total amount of the document/s requested to be paid is presented below. Please upload the receipt as a proof of payment to proceed with the transaction.</p>
-                <p class="default-text"><b>Note:</b> If the total payment cost “0 PhP”, just proceed to the next step by tapping the “Next” button.</p>
+                <p class="default-text">The total amount of the document/s requested to be paid is presented below. Proof of payment can be a transfer receipt (screenshot or scan). Optionally, you can upload your proof of payment if you already have your receipt.</p>
+                <p class="default-text">Otherwise, if you haven't processed your payment yet, you can proceed to the next page of the transaction. To manage your payment, you can access the "Track your Request" on the system's homepage.</p>
 
 
                 <div class="table-payment" id="tablePayment">

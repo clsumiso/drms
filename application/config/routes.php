@@ -87,6 +87,7 @@ $route = array (
     'staff/ondeliveryRequest'           => 'staffController/mailOnDelivery',
     'staff/deliveredRequest'            => 'staffController/mailDelivered',
     'staff/sendDocumentRequest'         => 'staffController/mailSendDocument',
+    'staff/approvePayment'              => 'staffController/mailApprovePayment',
 
 
     'admin'                             => 'adminController',
@@ -121,7 +122,12 @@ $route = array (
     'admin/update_handler_frontline'    => 'adminController/updateHandlerFrontline',
     
     'admin/display_feedback_ratings'    => 'adminController/displayFeedbackRatings',
-    'admin/display_suggestions'         => 'adminController/displaySuggestion'
+    'admin/display_suggestions'         => 'adminController/displaySuggestion',
+    
+    'admin/maintenanceStatus'           => 'adminController/maintenancePageOnOff',
+    'admin/setMaintenanceStatus'           => 'adminController/setMaintenance',
+
+    
 );
 
 $route['404_override'] = '';

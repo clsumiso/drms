@@ -17,23 +17,42 @@
         }
 
         public function active_student() {
-            $this->load->view('student/active_student/_head.php');
-            $this->load->view('student/active_student/_css.php');
-            $this->load->view('student/active_student/_page_loader.php');
-            $this->load->view('student/active_student/_header.php');
-            $this->load->view('student/active_student/_navigation.php');
-            $this->load->view('student/active_student/main.php');
-            $this->load->view('student/active_student/_script.php');
+
+            $this->load->model('SystemMaintenanceModel', 'maintenance');
+            $result = $this->maintenance->getMaintenanceStatus();
+
+            if($result->status == 1) {
+                $this->load->view("maintenance");
+            } else {
+                $this->load->view('student/active_student/_head.php');
+                $this->load->view('student/active_student/_css.php');
+                $this->load->view('student/active_student/_page_loader.php');
+                $this->load->view('student/active_student/_header.php');
+                $this->load->view('student/active_student/_navigation.php');
+                $this->load->view('student/active_student/main.php');
+                $this->load->view('student/active_student/_script.php');
+	        }
+
+            
         }
 
         public function inactive_student() {
-            $this->load->view('student/inactive_student/_head.php');
-            $this->load->view('student/inactive_student/_css.php');
-            $this->load->view('student/inactive_student/_page_loader.php');
-            $this->load->view('student/inactive_student/_header.php');
-            $this->load->view('student/inactive_student/_navigation.php');
-            $this->load->view('student/inactive_student/main.php');
-            $this->load->view('student/inactive_student/_script.php');
+
+            $this->load->model('SystemMaintenanceModel', 'maintenance');
+            $result = $this->maintenance->getMaintenanceStatus();
+
+            if($result->status == 1) {
+                $this->load->view("maintenance");
+            } else {
+                $this->load->view('student/inactive_student/_head.php');
+                $this->load->view('student/inactive_student/_css.php');
+                $this->load->view('student/inactive_student/_page_loader.php');
+                $this->load->view('student/inactive_student/_header.php');
+                $this->load->view('student/inactive_student/_navigation.php');
+                $this->load->view('student/inactive_student/main.php');
+                $this->load->view('student/inactive_student/_script.php');
+	        }
+           
         }
 
         public function getCourse() {
@@ -55,6 +74,9 @@
 
         }
 
+
+
+
         public function insert_active_request() {
 
             $today = date('Y-m-d H:i:s');
@@ -70,10 +92,20 @@
 
             $filePaymentNewName = "";
 
+            $status = 1;
+
             if ($payment_file_error === 0 || $payment_file_error === 4) {
 
-                if ($payment_file_error === 0) {
+                $payment_stats = $this->input->post('getTotalPayment');
+                if ($payment_stats == 0) {
+                    $filePaymentNewName = "0";
+                } else {
+                    $filePaymentNewName = "1";
+                    $status = 4;
+                }
 
+                if ($payment_file_error === 0) {
+                    
                     $fileExtPayment = explode(".", $payment_filename);
                     $fileMainExtPayment = strtolower(end($fileExtPayment));
                     $filePaymentNewName = uniqid().".".$fileMainExtPayment;
@@ -105,14 +137,19 @@
             // initializing form data for request_tbl 
             $student_type = 1;
             $course = $this->input->post('getCourse');
-            $status = 1;
             $purpose = strtolower($this->input->post('getPurposeFinal'));
             $delivery_option = strtolower($this->input->post('getDeliveryFinal'));
             $message = $this->input->post('getMessage');
 
+            $this->load->model('StudentModel');
+            $num = $this->StudentModel->getNumberofRequest();
+            $countReq = $num->count;
+
+            $uniq_request_id = date("iHs").$countReq;
 
             // okidoks na too hehez
             $request_data = array (
+                "request_id"         =>      $uniq_request_id,
                 "student_type"       =>      $student_type,
                 "course_id"          =>      $course,
                 "status"             =>      $status,
@@ -189,8 +226,6 @@
             }
 
             // echo json_encode($document_data);
-
-            $this->load->model('StudentModel');
             $result = $this->StudentModel->insertRequestActive($request_data, $info_data, $document_data, $today);
             
             if ($result !== true) {
@@ -208,7 +243,6 @@
             } else {
 
 
-                $this->load->model('studentModel');
                 $staff = $this->StudentModel->getDesignatedRIC($course);
 
                 $email_contact_ric = "";
@@ -239,7 +273,7 @@
     
     
                     $mail->isHTML(true);
-                    $mail->Subject = "Requested document has been confirmed [".$date_subject."]";
+                    $mail->Subject = "Requested document has been confirmed [".$uniq_request_id."]";
                     $mail->AddEmbeddedImage(FCPATH.'./assets/styles/resources/logo.png','clsulogo','logo.png');
                     $mail->Body    =    "<div style='display:flex; align-items: center;'>
                                             <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
@@ -293,9 +327,18 @@
             $payment_filename = $_FILES['getPaymentUpload']['name'];
             $payment_file_error = $_FILES['getPaymentUpload']['error'];
 
-            $filePaymentNewName = "NULL";
+            $filePaymentNewName = "";
+            $status = 1;
 
             if ($payment_file_error === 0 || $payment_file_error === 4) {
+
+                $payment_stats = $this->input->post('getTotalPayment');
+                if ($payment_stats == 0) {
+                    $filePaymentNewName = "0";
+                } else {
+                    $filePaymentNewName = "1";
+                    $status = 4;
+                }
 
                 if ($payment_file_error === 0) {
 
@@ -318,7 +361,6 @@
                     }
                     
                 }
-                
 
             } else {
                 echo "There was an error in the uploaded payment file. File error: Error-".$payment_file_error.". Please contact the administrator.";
@@ -335,8 +377,17 @@
             $message = $this->input->post('getMessage');
 
 
+            
+            $this->load->model('StudentModel');
+            $num = $this->StudentModel->getNumberofRequest();
+            $countReq = $num->count;
+
+
+            $uniq_request_id = date("iHs").$countReq;
+
             // okidoks na too hehez
             $request_data = array (
+                "request_id"         =>      $uniq_request_id,
                 "student_type"       =>      $student_type,
                 "course_id"          =>      $course,
                 "status"             =>      $status,
@@ -456,8 +507,6 @@
 
             }
 
-
-            $this->load->model('StudentModel');
             $result = $this->StudentModel->insertRequestInactive($request_data, $info_data, $document_data, $requirements_upload, $today);
             if ($result !== true) {
 
@@ -547,5 +596,8 @@
             }
 
         }
+
+
+
 
     }

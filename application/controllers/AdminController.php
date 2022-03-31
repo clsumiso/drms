@@ -90,6 +90,7 @@
             $this->load->view('admin/_session');
             $this->load->view('admin/maintenance/_head');
             $this->load->view('admin/maintenance/_css');
+            $this->load->view('admin/maintenance/_pageLoader');
             $this->load->view('admin/maintenance/_header');
             $this->load->view('admin/maintenance/_navigation');
             $this->load->view('admin/maintenance/main');
@@ -887,6 +888,37 @@
             endforeach;
 
             echo $suggestion_content;
+
+        }
+
+
+
+
+
+
+        public function maintenancePageOnOff() {
+
+            $this->load->model('AdminModel');
+            $result = $this->AdminModel->getMaintenanceStatus();
+
+            if ($result->status == 1) {
+                echo "1";
+            } else {
+                echo "0";
+            }
+
+        }
+
+
+
+        public function setMaintenance() {
+
+            $status = $this->input->post('status');
+
+            $this->load->model('AdminModel');
+            $this->AdminModel->setMaintenanceStatus($status);
+
+            echo "status: ".$status;
 
         }
 

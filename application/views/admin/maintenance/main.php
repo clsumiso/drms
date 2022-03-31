@@ -11,7 +11,7 @@
                 <h3 class="maintenance-title">System Maintenance</h3>
                 <p class="maintenance-description">For optimizing the system's performance, turn on to set up the system maintenance.</p>
                 <div class="button-maintenance-wrapper">
-                    <button class="btn btn-danger px-5" type="button" id="toggleMaintenance">Turn on maintenance</button>
+                    <button class="btn px-5" type="button" id="toggleMaintenance">Turn on maintenance</button>
                 </div>
             </div>
 

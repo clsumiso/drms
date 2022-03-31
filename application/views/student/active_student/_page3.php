@@ -44,6 +44,7 @@
                             <input type="text" class="form-control mb-3 getFCopies" name="document[0][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>
                             <input type="text" class="form-control mb-3 getFPages" name="document[0][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>
                             <input type="text" class="form-control mb-3 getFType" name="document[0][document_type]" id="getFType" placeholder="Document Type" value="0" readonly>
+                            <input type="text" class="form-control mb-3 getFCost" name="document[0][document_cost]" id="getFCost" placeholder="Document Cost" value="" readonly>
                         </div>
                     </div>
 
@@ -68,9 +69,9 @@
                 <hr class="my-4">
 
                 <p class="page-title">PROOF OF PAYMENT</p>
-                <p class="default-text">The total amount of the document/s requested to be paid is presented below. Please upload the receipt as a proof of payment to proceed with the transaction.</p>
-                <p class="default-text"><b>Note:</b> If the total payment cost “0 PhP”, just proceed to the next step by tapping the “Next” button.</p>
-
+                <p class="default-text">The total amount of the document/s requested to be paid is presented below. Proof of payment can be a transfer receipt (screenshot or scan). Optionally, you can upload your proof of payment if you already have your receipt.</p>
+                <p class="default-text">Otherwise, if you haven't processed your payment yet, you can proceed to the next page of the transaction. To manage your payment, you can access the "Track your Request" on the system's homepage.</p>
+                
 
                 <div class="table-payment" id="tablePayment">
                     <!-- table code here -->
@@ -80,6 +81,7 @@
                     <!-- append validation here -->
                 </div>
 
+                <input type="text" id="getTotalPayment" class="form-control" name="getTotalPayment">
                 <input type="file" name="getPaymentUpload" id="getPaymentUpload" class="form-control d-none w-25">
                 <button class="btn btn-primary poppins custom-button" type="button" id="btnUploadPayment"><i class="bx bx-upload me-2 fw-bold fs-18"></i>Upload your receipt</button>
                 <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, and png files are acceptable.</p>
