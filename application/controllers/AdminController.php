@@ -367,11 +367,28 @@
             $staff_email_check = $this->AdminModel->checkAccountEmail($email);
 
             if(isset($staff_check)) {
-                echo "1";
+
+                $data_account = array (
+                    'subject'   =>  'Staff ID already exist!',
+                    'message'   =>  $staff_id.' already exist.',
+                    'icon'      =>  'error'
+                );
+
+                echo json_encode($data_account);
+
             } else {
 
                 if(isset($staff_email_check)) {
-                    echo "2";
+
+                    $data_account = array (
+                        'subject'   =>  'Email exist!',
+                        'message'   =>  $email.' already exist.',
+                        'icon'      =>  'error'
+                    );
+    
+                    echo json_encode($data_account);
+                    
+
                 } else {
                     $staff = array(
                         "staff_id"          =>  $staff_id,
@@ -387,7 +404,14 @@
                     );
     
                     $this->AdminModel->createAccount($staff);
-                    echo "0";
+
+                    $data_account = array (
+                        'subject'   =>  'Account created!',
+                        'message'   =>  'You have created account for '.strtoupper($givenname),
+                        'icon'      =>  'success'
+                    );
+
+                    echo json_encode($data_account);
                 }
 
             }

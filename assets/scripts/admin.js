@@ -442,44 +442,18 @@ $(document).ready(function() {
                     type: 'POST',
                     data: data,
                     success: function(data) {
-                        console.log(data)
-                        if (data == 0) {
-                            Swal.fire (
-                                'Account created!',
-                                'You have created account for '+$('#c_givenname').val().toUpperCase()+'.',
-                                'success'
-                            )
 
-                            $('#toggleAccountClose2').click()
-                            resetCreateAccount()
-                            displayStaffAccounts()
+                        let request = JSON.parse(data)
 
-                        }  else if (data == 1) {
+                        Swal.fire(
+                            request.subject,
+                            request.message,
+                            request.icon
+                        )
 
-                            Swal.fire(
-                                'Email already existed!',
-                                'Account for '+$('#c_givenname').val().toUpperCase()+' was not created.',
-                                'error'
-                            )
-
-                        }   else if (data == 2) {
-
-                            Swal.fire(
-                                'Email already existed!',
-                                'Account for '+$('#c_givenname').val().toUpperCase()+' was not created.',
-                                'error'
-                            )
-
-                        } else {
-
-                            Swal.fire(
-                                'There was a problem creating an account!',
-                                'Account for '+$('#c_givenname').val().toUpperCase()+' was not created.',
-                                'error'
-                            )
-
-                        }
-                       
+                        $('#toggleAccountClose2').click()
+                        resetCreateAccount()
+                        displayStaffAccounts()
 
                     },
                     error: function(status, xhr, error) {
