@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 31, 2022 at 04:06 PM
+-- Generation Time: Mar 31, 2022 at 07:15 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -53,13 +53,6 @@ CREATE TABLE `ci_sessions` (
   `data` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `ci_sessions`
---
-
-INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('rl78pb20559k2t9c7q4r7vsfs8sbobc6', '::1', 1648735588, 0x5f5f63695f6c6173745f726567656e65726174657c693a313634383733353538383b);
-
 -- --------------------------------------------------------
 
 --
@@ -69,8 +62,8 @@ INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 CREATE TABLE `course_handler_tbl` (
   `course_handler_id` int(11) NOT NULL,
   `course_id` int(11) NOT NULL,
-  `staff_id_ric` int(11) NOT NULL DEFAULT 0,
-  `staff_id_frontline` int(11) NOT NULL DEFAULT 0
+  `staff_id_ric` varchar(255) NOT NULL DEFAULT '0',
+  `staff_id_frontline` varchar(255) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -188,7 +181,7 @@ CREATE TABLE `request_tbl` (
 --
 
 CREATE TABLE `staff_account_tbl` (
-  `staff_id` int(11) NOT NULL,
+  `staff_id` varchar(255) NOT NULL,
   `staff_fname` varchar(255) NOT NULL,
   `staff_mname` varchar(255) DEFAULT NULL,
   `staff_lname` varchar(255) NOT NULL,
@@ -458,12 +451,6 @@ ALTER TABLE `requestor_info_tbl`
 --
 ALTER TABLE `request_tbl`
   MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `staff_account_tbl`
---
-ALTER TABLE `staff_account_tbl`
-  MODIFY `staff_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_college`
