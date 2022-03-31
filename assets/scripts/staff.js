@@ -1183,8 +1183,6 @@ $(document).ready(function() {
                         $("#webLoader").fadeIn()
                     },
                     success: function(data) {
-                        console.log(id)
-                        console.log(email)
 
                         navigationClick()
                         navigationCount()
