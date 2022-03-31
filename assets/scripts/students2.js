@@ -129,7 +129,7 @@ $(document).ready(function() {
                                                         '</div>'+
                                                     
                                                         '<div class="row">'+
-                                                            '<div class="form-group col-lg-8 mb-3">'+
+                                                            '<div class="form-group col-lg-8 mb-3 d-none">'+
                                                                 '<input type="text" class="form-control mb-3 getFDocuments" name="document['+appendedDocuments+'][document_name]" id="getFDocuments" placeholder="Document Name" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFCopies" name="document['+appendedDocuments+'][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+

@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-lg-8 mb-3">
+                        <div class="form-group d-none col-lg-8 mb-3">
                             <input type="text" class="form-control mb-3 getFDocuments" name="document[0][document_name]" id="getFDocuments" placeholder="Document Name" readonly>
                             <input type="text" class="form-control mb-3 getFCopies" name="document[0][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>
                             <input type="text" class="form-control mb-3 getFPages" name="document[0][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>
@@ -83,6 +83,8 @@
                     <!-- append validation here -->
                 </div>
 
+                
+                <input type="text" id="getTotalPayment" class="form-control" name="getTotalPayment">
                 <input type="file" name="getPaymentUpload" id="getPaymentUpload" class="form-control d-none w-25">
                 <button class="btn btn-primary poppins custom-button" type="button" id="btnUploadPayment"><i class="bx bx-upload me-2 fw-bold fs-18"></i>Upload your receipt</button>
                 <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, and png files are acceptable.</p>

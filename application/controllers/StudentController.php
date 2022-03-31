@@ -92,20 +92,24 @@
 
             $filePaymentNewName = "";
 
-            $status = 1;
+            
 
             if ($payment_file_error === 0 || $payment_file_error === 4) {
+
 
                 $payment_stats = $this->input->post('getTotalPayment');
                 if ($payment_stats == 0) {
                     $filePaymentNewName = "0";
+                    $status = 1;
                 } else {
                     $filePaymentNewName = "1";
                     $status = 4;
                 }
 
+
                 if ($payment_file_error === 0) {
                     
+                    $status = 1;
                     $fileExtPayment = explode(".", $payment_filename);
                     $fileMainExtPayment = strtolower(end($fileExtPayment));
                     $filePaymentNewName = uniqid().".".$fileMainExtPayment;
@@ -328,19 +332,19 @@
             $payment_file_error = $_FILES['getPaymentUpload']['error'];
 
             $filePaymentNewName = "";
-            $status = 1;
 
             if ($payment_file_error === 0 || $payment_file_error === 4) {
 
                 $payment_stats = $this->input->post('getTotalPayment');
                 if ($payment_stats == 0) {
                     $filePaymentNewName = "0";
+                    $status = 1;
                 } else {
                     $filePaymentNewName = "1";
                     $status = 4;
                 }
 
-                if ($payment_file_error === 0) {
+                if ($payment_file_error === 0) { 
 
                     $fileExtPayment = explode(".", $payment_filename);
                     $fileMainExtPayment = strtolower(end($fileExtPayment));
@@ -355,6 +359,7 @@
                     $this->load->library('upload', $payment);
                     $this->upload->initialize($payment);
                     
+                    $status = 1;
                     if(!$this->upload->do_upload('getPaymentUpload')) {
                         print_r($error = array('error' => $this->upload->display_errors()));
                         echo "There was a problem moving your payment file. File is not uploaded!";
@@ -371,7 +376,6 @@
             // initializing form data for request_tbl 
             $student_type = 2;
             $course = $this->input->post('getCourse');
-            $status = 1;
             $purpose = strtolower($this->input->post('getPurposeFinal'));
             $delivery_option = strtolower($this->input->post('getDeliveryFinal'));
             $message = $this->input->post('getMessage');

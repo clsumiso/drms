@@ -238,7 +238,6 @@
                                 <td class="fw-bold">'.$declined_count.'</td>
                             </tr>';
 
-
                 }
                
 
