@@ -48,6 +48,11 @@ header .user-type {
     display: none;
 }
 
+.form-search2 {
+    display: block;
+    position: relative;
+}
+
 
 .form-search {
     display: none;

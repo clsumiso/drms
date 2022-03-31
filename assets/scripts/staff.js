@@ -629,6 +629,9 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
+
     })
 
     $('#navPendingRequest').click(function(e) {
@@ -647,6 +650,9 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+        
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
 
     })
 
@@ -666,6 +672,8 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
     })
 
     $('#navSentRequest').click(function(e) {
@@ -683,6 +691,8 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
     })
 
 
@@ -701,6 +711,8 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
     })
 
 
@@ -747,6 +759,8 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
     })
 
 
@@ -765,6 +779,8 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
     })
 
 
@@ -784,6 +800,9 @@ $(document).ready(function() {
         $('.request-review-wrapper').hide()
         $('.request-list-wrapper-contents').fadeIn()
 
+
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
 
     })
 
@@ -810,6 +829,10 @@ $(document).ready(function() {
                 
                 $('.request-review-wrapper').empty()
                 $('.request-review-wrapper').append(data)
+
+                
+                $('.form-search').css('visibility', 'hidden')
+                $('.form-search2').css('display', 'none')
             },
             error: function(xhr, status, error) {
                 console.log(xhr)
@@ -1139,13 +1162,12 @@ $(document).ready(function() {
 
     $(document).on('click', '.btnPaymentApprove', function() {
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: 'Confirm Payment?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Confirm'
         }).then((result) => {
             if (result.isConfirmed) {
                 let id = $(".requestIDUniq").val()
