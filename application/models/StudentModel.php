@@ -35,16 +35,15 @@ class StudentModel extends CI_Model
 
     }
 
-    public function insertRequestActive($request = array(), $info = array(), $document = array(), $date) {
+    public function insertRequestActive($request = array(), $info = array(), $document = array(), $date, $request_id) {
         
         $this->db->trans_begin();
         $this->db->trans_strict(TRUE);
 
         $this->db->insert('request_tbl', $request);
-        $id = $this->db->insert_id();
 
 
-        $info['request_id'] = $id;
+        $info['request_id'] =  $request_id;
         $this->db->insert('requestor_info_tbl', $info);
 
 
@@ -53,7 +52,7 @@ class StudentModel extends CI_Model
         
         for ($i=0; $i < count($document) ; $i++) { 
             $temp_docs = array(
-                "request_id"        =>  $id,
+                "request_id"        =>  $request_id,
                 "document_name"     =>  $document[$i]['document_name'],
                 "document_type"     =>  $document[$i]['document_type'],
                 "document_copies"   =>  $document[$i]['document_copies'],
@@ -79,16 +78,15 @@ class StudentModel extends CI_Model
 
 
 
-    public function insertRequestInactive($request = array(), $info = array(), $document = array(), $uploads, $date) {
+    public function insertRequestInactive($request = array(), $info = array(), $document = array(), $uploads, $date, $request_id) {
         
         $this->db->trans_begin();
         $this->db->trans_strict(TRUE);
 
         $this->db->insert('request_tbl', $request);
-        $id = $this->db->insert_id();
 
 
-        $info['request_id'] = $id;
+        $info['request_id'] =  $request_id;
         $this->db->insert('requestor_info_tbl', $info);
 
 
@@ -97,7 +95,7 @@ class StudentModel extends CI_Model
         
         for ($i=0; $i < count($document) ; $i++) { 
             $temp_docs = array(
-                "request_id"        =>  $id,
+                "request_id"        =>  $request_id,
                 "document_name"     =>  $document[$i]['document_name'],
                 "document_type"     =>  $document[$i]['document_type'],
                 "document_copies"   =>  $document[$i]['document_copies'],

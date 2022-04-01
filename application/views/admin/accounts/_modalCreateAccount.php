@@ -8,7 +8,6 @@
                         <button type="button" class="btn-close" id="toggleAccountClose" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     
-
                     <div class="modal-body px-5">
                         <div class="row">
                             <div class="form-group col-lg-3 mb-3">

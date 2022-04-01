@@ -230,7 +230,7 @@
             }
 
             // echo json_encode($document_data);
-            $result = $this->StudentModel->insertRequestActive($request_data, $info_data, $document_data, $today);
+            $result = $this->StudentModel->insertRequestActive($request_data, $info_data, $document_data, $today, $uniq_request_id);
             
             if ($result !== true) {
 
@@ -511,7 +511,7 @@
 
             }
 
-            $result = $this->StudentModel->insertRequestInactive($request_data, $info_data, $document_data, $requirements_upload, $today);
+            $result = $this->StudentModel->insertRequestInactive($request_data, $info_data, $document_data, $requirements_upload, $today, $uniq_request_id);
             if ($result !== true) {
 
                 echo "There was a problem sending your request. Please contact administrator.";

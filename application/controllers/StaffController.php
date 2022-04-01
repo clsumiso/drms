@@ -168,8 +168,6 @@
             }
 
 
-
-
             // REQUEST STATUS
             // 0 - Completed
             // 1 - Pending
