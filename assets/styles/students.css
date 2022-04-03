@@ -524,7 +524,7 @@ header p {
 
 /* contents hide */
 #dataPrivacyContentPage {
-    display: block;
+    display: none;
     animation: animatePageContents .5s;
 }
 
@@ -534,7 +534,7 @@ header p {
 }
 
 #documentRequestContentPage {
-    display: none;
+    display: block;
     animation: animatePageContents .5s;
 }
 

@@ -136,7 +136,6 @@ $(document).ready(function() {
                                                                 '<input type="file" class="form-control mb-3 getFUploads" name="getFUploads[]" id="getFUploads" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_type]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+ 
                                                                 '<input type="text" class="form-control mb-3 getFCost" name="document['+appendedDocuments+'][document_cost]" id="getFCost" placeholder="Document Type" value="0" readonly></input>'+    
-                                                                '</div>'+     
                                                             '</div>'+
                                                         '</div>'+
 
@@ -478,8 +477,12 @@ $(document).ready(function() {
 
     let countTotalUploaded = 0;
     // PAGE THREE
+
+    
     $(document).on('change', '.getDocument', function() {
         
+        console.log($(this).val())
+
         updateTablePayment()
 
         $(this).parent().parent().find('.error-msg').remove()
@@ -514,6 +517,8 @@ $(document).ready(function() {
         if($(this).val() == 0) {
             $(this).addClass('is-invalid') 
         } else if ($(this).val() == 8) {
+
+            console.log("asdlskjajhdskjhnn")
             countTotalUploaded++
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showDescription">'+
                                                             '<b class="text-uppercase poppins">Be advised</b>'+
@@ -531,6 +536,8 @@ $(document).ready(function() {
                                                                 '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf file is accepted</p>'+
                                                             '</div>'+
                                                         '</div>')
+
+
         } else if ($(this).val() == 9) {
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showPages align-items-center">'+
                                                             '<div class="form-group col-lg-5 mb-3">'+
@@ -559,6 +566,8 @@ $(document).ready(function() {
                                                                 '<p class="poppins">For non-graduates of master\'s or doctoral program, please pay 100 pesos (1 page)</p>'+
                                                             '</div>'+
                                                         '</div>')
+
+
         } else if ($(this).val() == 10 || $(this).val() == 11) {
             
             countTotalUploaded++
@@ -578,6 +587,7 @@ $(document).ready(function() {
                                                                 '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf file is accepted</p>'+
                                                             '</div>'+
                                                         '</div>')
+
                                                         
         } else if ($(this).val() == 12) {                             
             
@@ -598,12 +608,16 @@ $(document).ready(function() {
                                                                 '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf file is accepted</p>'+
                                                             '</div>'+
                                                         '</div>')
+
+
         } else if ($(this).val() == 13) {
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showOthers">'+
                                                             '<div class="form-group col-lg-7 mb-3">'+
                                                                 '<input type="text" class="form-control getOtherDocument" name="getOtherDocument" id="getOtherDocument" placeholder="Please specify the document">'+
                                                             '</div>'+
                                                         '</div>')
+
+                                                        
         }
 
     })
