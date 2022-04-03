@@ -371,8 +371,6 @@
                 echo "There was an error in the uploaded payment file. File error: Error-".$payment_file_error.". Please contact the administrator.";
             }
 
-
-
             // initializing form data for request_tbl 
             $student_type = 2;
             $course = $this->input->post('getCourse');
@@ -380,12 +378,10 @@
             $delivery_option = strtolower($this->input->post('getDeliveryFinal'));
             $message = $this->input->post('getMessage');
 
-
             
             $this->load->model('StudentModel');
             $num = $this->StudentModel->getNumberofRequest();
             $countReq = $num->count;
-
 
             $uniq_request_id = date("iHs").$countReq;
 

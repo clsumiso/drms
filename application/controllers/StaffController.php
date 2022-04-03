@@ -991,8 +991,9 @@
                     }
 
                     $showDocumentUpload = "";
-                    if(!empty($documents->document_upload)) {
-                        $showDocumentUpload = '<a href="./assets/uploads/requirements/'.$documents->document_upload.'" download="'.$documents->document_upload.'"><i class="bx bxs-file-blank fs-18 me-2"></i> Download file requirement</a>';
+                    if(!empty($document->document_upload)) {
+                        $showDocumentUpload = '<a href="./assets/uploads/requirements/'.$document->document_upload.'" download="'.$document->document_upload.'"><i class="bx bxs-file-blank fs-18 me-2"></i> Download file requirement</a>';
+
                     }
 
 
@@ -1000,8 +1001,7 @@
                                                 '.$temp_doc.'
                                                 '.$showDocumentUpload.'
                                             </div>';
-
-
+                
                 endforeach;
                
                 
