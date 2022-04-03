@@ -57,7 +57,7 @@ class StudentModel extends CI_Model
                 "document_type"     =>  $document[$i]['document_type'],
                 "document_copies"   =>  $document[$i]['document_copies'],
                 "document_pages"    =>  $document[$i]['document_pages'],
-                "document_upload"   =>  "NULL",
+                "document_upload"   =>  "",
                 "document_cost"     =>  $document[$i]['document_cost'],
                 "date_created"      =>  $date
             );
