@@ -238,6 +238,8 @@
                 $time = date_format($getDate, 'g:i A');
                 $date = date_format($getDate, 'M d, Y');
 
+                
+
 
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
@@ -690,7 +692,10 @@
 
                 $id = $request->request_id;
                 $getDate = new DateTime($request->date_created);
-                $date = date_format($getDate, 'M d');
+                $time = date_format($getDate, 'g:i A');
+                $date = date_format($getDate, 'M d, Y');
+
+               
 
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
@@ -780,7 +785,10 @@
                                 <p class="dash">-</p>
                                 <p class="content">'.$requested_docs.' '.$purpose.' '.$add_message.'</p>
                             </div>
-                            <p class="date-desktop">'.$date.'</p>
+                            <div class="date-desktop-wrapper">
+                                <p class="date-desktop">'.$time.'</p>
+                                <p class="date-desktop">'.$date.'</p>
+                            </div>
                         </div>';
             endforeach;
 
