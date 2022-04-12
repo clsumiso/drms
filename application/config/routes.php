@@ -66,6 +66,11 @@ $route = array (
 
     'student/courses'                   => 'studentController/getCourse',
 
+    'student/searchRequest'             => 'studentController/getRequestID',
+    'student/request/(:any)'            => 'studentController/getRequest/$1',
+    'student/updaterequest'             => 'studentController/getRequestUpdate',
+    'student/updatePaymentRequest'      => 'studentController/updateRequestedPayment',
+
     
     'login'                             => 'loginController',
     'staff_login'                       => 'loginController/login',

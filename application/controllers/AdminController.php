@@ -433,41 +433,74 @@
 
 
             $this->load->model('AdminModel');
-            $staff_check = $this->AdminModel->checkAccount($email);
 
-            if(!isset($staff_check)) {
+            $staff_check = $this->AdminModel->checkAccountUpdate($id);
+            $flag = 0;
+            if(isset($staff_check)) {
 
-                if (empty($password)) {
-                    $staff = array(
-                        "staff_fname"       =>  $givenname,
-                        "staff_mname"       =>  $middlename,
-                        "staff_lname"       =>  $lastname,
-                        "staff_email"       =>  $email,
-                        "staff_username"    =>  $username,
-                        "staff_type"        =>  $usertype,
-                        "account_status"    =>  $status
+                foreach($staff_check as $check):
+
+                    if ($check->staff_id == $id) {
+                        $data_account = array (
+                            'subject'   =>  'Account was not updated!',
+                            'message'   =>  $staff_id.' already exist.',
+                            'icon'      =>  'error'
+                        );
+                        $flag = 1;
+                        echo json_encode($data_account);
+
+                    } 
+                    
+                    if ($check->staff_email == $email) {
+
+                        $data_account = array (
+                            'subject'   =>  'Account was not updated!',
+                            'message'   =>  $email.' already exist.',
+                            'icon'      =>  'error'
+                        );
+                        $flag = 1;
+                        echo json_encode($data_account);
+                    }
+
+                endforeach;
+
+
+                if ($flag == 0) {
+                    if (empty($password)) {
+                        $staff = array(
+                            "staff_fname"       =>  $givenname,
+                            "staff_mname"       =>  $middlename,
+                            "staff_lname"       =>  $lastname,
+                            "staff_email"       =>  $email,
+                            "staff_username"    =>  $username,
+                            "staff_type"        =>  $usertype,
+                            "account_status"    =>  $status
+                        );
+                    } else {
+                        $staff = array(
+                            "staff_fname"       =>  $givenname,
+                            "staff_mname"       =>  $middlename,
+                            "staff_lname"       =>  $lastname,
+                            "staff_email"       =>  $email,
+                            "staff_username"    =>  $username,
+                            "staff_password"    =>  $password,
+                            "staff_type"        =>  $usertype,
+                            "account_status"    =>  $status
+                        );
+                    }
+
+                    $this->AdminModel->updateAccount($id, $staff);
+
+                    $data_account = array (
+                        'subject'   =>  'Account update!',
+                        'message'   =>  'Account was updated successfully.',
+                        'icon'      =>  'success'
                     );
-                } else {
-                    $staff = array(
-                        "staff_fname"       =>  $givenname,
-                        "staff_mname"       =>  $middlename,
-                        "staff_lname"       =>  $lastname,
-                        "staff_email"       =>  $email,
-                        "staff_username"    =>  $username,
-                        "staff_password"    =>  $password,
-                        "staff_type"        =>  $usertype,
-                        "account_status"    =>  $status
-                    );
+
+                    echo json_encode($data_account);
                 }
-    
-                $this->AdminModel->updateAccount($id, $staff);
 
-                echo "1";
-            } else {
-                echo "0";
             }
-
-            
 
         }
 

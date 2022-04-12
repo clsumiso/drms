@@ -9,17 +9,17 @@
         <p class="poppins text-center">(Please choose from the option below to proceed)</p>
 
         <div class="request-buttons-wrapper">
-            <a href="<?php echo base_url(); ?>student/active" class="btn btn-success w-100 p-3">Active Student</a>
+            <a href="<?php echo base_url('student/active'); ?>" class="btn btn-success w-100 p-3">Active Student</a>
             <div class="divider">
                 <span></span>
                 <p>or</p>
                 <span></span>
             </div>
-            <a href="<?php echo base_url(); ?>student/inactive" class="btn btn-primary w-100 p-3">Inactive Student</a>
+            <a href="<?php echo base_url('student/inactive'); ?>" class="btn btn-primary w-100 p-3">Inactive Student</a>
         </div>
 
-
-        <div class="flex-content-faq">
+ 
+        <div class="flex-content-faq mb-3">
             <div class="faq-wrapper">
                 <h3>What is active and inactive student?</h3>
                 <p>Active students are those who are currently enrolled from the University such as student who take their bachelor's, masteral, or doctoral degree while inactive students are those who are not enrolled at the university, might be already graduated or transferred to another university.</p>
@@ -32,12 +32,13 @@
         </div>
 
 
-        <div class="flex-content-faq mt-4 mb-5">
-            <div class="faq-wrapper">
-                <h3>Login as staff</h3>
-                <p>RIC, Frontline and the Dean accounts must be logged in through their preferred devices. Login requires access to all the necessary staff credentials, including username, password and role.</p>
 
-                <button class="btn btn-success p-2" id="btnLogin">Login<i class='bx bxs-lock-alt'></i></button>
+        <div class="flex-content-faq mt-3 mb-3">
+            <div class="faq-wrapper">
+                <h3>Track Request</h3>
+                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia quas tempore eius nulla odit veritatis eaque. Distinctio commodi eligendi voluptatem? Doloremque itaque animi iure consequuntur quas beatae, architecto corrupti nulla omnis optio illo obcaecati quos!</p>
+
+                <button class="btn btn-primary p-2" id="btnTrack">Track</button>
             </div>
 
             <div class="faq-wrapper">
@@ -46,6 +47,22 @@
 
                 <button class="btn btn-primary p-2" id="btnEmailUs">Email Us<i class='bx bxs-envelope' ></i></button>
             </div>
+        </div>
+
+
+
+        <div class="flex-content-faq mt-3 mb-5">
+            <div class="faq-wrapper">
+                <h3>Login as staff</h3>
+                <p>RIC, Frontline and the Dean accounts must be logged in through their preferred devices. Login requires access to all the necessary staff credentials, including username, password and role.</p>
+
+                <button class="btn btn-success p-2" id="btnLogin">Login<i class='bx bxs-lock-alt'></i></button>
+            </div>
+
+            <div class="faq-wrapper">
+
+            </div>
+            
         </div>
 
     </div>

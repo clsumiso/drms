@@ -1533,7 +1533,7 @@ $(document).ready(function() {
 
      // print data from the php code (courses available)
      $.ajax({
-        url: window.location.origin + '/drms_ojt/student/courses',
+        url: window.location.origin + '/drms/student/courses',
         type: 'GET',
         dataType: 'text',
         beforeSend: function() {
@@ -1560,7 +1560,7 @@ $(document).ready(function() {
         $("#webLoader").fadeIn()
 
         $.ajax({
-            url: window.location.origin + '/drms_ojt/student/inactive_request',
+            url: window.location.origin + '/drms/student/inactive_request',
             type: 'POST',
             data: dataForm,
             // beforeSend: function() {
@@ -1569,7 +1569,7 @@ $(document).ready(function() {
             success: function(data) {
                 $('#validationSubmit').text(data)
                 $('.bg-logo-web-load .spinlogo').css('animation-iteration-count', '0')
-                $('#validationSubmit').append('<div class="mt-3"><a href="'+window.location.origin+'/drms_ojt" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
+                $('#validationSubmit').append('<div class="mt-3"><a href="'+window.location.origin+'/drms" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
             },
             error: function(xhr, status, error) {
                 console.log(xhr)

@@ -1,7 +1,7 @@
 RewriteEngine On
-RewriteBase /drms_ojt
+RewriteBase /drms
 
-RewriteCond %{REQUEST_URI} ^drms_ojt.*
+RewriteCond %{REQUEST_URI} ^drms.*
 RewriteRule ^(.*)$ /index.php?/$1 [L]
 
 RewriteCond %{REQUEST_URI} ^application.*

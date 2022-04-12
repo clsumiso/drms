@@ -10,17 +10,48 @@ class StudentModel extends CI_Model
 {
 	
 	function __construct() {
-		$this->load->database();
+		//$this->load->database('drms', TRUE);
 	}
 
+
+
+
+    public function searchRequestID($rid) {
+        $query = $this->db->query('SELECT * FROM request_tbl WHERE request_id = "'.$rid.'"');
+        return $query->row();
+    }
+
+
+    public function updateUploadPayment($rid, $data) {
+        $this->db->set($data);
+        $this->db->where('request_id', $rid);
+        $this->db->update('request_tbl');
+    }
+
+
     public function getCourses() {
-        $query = $this->db->query('SELECT * FROM tbl_course;');
+		$db2 = $this->load->database('admissions', TRUE);
+        $query = $db2->query('SELECT * FROM tbl_course WHERE course_type NOT IN ("EMP")');
 
         return $query->result();
     }
 
+
+    public function getRequestReview($rid) {
+        $query = $this->db->query("SELECT * FROM request_tbl JOIN requestor_info_tbl WHERE request_tbl.request_id = '".$rid."' AND requestor_info_tbl.request_id = '".$rid."'");
+        return $query->row();
+    }
+
+
+    public function get_documents($request_id) {
+        $query = $this->db->query("SELECT * FROM document_request_tbl WHERE request_id = '$request_id'");
+        return $query->result(); 
+    }
+
+
 	public function getColleges() {
-        $query = $this->db->query('SELECT * FROM tbl_college');
+		$db2 = $this->load->database('admissions', TRUE);
+        $query = $db2->query('SELECT * FROM tbl_college');
 
         return $query->result();
     }

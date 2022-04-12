@@ -7,7 +7,7 @@ $(document).ready(function() {
         let dataForm = $('#formLogin').serialize()
 
         $.ajax({
-            url: window.location.origin + '/drms_ojt/staff_login',
+            url: window.location.origin + '/drms/staff_login',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {
@@ -49,7 +49,7 @@ $(document).ready(function() {
         let dataForm = $('#formAdminLogin').serialize()
 
         $.ajax({
-            url: window.location.origin + '/drms_ojt/admin_signinAdmin',
+            url: window.location.origin + '/drms/admin_signinAdmin',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {

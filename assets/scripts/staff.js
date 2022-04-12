@@ -50,7 +50,7 @@ $(document).ready(function() {
           }).then((result) => {
             if (result.isConfirmed) {
               
-                window.location.replace(window.location.origin + '/drms_ojt/staff_logout');
+                window.location.replace(window.location.origin + '/drms/staff_logout');
 
             }
         })
@@ -79,7 +79,7 @@ $(document).ready(function() {
                 let data = $('#formNotes').serialize()
 
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/staff/notes',
+                    url: window.location.origin + '/drms/staff/notes',
                     type: 'POST',
                     data: data,
                     success: function(data) {
@@ -114,7 +114,7 @@ $(document).ready(function() {
         let data = $('#formNotes').serialize()
         
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/notes',
+            url: window.location.origin + '/drms/staff/notes',
             type: 'POST',
             data: data,
             success: function(data) {
@@ -195,7 +195,7 @@ $(document).ready(function() {
     function getStaffName() {
 
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/getStaffName',
+            url: window.location.origin + '/drms/staff/getStaffName',
             type: 'GET',
             success: function(data) {
                 $('#username').empty()
@@ -216,7 +216,7 @@ $(document).ready(function() {
     function navigationCount() {
 
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/navCount',
+            url: window.location.origin + '/drms/staff/navCount',
             type: 'GET',
             success: function(data) {
 
@@ -251,7 +251,7 @@ $(document).ready(function() {
 
 
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/getRequest',
+            url: window.location.origin + '/drms/staff/getRequest',
             type: 'POST',
             data: {
                 request_type: id
@@ -273,7 +273,7 @@ $(document).ready(function() {
     function getReminderRequest() {
 
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/getReminderRequest',
+            url: window.location.origin + '/drms/staff/getReminderRequest',
             type: 'GET',
             success: function(data) {
                 $('.request-container').empty()
@@ -292,7 +292,7 @@ $(document).ready(function() {
     function getOutboxRequest() {
 
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/getOutboxRequest',
+            url: window.location.origin + '/drms/staff/getOutboxRequest',
             type: 'GET',
             success: function(data) {
                 $('.request-container').empty()
@@ -530,7 +530,7 @@ $(document).ready(function() {
             let data = $(this).serialize()
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/staff/getSearch',
+                url: window.location.origin + '/drms/staff/getSearch',
                 type: 'POST',
                 data: data,
                 success: function(data) {
@@ -580,7 +580,7 @@ $(document).ready(function() {
             let data = $(this).serialize()
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/staff/getSearch',
+                url: window.location.origin + '/drms/staff/getSearch',
                 type: 'POST',
                 data: data,
                 success: function(data) {
@@ -818,7 +818,7 @@ $(document).ready(function() {
         $('.setEmailModal').val(email)
         
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/review',
+            url: window.location.origin + '/drms/staff/review',
             type: 'POST',
             data: {
                 request_id: request_id
@@ -910,7 +910,7 @@ $(document).ready(function() {
                     let dataForm = $(this).serialize()
 
                     $.ajax ({
-                        url: window.location.origin + '/drms_ojt/staff/declineRequest',
+                        url: window.location.origin + '/drms/staff/declineRequest',
                         type: 'POST',
                         data: dataForm,
                         beforeSend: function() {
@@ -963,7 +963,7 @@ $(document).ready(function() {
         let dataForm = $(this).serialize()
 
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/ondeliveryRequest',
+            url: window.location.origin + '/drms/staff/ondeliveryRequest',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {
@@ -1012,7 +1012,7 @@ $(document).ready(function() {
         let dataForm = $(this).serialize()
 
         $.ajax ({
-            url: window.location.origin + '/drms_ojt/staff/deliveredRequest',
+            url: window.location.origin + '/drms/staff/deliveredRequest',
             type: 'POST',
             data: dataForm,
             beforeSend: function() {
@@ -1066,7 +1066,7 @@ $(document).ready(function() {
             let dataForm = new FormData(this)
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/staff/sendDocumentRequest',
+                url: window.location.origin + '/drms/staff/sendDocumentRequest',
                 type: 'POST',
                 data: dataForm,
                 beforeSend: function() {
@@ -1122,7 +1122,7 @@ $(document).ready(function() {
     function checkReminderPopup() {
 
         $.ajax({
-            url: window.location.origin + '/drms_ojt/staff/getRemindPop',
+            url: window.location.origin + '/drms/staff/getRemindPop',
             type: 'GET',
             success: function(data) {
                 if(data > 0) {
@@ -1173,7 +1173,7 @@ $(document).ready(function() {
                 let id = $(".requestIDUniq").val()
                 let email = $(".emailUniq").val()
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/staff/approvePayment',
+                    url: window.location.origin + '/drms/staff/approvePayment',
                     type: 'POST',
                     data: {
                         id: id,

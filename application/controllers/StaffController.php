@@ -87,7 +87,7 @@
             }
 
 
-            $incomplete = $this->StaffModel->get_navigation_count($uid, $staff_type, $student_type, '4');
+            $incomplete = $this->StaffModel->get_navigation_count($uid, $staff_type, $student_type, '4, 5');
             if (isset($incomplete)) {
                 $pending_incomplete = $incomplete->count;
             }
@@ -214,14 +214,19 @@
             }
 
             elseif ($request_type == 9) {
-                $req_status = "4";
+                $req_status = "4, 5";
                 
                 $message = "There are no incomplete requests yet!";
                 $undraw_icon = "";
             }
 
 
-            $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN ($req_status) AND tbl_course.course_id =  request_tbl.course_id AND request_tbl.outbox_status IN (".$outbox_stats.") ORDER BY request_tbl.date_created ASC";
+            $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN ($req_status) AND admissions.tbl_course.course_id =  request_tbl.course_id AND request_tbl.outbox_status IN (".$outbox_stats.") ORDER BY request_tbl.date_created ASC";
+
+
+            if ($request_type == 9) {
+                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN ($req_status) AND admissions.tbl_course.course_id =  request_tbl.course_id AND request_tbl.outbox_status IN (".$outbox_stats.") ORDER BY request_tbl.date_created ASC, status";
+            }
 
 
             $this->load->model('StaffModel');
@@ -272,7 +277,10 @@
                     $statusText = "Declined";
                 } else if ($status == 4) {
                     $statusColor = "bg-light border text-danger";
-                    $statusText = "Incomplete";
+                    $statusText = "Unpaid";
+                } else if ($status == 5) {
+                    $statusColor = "bg-light border text-success";
+                    $statusText = "Paid";
                 }
 
 
@@ -727,8 +735,15 @@
                     $statusText = "Declined";
                 } else if ($status == 4) {
                     $statusColor = "bg-light border text-danger";
-                    $statusText = "Incomplete";
+                    $statusText = "Unpaid";
+                }  elseif ($status == 5) {
+                    $statusColor = "bg-light border text-success";
+                    $statusText = "Paid";
                 }
+
+               
+
+
 
 
                 $document = array();
@@ -890,6 +905,14 @@
                     $showSetDeliveredBtn = "d-none";
                     $showPaymentBtn = "d-none";
                 } else if ($status == 4) {
+                    $showSendDocumentBtn = "d-none";
+                    $showSetDeliveryBtn = "d-none";
+                    $showDeclineBtn = "";
+                    $showDateCompleted = "d-none";
+                    $showRemarks = "d-none";
+                    $showSetDeliveredBtn = "d-none";
+                    $showPaymentBtn = "";
+                } else if ($status == 5) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
                     $showDeclineBtn = "";
@@ -1221,13 +1244,22 @@
 
             $this->load->model('StaffModel');
             $staff = $this->StaffModel->get_staff_details($uid);
-            
+            $staff_text = "";
             if (isset($staff)) {
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
-                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_name = ucwords($firstname." ".$lastname);
                 $staff_email = $staff->staff_email;
+                $staff_type = $staff->staff_type;
+
+                if ($staff_type == 1) {
+                    $staff_text = "(Record-in-Charge)";
+                }
+
+                if ($staff_type == 2) {
+                    $staff_text = "(Frontline)";
+                }
             }
             
             $request_id = $this->input->post('setRequestID');
@@ -1243,6 +1275,7 @@
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
+                $student_fname = $request->firstname;
             }
 
 
@@ -1265,34 +1298,6 @@
             $docs = implode(", ", $documentRequested);
            
 
-
-            $inquiryMsg = "";
-            if($student_type == '1') {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_fullname." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            } else {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the frontline services (<a href='mailto:fakeemail.oadfls@clsu2.edu.ph'>fakeemail.oadfls@clsu2.edu.ph</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            }
-
-
-            $body_message = "<div style='display:flex; align-items: center;'>
-                                <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                            </div>
-                            
-                            <br>
-                            <p style='line-height: 1.8; margin: 0;'>In response to your request, we are sorry to inform you that we won't be able to assess the document/s you have requested <b>(".$docs.")</b> at this point of time.</p>
-                            <br>
-                            <b>Reason:</b>
-                            <p style='line-height: 1.8; margin: 0;'>".$message."</p>
-                            <br>
-                            ".$inquiryMsg."
-                            <br>
-                            <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                
-                            <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
-
-
-
             $mail = new PHPMailer(true);
 
             try {
@@ -1309,12 +1314,44 @@
                 $mail->addAddress($email);    
                 $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
             
+                $mail->Priority = 1; // High priority flag is set.
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Requested document has been declined [".$request_id."]";
-                $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
-                $mail->Body    =    $body_message;
+                $mail->Subject = "Requested document is declined [Request ID: ".$request_id."]";
+                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hi, ".ucwords($student_fname)."!</p>
+                    
+                                      <br>
+                  
+                                      <p style='margin: 0; line-height: 1.8;'>In response to your request, we are sorry to inform you that we won't be able to assess the document/s you have requested (".$docs.") at this point of time.</p>
+
+                                      <b style='margin: 0; line-height: 1.8;'>Reasons:</b>
+                                      <p style='margin: 0; line-height: 1.8;'>".$message."</p>
+
+                                      <br>
+
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+
+                                      <br>
+                                      <br>
+
+                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      
+                                      <br>
+                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                      
+                                      <br>
+                                      <hr>
+                                      
+                                      <p style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'><b>CONFIDENTIALITY NOTICE</b> -- This email is intended only for the person(s) named in the message header. Unless otherwise indicated, it contains information that is confidential, privileged and/or exempt from disclosure under applicable law. If you have received this message in error, please notify the sender of the error and delete the message. Thank you.</p>
+                                      
+                                      <br>
+
+                                      <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
+
                             
                 if(!$mail->send()) {
                         
@@ -1375,13 +1412,24 @@
 
             $this->load->model('StaffModel');
             $staff = $this->StaffModel->get_staff_details($uid);
-            
+            $staff_text = "";
+
             if (isset($staff)) {
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
-                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_name = ucwords($firstname." ".$middlename." ".$lastname);
                 $staff_email = $staff->staff_email;
+
+                $staff_type = $staff->staff_type;
+
+                if ($staff_type == 1) {
+                    $staff_text = "(Record-in-Charge)";
+                }
+
+                if ($staff_type == 2) {
+                    $staff_text = "(Frontline)";
+                }
             }
             
             $request_id = $this->input->post('setRequestID');
@@ -1407,6 +1455,7 @@
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
+                $student_fname = $request->firstname;
             }
 
 
@@ -1415,15 +1464,6 @@
             $outbox_status = 0;
 
             $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
-
-
-
-            $inquiryMsg = "";
-            if($student_type == '1') {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_fullname." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            } else {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the frontline services (<a href='mailto:fakeemail.oadfls@clsu2.edu.ph'>fakeemail.oadfls@clsu2.edu.ph</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            }
 
 
             $addition_message = "";
@@ -1451,71 +1491,40 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Document is ready to be drop [".$request_id."]";
-                $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
-                $body = "";
-               
-                if ($delivery_option == 'send through courier') {
+                $mail->Subject = "Request is On delivery [Request ID: ".$request_id."]";
+                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hello, ".ucwords($student_fname)."!</p>
+                    
+                                      <br>
+                  
+                                      <p style='margin: 0; line-height: 1.8;'>This is to inform you that your requests have been processed. Documents will be prepared and will be dropped at the CLSU main gate (drop box) and/or at the courier. You will be duly informed regarding the claiming details of the document/s.</p>
 
-                    $body    =    "<div style='display:flex; align-items: center;'>
-                                            <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                            <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                        </div>
-                                        
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day! This is to inform you that your requests has been processed. Documents will be preparing to be drop at the CLSU main gate. You will be duly inform regarding the claiming details of the document/s.</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
-                                        <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
-                                        ".$addition_message."
-                                        <br>
-                                        ".$inquiryMsg."
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>";
-    
-    
-                } else if($delivery_option == 'claim at clsu main gate') { 
-    
-                    $body    =    "<div style='display:flex; align-items: center;'>
-                                            <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                            <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                        </div>
-                                        
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your requests has been processed. Documents will be preparing to be drop and pick by the courier. You will be duly inform regarding the claiming details of the document/s.</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
-                                        <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
-                                        ".$addition_message."
-                                        <br>
-                                        ".$inquiryMsg."
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                        
-                                        <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
-    
-                } else {
-                    $body    =    "<div style='display:flex; align-items: center;'>
-                                            <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                            <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                        </div>
-                                        
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your requests has been processed. You will be duly inform regarding the claiming details of the document/s.</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
-                                        <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
-                                        ".$addition_message."
-                                        <br>
-                                        ".$inquiryMsg."
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                        
-                                        <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
-                }
+                                      ".$addition_message."
+ 
 
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
 
-                $mail->Body = $body;
+                                      <br>
+                                      <br>
+
+                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      
+                                      <br>
+
+                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+
+                                      <br>
+                                      
+                                      <br>
+                                      <hr>
+                                      
+                                      <p style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'><b>CONFIDENTIALITY NOTICE</b> -- This email is intended only for the person(s) named in the message header. Unless otherwise indicated, it contains information that is confidential, privileged and/or exempt from disclosure under applicable law. If you have received this message in error, please notify the sender of the error and delete the message. Thank you.</p>
+                                      
+                                      <br>
+
+                                      <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
 
 
 
@@ -1590,8 +1599,18 @@
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
-                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_name = ucwords($firstname." ".$lastname);
                 $staff_email = $staff->staff_email;
+
+                $staff_type = $staff->staff_type;
+
+                if ($staff_type == 1) {
+                    $staff_text = "(Record-in-Charge)";
+                }
+
+                if ($staff_type == 2) {
+                    $staff_text = "(Frontline)";
+                }
             }
 
 
@@ -1603,6 +1622,7 @@
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
+                $student_fname = $request->firstname;
             }
 
 
@@ -1613,25 +1633,6 @@
             $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
 
             
-            
-
-            $documents = $this->StaffModel->get_documents($request_id);
-
-            $documentRequested = "";
-
-            foreach ($documents as $document):
-                $documentRequested .= "x".$document->document_copies." ".$document->document_name."<br>";
-            endforeach;
-
-
-
-            $inquiryMsg = "";
-            if($student_type == '1') {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_fullname." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            } else {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the frontline services (<a href='mailto:fakeemail.oadfls@clsu2.edu.ph'>fakeemail.oadfls@clsu2.edu.ph</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            }
-
 
             $addition_message = "";
             if(!empty($message)) {
@@ -1658,87 +1659,45 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Document is ready to be claim [".$request_id."]";
-                $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
-                $body = "";
-               
-                if ($delivery_option == 'send through courier') {
+                $mail->Subject = "Document is ready to be claim [Request ID: ".$request_id."]";
+                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Good day, ".ucwords($student_fname)."!</p>
+                    
+                                      <br>
+                  
+                                      <p style='margin: 0; line-height: 1.8;'>The document/s has been released. To claim it: </p>
+                                      <p style='margin: 0; line-height: 1.8;'>a.) For the drop box, claiming hours will be at  10:00 am - 11:00am and 3:00 pm - 5:00 pm and  located at the CLSU Main Gate.
+                                      </p>
+                                      <p style='margin: 0; line-height: 1.8;'>b.) For the courier, kindly wait for further notice and delivery of your document/s.
+                                      </p>
 
-                    $body         =    "<div style='display:flex; align-items: center;'>
-                                            <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                            <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                        </div>
-                                        
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document/s has been released and already dropped to the courier. Please wait for further notice and delivery of your document/s.</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
-                                        <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
-                                        ".$addition_message."
-                                        <br>
-                                        ".$inquiryMsg."
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>";
-    
-    
-                } else if ($delivery_option == 'claim at clsu main gate') { 
-    
-                    $body         =    "<div style='display:flex; align-items: center;'>
-                                            <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                            <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                        </div>
-                                        
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document is ready to claim at the CLSU main gate (drop box). Claiming hours will be available at 10:00am - 11:00am and 3:00pm - 5:00pm.</p>
-                                        
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
-                                        <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
-                                        ".$addition_message."
-                                        <br>
-                                        ".$inquiryMsg."
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'><b>Note: </b>Claiming of the document/s may vary depending on the delivery schedule of the courier. The staffs are no longer responsible for any loss of the document/s once it is given to the courier.</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Thank you!</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                        
-                                        <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
-    
-                } else {
-    
-                    $body         =    "<div style='display:flex; align-items: center;'>
-                                            <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                            <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                        </div>
-                                        
+                                      ".$addition_message."
+ 
 
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Good day, this is to inform you that your document/s has been released. 
-                                        To claim your requested document/s: </p>
-                                        <p style='line-height: 1.8; margin: 0;'>The delivery option for the drop box will be available at the CLSU Main gate. Claiming hours will be at 10:00 am - 11:00am and 3:00 pm - 5:00 pm.</p>
-                                        <p style='line-height: 1.8; margin: 0;'>The delivery option for the courier, the document/s has been dropped. Kindly wait for further notice and delivery of your document/s.
-                                        </p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Here are the lists of the requested documents: </p>
-                                        <p style='line-height: 1.8; margin: 0 0 0 15px;'>".$documentRequested."</p>
-                                        ".$addition_message."
-                                        <br>
-                                        ".$inquiryMsg."
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'><b>Note: </b>Claiming of the document/s may vary depending on the delivery schedule of the courier. The staffs are no longer responsible for any loss of the document/s once it is given to the courier.</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0;'>Thank you!</p>
-                                        <br>
-                                        <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                        
-                                        <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
-                                        
-                }
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
 
+                                      <br>
+                                      <br>
 
-                $mail->Body = $body;
+                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      
+                                      <br>
+
+                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+
+                                      <br>
+                                      
+                                      <br>
+                                      <hr>
+                                      
+                                      <p style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'><b>CONFIDENTIALITY NOTICE</b> -- This email is intended only for the person(s) named in the message header. Unless otherwise indicated, it contains information that is confidential, privileged and/or exempt from disclosure under applicable law. If you have received this message in error, please notify the sender of the error and delete the message. Thank you.</p>
+                                      
+                                      <br>
+
+                                      <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
+
 
 
                 if(!$mail->send()) {
@@ -1814,8 +1773,18 @@
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
-                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_name = ucwords($firstname." ".$lastname);
                 $staff_email = $staff->staff_email;
+
+                $staff_type = $staff->staff_type;
+
+                if ($staff_type == 1) {
+                    $staff_text = "(Record-in-Charge)";
+                }
+
+                if ($staff_type == 2) {
+                    $staff_text = "(Frontline)";
+                }
             }
 
 
@@ -1827,6 +1796,7 @@
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
+                $student_fname = $request->firstname;
             }
 
 
@@ -1835,16 +1805,6 @@
             $outbox_status = 0;
 
             $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
-
-
-
-            $inquiryMsg = "";
-            if($student_type == '1') {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_fullname." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            } else {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the frontline services (<a href='mailto:fakeemail.oadfls@clsu2.edu.ph'>fakeemail.oadfls@clsu2.edu.ph</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            }
-
 
             $addition_message = "";
             if(!empty($message)) {
@@ -1871,23 +1831,42 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Document requested is complete. [".$request_id."]";
-                $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
-               
-                $mail->Body    =    "<div style='display:flex; align-items: center;'>
-                                        <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                        <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                                    </div>
-                                    
-                                    <br>
-                                    <p style='line-height: 1.8; margin: 0;'>Good day, in response to your request, we have completely processed your document/s and already released it. The documents requested are attached, you can now access and download it.</p>
-                                    ".$addition_message."
-                                    <br>
-                                    ".$inquiryMsg."
-                                    <br>
-                                    <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                            
-                                    <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
+                $mail->Subject = "Document requested is complete [Request ID: ".$request_id."]";
+                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hi, ".ucwords($student_fname)."!</p>
+                    
+                                      <br>
+                  
+                                      <p style='margin: 0; line-height: 1.8;'>We have completely processed and released your request/s. The documents requested are attached below, you can now access and download it.
+                                      </p>
+
+                                      ".$addition_message."
+ 
+
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+
+                                      <br>
+                                      <br>
+
+                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      
+                                      <br>
+
+                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+
+                                      <br>
+                                      
+                                      <br>
+                                      <hr>
+                                      
+                                      <p style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'><b>CONFIDENTIALITY NOTICE</b> -- This email is intended only for the person(s) named in the message header. Unless otherwise indicated, it contains information that is confidential, privileged and/or exempt from disclosure under applicable law. If you have received this message in error, please notify the sender of the error and delete the message. Thank you.</p>
+                                      
+                                      <br>
+
+                                      <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
+
 
                 //Attachments
                 for($i=0 ; $i<$countFiles ; $i++) {
@@ -1995,8 +1974,18 @@
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
-                $staff_fullname = ucwords($firstname." ".$middlename." ".$lastname);
+                $staff_name = ucwords($firstname." ".$lastname);
                 $staff_email = $staff->staff_email;
+
+                $staff_type = $staff->staff_type;
+
+                if ($staff_type == 1) {
+                    $staff_text = "(Record-in-Charge)";
+                }
+
+                if ($staff_type == 2) {
+                    $staff_text = "(Frontline)";
+                }
             }
             
             $request_id = $this->input->post('id');
@@ -2010,6 +1999,7 @@
                 $date = $request->date_created;
                 $student_type = $request->student_type;
                 $delivery_option = $request->delivery_option;
+                $student_fname = $request->firstname;
             }
 
 
@@ -2018,28 +2008,6 @@
             $outbox_status = 0;
 
             $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
-
-            $inquiryMsg = "";
-            if($student_type == '1') {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the respective record-in-charge, ".$staff_fullname." (<a href='mailto:".$staff_email."'>".$staff_email."</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            } else {
-                $inquiryMsg = "<p style='line-height: 1.5; margin: 0;'>If you have any concerns regarding to your request, kindly email the frontline services (<a href='mailto:fakeemail.oadfls@clsu2.edu.ph'>fakeemail.oadfls@clsu2.edu.ph</a>) or <a href='localhost/drms/'>contact us</a> for other inquiries.</p>";
-            }
-
-
-            $body_message = "<div style='display:flex; align-items: center;'>
-                                <img src='cid:clsulogo' alt='clsulogo' width='40px' height='40px'>
-                                <h2 style='margin-left:10px!important; margin-top: 7px'>CLSU | OAD</h2>
-                            </div>
-
-                            <br>
-                            <p style='line-height: 1.8; margin: 0;'>Good day! This is to inform you that we have already received your proof of payment. Please wait for futher notice.</p>
-                            <br>
-                            ".$inquiryMsg."
-                            <br>
-                            <p style='line-height: 1.8; margin: 0; text-transform: uppercase; color: red;'>Please do not respond to this automated email. This is an unattended mailbox.</p>
-                                
-                            <p style='line-height: 1.5; margin: 0; text-transform: uppercase; color: red;'>Note that this is used for testing purposes only. PLEASE DISREGARD THIS EMAIL.</p>";
 
 
 
@@ -2062,10 +2030,43 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Your payment has been recevied [".$request_id."]";
-                $mail->AddEmbeddedImage('./assets/styles/resources/logo.png','clsulogo','logo.png');
-                $mail->Body    =    $body_message;
+                $mail->Subject = "Payment Received [Request ID: ".$request_id."]";
+                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hello, ".ucwords($student_fname)."!</p>
+                    
+                                    <br>
+                
+                                    <p style='margin: 0; line-height: 1.8;'>We have already received your payment. Kindly wait as you will be duly informed regarding the processing of the document/s.
+                                    </p>
+
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+
+                                    <br>
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                    <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                    <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                    <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                    
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+
+                                    <br>
+                                    
+                                    <br>
+                                    <hr>
+                                    
+                                    <p style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'><b>CONFIDENTIALITY NOTICE</b> -- This email is intended only for the person(s) named in the message header. Unless otherwise indicated, it contains information that is confidential, privileged and/or exempt from disclosure under applicable law. If you have received this message in error, please notify the sender of the error and delete the message. Thank you.</p>
+                                    
+                                    <br>
+
+                                    <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
                             
+
+
                 if(!$mail->send()) {
                     
                     $status = $temp_status; 

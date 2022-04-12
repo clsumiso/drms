@@ -48,7 +48,14 @@ class AdminModel extends CI_Model
 		$query = $this->db->query("SELECT * FROM staff_account_tbl WHERE staff_email = '".$email."'");
 		return $query->row();
 	}
-	
+
+
+	public function checkAccountUpdate($id) {
+		$query = $this->db->query("SELECT * FROM staff_account_tbl WHERE staff_id <> '".$id."'");
+		return $query->result();
+	}
+
+
 	public function createAccount($data) {
         $this->db->insert('staff_account_tbl', $data);
     }
@@ -64,7 +71,8 @@ class AdminModel extends CI_Model
 	}
 
 	public function displayColleges() {
-		$query = $this->db->get('tbl_college');
+		$db2 = $this->load->database('admissions', TRUE);
+		$query = $db2->get('tbl_college');
         return $query->result();
 	}
 
@@ -85,12 +93,14 @@ class AdminModel extends CI_Model
 
 
 	public function getColleges_option() {
-		$query = $this->db->query("SELECT * FROM tbl_college ORDER BY college_id ASC");
+		$db2 = $this->load->database('admissions', TRUE);
+		$query = $db2->query("SELECT * FROM tbl_college ORDER BY college_id ASC");
         return $query->result();
 	}
 
 	public function displayCourses($id) {
-		$query = $this->db->query("SELECT * FROM tbl_course WHERE college_id = '".$id."'");
+		$db2 = $this->load->database('admissions', TRUE);
+		$query = $db2->query("SELECT * FROM tbl_course WHERE college_id = '".$id."' AND course_type NOT IN('EMP')");
         return $query->result();
 	}
 

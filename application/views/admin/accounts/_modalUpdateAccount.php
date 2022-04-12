@@ -4,12 +4,20 @@
             <form id="formUpdateAccount">
                 <div class="modal-content">
                     <div class="modal-header px-5">
-                        <h3 class="modal-title poppins text-uppercase fw-bolder"` id="staticBackdropLabel"`>update account</h3>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h3 class="modal-title poppins text-uppercase fw-bolder" id="staticBackdropLabel">update account</h3>
+                        <button type="button" class="btn-close" id="toggleAccountUpdateClose" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     
 
                     <div class="modal-body px-5">
+
+                        <div class="row">
+                            <div class="form-group col-lg-3 mb-3">
+                                <label for="u_getStaffID" class="form-label">Staff ID</label>
+                                <input type="text" name="u_getStaffID" id="u_getStaffID" class="form-control" maxlength="11" autocomplete="off">
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="form-group col-lg-4 mb-3">
                                 <label for="u_givenname" class="form-label">Given name</label>
@@ -86,7 +94,7 @@
 
 
                         <div class="modal-footer px-5">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Discard</button>
+                            <button type="button" class="btn btn-secondary" id="toggleUpdateAccountUpdateClose2" data-bs-dismiss="modal">Discard</button>
                             <button type="submit" class="btn btn-primary">Update account</button>
                         </div>
                     </div>

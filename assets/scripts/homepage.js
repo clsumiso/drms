@@ -13,7 +13,7 @@ $(document).ready(function() {
 
 
     $('#btnLogin').click(function() {
-        window.location.href = window.location.origin + '/drms_ojt/login';
+        window.location.href = window.location.origin + '/drms/login';
     })
 
     $('#btnEmailUs').click(function() {
@@ -90,7 +90,7 @@ $(document).ready(function() {
             let formData = $('#formEmail').serialize()
 
             $.ajax({
-                url: window.location.origin + '/drms_ojt/email-us',
+                url: window.location.origin + '/drms/email-us',
                 type: 'POST',
                 data: formData,
                 datatype: 'json',
@@ -128,7 +128,7 @@ $(document).ready(function() {
         let dataReviewForm = $('#submitReviewForm').serialize()
 
         $.ajax({
-            url: window.location.origin + '/drms_ojt/feedback',
+            url: window.location.origin + '/drms/feedback',
             type: 'POST',
             data: dataReviewForm,
             datatype: 'json',
@@ -152,7 +152,62 @@ $(document).ready(function() {
 
 
     $('#btnCloseFeedback').click(function() {
-        window.location.href = "databases/students/session_destroy.php";
+        window.location.href = window.location.origin + '/drms';
     })
+
+
+    $('#btnTrack').click(function() {
+        $('#modalTrack').fadeIn()
+    })
+
+    
+    $('#closeModalTrackRequest').click(function() {
+        $('#modalTrack').fadeOut()
+    })
+
+
+
+    $('#formSearchRequest').submit(function(e) {
+
+        e.preventDefault()
+
+        let data = $(this).serialize()
+
+        if ($('#requestID').val()) {
+            $.ajax ({
+                
+                url: window.location.origin + '/drms/student/searchRequest',
+                type: 'POST',
+                data: data,
+                beforeSend: function() {
+                    $("#webLoader").fadeIn()
+                },
+                success: function(data) {
+                    console.log(data)
+                    $("#webLoader").fadeOut()
+
+                    if (data == 1) {
+                        window.location.href = window.location.origin + '/drms/student/request/' + $('#requestID').val();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'No request found.',
+                        })
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr)
+                    console.log(status)
+                    console.log(error)
+                }
+
+            })
+        }   
+        
+
+    })
+
 
 })

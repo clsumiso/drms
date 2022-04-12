@@ -24,7 +24,8 @@ date_default_timezone_set('Asia/Manila');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/drms_ojt/';
+$config['base_url'] = 'http://localhost/drms/';
+// $config['base_url'] = 'https://oad.clsu2.edu.ph/drms/';
 
 /*
 |--------------------------------------------------------------------------

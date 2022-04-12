@@ -60,7 +60,7 @@ $(document).ready(function() {
             confirmButtonText: 'Logout'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.replace(window.location.origin + '/drms_ojt/staff_logout');
+                window.location.replace(window.location.origin + '/drms/staff_logout');
             }
         })
 
@@ -73,7 +73,7 @@ $(document).ready(function() {
         function displayWidgets() {
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/dashboard_widgets',
+                url: window.location.origin + '/drms/admin/dashboard_widgets',
                 type: 'GET',
                 success: function(data) {
                     $('.widgets').empty()
@@ -95,7 +95,7 @@ $(document).ready(function() {
         function displayEmployeeStatus() {
 
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/admin/dashboard_employee_status',
+                    url: window.location.origin + '/drms/admin/dashboard_employee_status',
                     type: 'GET',
                     success: function (data) {
                         $('#tblEmployeeStatus tbody').empty()
@@ -122,7 +122,7 @@ $(document).ready(function() {
 
         function displayStaffAccounts() {
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/display_account',
+                url: window.location.origin + '/drms/admin/display_account',
                 type: 'GET',
                 success: function(data) {
                     $('#tableStaffs tbody').empty()
@@ -153,6 +153,7 @@ $(document).ready(function() {
             
             $('#c_password').attr('type', 'password')
             $('#c_confirmpass').attr('type', 'password')
+
         }
 
         $('#toggleAccountClose').click(function() {
@@ -438,7 +439,7 @@ $(document).ready(function() {
             if(countValidation == 9) {
                 let data = $(this).serialize()
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/admin/create_account',
+                    url: window.location.origin + '/drms/admin/create_account',
                     type: 'POST',
                     data: data,
                     success: function(data) {
@@ -492,7 +493,7 @@ $(document).ready(function() {
                     let id = $(this).parent().parent().parent().find('.getStaffID').val()
                     
                     $.ajax ({
-                        url: window.location.origin + '/drms_ojt/admin/delete_account',
+                        url: window.location.origin + '/drms/admin/delete_account',
                         type: 'POST',
                         data: {
                             id: id
@@ -708,12 +709,11 @@ $(document).ready(function() {
 
         $('#formUpdateAccount').submit(function(e) {
 
-            console.log('asldkjhnsakidjsbaikjdbs')
-
             e.preventDefault()
             $('.account-validation').remove()
         
             let countValidation = 0
+            let totalValidation = 5
         
             if ($('#u_givenname').val()) {
                 if (validateName($('#u_givenname').val())) {
@@ -786,43 +786,49 @@ $(document).ready(function() {
             }
         
         
-            // if ($('#u_password').val()) {
-            //     if ($('#u_password').val().length > 8 && $('#u_password').val().length < 32) {
-            //         $('#u_password').removeClass('is-invalid')
-            //         $('#u_password').addClass('is-valid')
-            //         countValidation++
-            //     } else {
-            //         $('#u_password').addClass('is-invalid')
-            //         $('#u_password').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Password must be 8 to 32 characters</p>')
-            //     }
-            // } else {
-            //     $('#u_password').addClass('is-invalid')
-            //     $('#u_password').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
-            // }
+            if ($('#u_password').val()) {
+                totalValidation++
+                if ($('#u_password').val().length > 8 && $('#u_password').val().length < 32) {
+                    $('#u_password').removeClass('is-invalid')
+                    $('#u_password').addClass('is-valid')
+                    countValidation++
+                } else {
+                    $('#u_password').addClass('is-invalid')
+                    $('#u_password').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Password must be 8 to 32 characters</p>')
+                }
+            }
             
-            // if ($('#u_password').val()) {
-            //     if ($('#u_confirmpass').val() == $('#u_password').val()) {
-            //         $('#u_confirmpass').removeClass('is-invalid')
-            //         $('#u_confirmpass').addClass('is-valid')
-            //         countValidation++
-            //     } else {
-            //         $('#u_confirmpass').addClass('is-invalid')
-            //         $('#u_confirmpass').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Incorrect password</p>')
-            //     }
-            // }
+            if ($('#u_password').val()) {
+                totalValidation++
+                if ($('#u_confirmpass').val() == $('#u_password').val()) {
+                    $('#u_confirmpass').removeClass('is-invalid')
+                    $('#u_confirmpass').addClass('is-valid')
+                    countValidation++
+                } else {
+                    $('#u_confirmpass').addClass('is-invalid')
+                    $('#u_confirmpass').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Incorrect password</p>')
+                }
+            }
         
         
-            if(countValidation == 5) {
+            if(countValidation == totalValidation) {
                 
                 let data = $(this).serialize()
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/admin/update_account',
+                    url: window.location.origin + '/drms/admin/update_account',
                     type: 'POST',
                     data: data,
                     success: function(data) {
-
-
                         
+                        let request = JSON.parse(data)
+
+                        Swal.fire(
+                            request.subject,
+                            request.message,
+                            request.icon
+                        )
+
+                        $('#toggleUpdateAccountUpdateClose2').click()
                         resetUpdateAccount()
                         displayStaffAccounts()
 
@@ -859,7 +865,7 @@ $(document).ready(function() {
 
         function displayColleges() {
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/display_college',
+                url: window.location.origin + '/drms/admin/display_college',
                 type: 'GET',
                 success: function(data) {
                     $('#tblColleges tbody').empty()
@@ -938,7 +944,7 @@ $(document).ready(function() {
                 let data = $(this).serialize()
 
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/admin/create_college',
+                    url: window.location.origin + '/drms/admin/create_college',
                     type: 'POST',
                     data: data,
                     success: function(data) {
@@ -1029,7 +1035,7 @@ $(document).ready(function() {
                 let data = $(this).serialize()
 
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/admin/update_college',
+                    url: window.location.origin + '/drms/admin/update_college',
                     type: 'POST',
                     data: data,
                     success: function(data) {
@@ -1075,7 +1081,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax ({
-                        url: window.location.origin + '/drms_ojt/admin/delete_college',
+                        url: window.location.origin + '/drms/admin/delete_college',
                         type: 'POST',
                         data: {
                             id: id
@@ -1113,7 +1119,7 @@ $(document).ready(function() {
         function getCollegesOptions() {
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/get_colleges_opt',
+                url: window.location.origin + '/drms/admin/get_colleges_opt',
                 type: 'GET',
                 success: function(data) {
                     $('#c_getCourseCollege').empty()
@@ -1140,7 +1146,7 @@ $(document).ready(function() {
         function displayCourses() {
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/display_course',
+                url: window.location.origin + '/drms/admin/display_course',
                 type: 'GET',
                 success: function(data) {
                     $('#tblCourses tbody').empty()
@@ -1231,7 +1237,7 @@ $(document).ready(function() {
                 let data = $(this).serialize()
 
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/admin/create_course',
+                    url: window.location.origin + '/drms/admin/create_course',
                     type: 'POST',
                     data: data,
                     success: function(data) {
@@ -1336,7 +1342,7 @@ $(document).ready(function() {
                 let data = $(this).serialize()
         
                 $.ajax ({
-                    url: window.location.origin + '/drms_ojt/admin/update_course',
+                    url: window.location.origin + '/drms/admin/update_course',
                     type: 'POST',
                     data: data,
                     success: function(data) {
@@ -1381,7 +1387,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax ({
-                        url: window.location.origin + '/drms_ojt/admin/delete_course',
+                        url: window.location.origin + '/drms/admin/delete_course',
                         type: 'POST',
                         data: {
                             id: id
@@ -1431,7 +1437,7 @@ $(document).ready(function() {
 
         function displayHandlers() {
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/display_handler',
+                url: window.location.origin + '/drms/admin/display_handler',
                 type: 'GET',
                 success: function(data) {
                     $('.handlers-wrappers').empty()
@@ -1474,7 +1480,7 @@ $(document).ready(function() {
             let self = this
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/update_handler_ric',
+                url: window.location.origin + '/drms/admin/update_handler_ric',
                 type: 'POST',
                 data: {
                     id: id,
@@ -1513,7 +1519,7 @@ $(document).ready(function() {
             let self = this
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/update_handler_frontline',
+                url: window.location.origin + '/drms/admin/update_handler_frontline',
                 type: 'POST',
                 data: {
                     id: id,
@@ -1557,7 +1563,7 @@ $(document).ready(function() {
 
         function displayRatings() {
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/display_feedback_ratings',
+                url: window.location.origin + '/drms/admin/display_feedback_ratings',
                 type: 'POST',
                 success: function(data) {
                     $('.feedback-ratings').empty()
@@ -1578,7 +1584,7 @@ $(document).ready(function() {
 
             let type = $('#getType').val()
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/display_suggestions',
+                url: window.location.origin + '/drms/admin/display_suggestions',
                 type: 'POST',
                 data: {
                     type: type
@@ -1685,7 +1691,7 @@ $(document).ready(function() {
         function getMaintenanceStatus() {
 
             $.ajax ({
-                url: window.location.origin + '/drms_ojt/admin/maintenanceStatus',
+                url: window.location.origin + '/drms/admin/maintenanceStatus',
                 type: 'GET',
                 success: function(data) {
                     if (data == 0) {
@@ -1746,7 +1752,7 @@ $(document).ready(function() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax ({
-                        url: window.location.origin + '/drms_ojt/admin/setMaintenanceStatus',
+                        url: window.location.origin + '/drms/admin/setMaintenanceStatus',
                         type: 'POST',
                         data: {
                             status: status

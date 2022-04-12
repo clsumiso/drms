@@ -12,7 +12,7 @@
                         <div class="row">
                             <div class="form-group col-lg-3 mb-3">
                                 <label for="c_staffID" class="form-label">Staff ID</label>
-                                <input type="text" name="c_staffID" id="c_staffID" class="form-control" maxlength="7" autocomplete="off">
+                                <input type="text" name="c_staffID" id="c_staffID" class="form-control" maxlength="12" autocomplete="off">
                             </div>
                         </div>
 

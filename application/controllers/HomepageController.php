@@ -32,6 +32,7 @@
                 $this->load->view('homepage/_footer');
                 $this->load->view('homepage/_modal_email');
                 $this->load->view('homepage/_modal_feedback');
+                $this->load->view('homepage/_modal_track');
                 $this->load->view('homepage/_script');
             }
             
