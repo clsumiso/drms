@@ -33,7 +33,6 @@ class StudentModel extends CI_Model
     public function checkStudentID($id) {
 		$db2 = $this->load->database('admissions', TRUE);
         $query = $db2->query("SELECT * FROM tbl_profile WHERE user_id = '$id'");
-
         return $query->row();
     }
 
@@ -44,6 +43,14 @@ class StudentModel extends CI_Model
         $query = $db2->query("SELECT * FROM tbl_profile WHERE email = '$email'");
 
         return $query->row();
+    }
+
+
+
+    public function checkEmaiUserID($id, $email) {
+		$db2 = $this->load->database('admissions', TRUE);
+        $query = $db2->query("SELECT * FROM tbl_profile");
+        return $query->result();
     }
 
 

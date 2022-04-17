@@ -662,13 +662,16 @@
             $email = $this->input->post('email');
 
             
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
+
             $this->load->model('StudentModel');
-            $user_id = $this->StudentModel->checkStudentID($user_id);
+            $user = $this->StudentModel->checkStudentID($user_id);
 
             $countValidation = 0;
             $countInvalid = 0;
 
-            if (isset($user_id)) {
+            if (isset($user)) {
                 $countValidation++;
             } else {
                 $validate = array(
@@ -683,16 +686,16 @@
             }
 
 
-            $email = $this->StudentModel->checkEmail($email);
+            $emailcheck = $this->StudentModel->checkEmail($email);
 
-            if (isset($email)) {
+            if (isset($emailcheck)) {
                 $countValidation++;
             } else {
                 $validate = array(
                     'status'        =>  0,
                     'icon'          =>  'error',
                     'title'         =>  'Invalid CLSU email',
-                    'message'       =>  'If problem persist, please email your concern to <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com'
+                    'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
                 );
 
                 $countInvalid++;
@@ -701,9 +704,41 @@
 
             if ($countValidation == 2) {
 
-                $validate = array(
-                    'status'        =>  1
-                );
+                $result = $this->StudentModel->checkEmaiUserID("18-2079", "labiste.darwin@clsu2.edu.ph");
+                
+                if (isset($result)) {
+                    $countings = 0;
+
+                    foreach ($result as $res):
+                       
+                        if ($res->user_id == $user_id && $res->email == $email) {
+                            $validate = array(
+                                                    'status'        =>  1
+                                                );
+                            $countings = 1;
+                        }
+                        
+                    endforeach;
+
+                    if ($countings == 0) {
+                        $validate = array(
+                                    'status'        =>  0,
+                                    'icon'          =>  'error',
+                                    'title'         =>  'Student ID and CLSU email are invalid',
+                                    'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
+                                );
+                    }
+
+
+                } else {
+                    $validate = array(
+                        'status'        =>  0,
+                        'icon'          =>  'error',
+                        'title'         =>  'Student ID and CLSU email are invalid',
+                        'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
+                    );
+                }
+               
 
             } else {
                 if ($countInvalid == 2) {
@@ -711,7 +746,7 @@
                         'status'        =>  0,
                         'icon'          =>  'error',
                         'title'         =>  'Student ID and CLSU email are invalid',
-                        'message'       =>  'If problem persist, please email your concern to <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com'
+                        'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
                     );
                 }
             }
