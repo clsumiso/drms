@@ -111,8 +111,14 @@ $(document).ready(function() {
                     
                 },
                 success: function(data) {
-                    $("#webLoader").fadeOut()
+                        
+                    $('#validationSubmit').empty()
+                    $('.bg-logo-web-load .spinlogo').css('animation-iteration-count', '0')
+                    $('#validationSubmit').append('<p>'+data+'</p>')
+                    $('#validationSubmit').append('<div class="mt-3"><a href="" class="btn btn-primary poppins w-25 p-2" id="btnCloseUpdatePaymentPageLoader">Close</a></div>')
+
                     getRequest()
+
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr)
@@ -129,6 +135,12 @@ $(document).ready(function() {
 
     })
 
+
+
+    $('#btnCloseUpdatePaymentPageLoader').click(function(e) {
+        e.preventDefault()
+        $("#webLoader").fadeOut()
+    })
 
 
 })

@@ -180,25 +180,25 @@ $(document).ready(function() {
         $('#getIdentityUpload').click()
     })
 
-    $('#getIdentityUpload').change(function(e) {
+    // $('#getIdentityUpload').change(function(e) {
 
-        $('.validate-identity-upload').empty()
+    //     $('.validate-identity-upload').empty()
 
-        if(validateImg($(this).val())) {
-            let fileNameExt = e.target.files[0].name
-            identityName = fileNameExt
-            let fileExt = $(this).val().substr( ($(this).val().lastIndexOf('.') + 1) )
+    //     if(validateImg($(this).val())) {
+    //         let fileNameExt = e.target.files[0].name
+    //         identityName = fileNameExt
+    //         let fileExt = $(this).val().substr( ($(this).val().lastIndexOf('.') + 1) )
 
-            if(fileExt == 'pdf') {
-                $('.validate-identity-upload').append('<div class="validate-identity-text"><i class="bx bxs-file-pdf"></i><p>'+fileNameExt+'</p></div>')
-            } else {
-                $('.validate-identity-upload').append('<div class="validate-identity-text"><i class="bx bxs-image"></i><p>'+fileNameExt+'</p></div>')
-            }
-        } else {
-            $('.validate-identity-upload').append('<div class="validate-identity-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
-        }
+    //         if(fileExt == 'pdf') {
+    //             $('.validate-identity-upload').append('<div class="validate-identity-text"><i class="bx bxs-file-pdf"></i><p>'+fileNameExt+'</p></div>')
+    //         } else {
+    //             $('.validate-identity-upload').append('<div class="validate-identity-text"><i class="bx bxs-image"></i><p>'+fileNameExt+'</p></div>')
+    //         }
+    //     } else {
+    //         $('.validate-identity-upload').append('<div class="validate-identity-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
+    //     }
 
-    })
+    // })
 
     $('#getStudentID').change(function() {
         $(this).parent().parent().find('.error-msg').remove()
@@ -863,6 +863,29 @@ $(document).ready(function() {
         } else {
             $(this).removeClass('is-invalid')
             $('#getDeliveryFinal').val($(this).find('option:selected').text())
+
+            $('#modalBodyChangeText').empty()
+
+            if ($(this).val() == 2) {
+
+                $('.modalTitleChangeHeader').text('Please note for Courier')
+
+                $('#modalBodyChangeText').append('<p class="poppins">The document/s will be delivered through courier. Receiving the document/s acquires two processes where the recipient will be notified through email, first if the RIC or Frontline is already preparing the requested document/s, second, if the document/s is already handed to the courier. JRS Express is the preferred courier of the Office of Admission, they ship parcels either by dropping off at a branch or picking up from the location, so thus delivery time will depend on the delivery process of the courier. Recipients may inquire from the JRS Express regarding their delivery service.</p>')
+
+                $('#btnToggleModalCourierNote').click()
+
+            }
+
+            if ($(this).val() == 3) {
+
+                
+                $('.modalTitleChangeHeader').text('Please note for Claiming at CLSU Main Gate')
+
+                $('#modalBodyChangeText').append('<p class="poppins" style="line-height: 2;">Claim at CLSU Main Gate allows the receiving of the documents through dropbox. You will receive an email if the document/s are available on the dropbox. Claiming hours are from 10:00 am - 11:00am and 3:00 pm - 5:00 pm Monday to Friday only.</p>')
+
+                $('#btnToggleModalCourierNote').click()
+            }
+
         }
     })
 
@@ -897,18 +920,18 @@ $(document).ready(function() {
         // counts total validated inputs
         let countValidatePage2 = 0
         // add validations for optional input
-        let countOptValidatePage2 = 12
+        let countOptValidatePage2 = 11
 
         // remove validation to prevent overlapping
         $(' .error-msg').remove()
 
         // validates uploaded identity
-        if(validateImg($('#getIdentityUpload').val())) {
-            countValidatePage2++
-        } else {
-            $('.validate-identity-upload').empty()
-            $('.validate-identity-upload').append('<div class="validate-identity-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
-        }
+        // if(validateImg($('#getIdentityUpload').val())) {
+        //     countValidatePage2++
+        // } else {
+        //     $('.validate-identity-upload').empty()
+        //     $('.validate-identity-upload').append('<div class="validate-identity-text text-danger"><i class="bx bxs-error-alt"></i><p class="fw-bold">Cannot be blank</p></div>')
+        // }
 
 
         if ($('#getStudentID').val()) {
@@ -1118,13 +1141,46 @@ $(document).ready(function() {
         }
     
 
-
-
         // Validate all validation to proceed to next page
         if(countValidatePage2 === countOptValidatePage2) {
-            $('#personalInfoContentPage').css('display', 'none')
-            $('#documentRequestContentPage').css('display', 'block')
-            $('#pageThree').addClass('active-page')
+
+            let sid = $('#getStudentID').val()
+            let email = $('#getEmail').val()
+            
+            $.ajax ({
+                url: window.location.origin + '/drms/student/checkSIDEmail',
+                type: 'POST',
+                data: {
+                    sid: sid,
+                    email: email
+                },
+                success: function(data) {
+
+                    let request = JSON.parse(data)
+
+                    if (request.status == 0) {
+
+                        Swal.fire({
+                            icon: request.icon,
+                            title: request.title,
+                            text: request.message,
+                        })
+
+                    } else {
+                        $('#personalInfoContentPage').css('display', 'none')
+                        $('#documentRequestContentPage').css('display', 'block')
+                        $('#pageThree').addClass('active-page')
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr)
+                    console.log(status)
+                    console.log(error)
+                }
+            })
+
+           
         }
     }
 
@@ -1295,7 +1351,7 @@ $(document).ready(function() {
 
         $('body').find('#appendAllRequests').empty()
 
-        $('#setIdentityUpload').text($('#getIdentityUpload').get(0).files.item(0).name)
+        // $('#setIdentityUpload').text($('#getIdentityUpload').get(0).files.item(0).name)
         $('#final_getstudentid').text($('#getStudentID').val())
         $('#final_getfullname').text($('#getLastname').val()+', '+$('#getFirstname').val()+' '+$('#getSuffix').val()+' '+$('#getMiddlename').val())
         $('#final_getcourse').text($('#getCourse').find('option:selected').text())
@@ -1413,7 +1469,7 @@ $(document).ready(function() {
 
     // print data from the php code (courses available)
     $.ajax({
-        url: window.location.origin + '/drms/student/courses',
+        url: window.location.origin + '/drms/student/coursesActive',
         type: 'GET',
         dataType: 'text',
         beforeSend: function() {
@@ -1446,10 +1502,28 @@ $(document).ready(function() {
             //     $("#webLoader").fadeIn()
             // },
             success: function(data) {
-                $('#validationSubmit').text(data)
+
+                $('#validationSubmit').empty()
+
+                let request = JSON.parse(data)
+
+                if (request.status != 1) {
+
+                    $('#validationSubmit').append('<p>'+request.title+'</p>')
+
+                } else {
+
+                    $('#validationSubmit').append('<p>'+request.title+'</p>')
+                    $('#validationSubmit').append('<h3>'+request.request_id+'</h3>')
+
+                }
+
+               
                 $('.bg-logo-web-load .spinlogo').css('animation-iteration-count', '0')
                 $('#validationSubmit').append('<div class="mt-3"><a href="'+window.location.origin+'/drms" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
+
             },
+
             error: function(xhr, status, error) {
                 console.log(xhr)
                 console.log(status)

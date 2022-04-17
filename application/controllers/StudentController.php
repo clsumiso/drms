@@ -2,10 +2,10 @@
 
     defined('BASEPATH') or exit('No direct script access allowed');
 
-    
+
     use PHPMailer\PHPMailer\PHPMailer;
-    use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
+    use PHPMailer\PHPMailer\SMTP;
 
     require 'vendor/autoload.php';
 
@@ -24,13 +24,14 @@
             if($result->status == 1) {
                 $this->load->view("maintenance");
             } else {
-                $this->load->view('student/active_student/_head.php');
-                $this->load->view('student/active_student/_css.php');
-                $this->load->view('student/active_student/_page_loader.php');
-                $this->load->view('student/active_student/_header.php');
-                $this->load->view('student/active_student/_navigation.php');
-                $this->load->view('student/active_student/main.php');
-                $this->load->view('student/active_student/_script.php');
+                $this->load->view('student/active_student/_head');
+                $this->load->view('student/active_student/_css');
+                $this->load->view('student/active_student/_page_loader');
+                $this->load->view('student/active_student/_header');
+                $this->load->view('student/active_student/_navigation');
+                $this->load->view('student/active_student/main');
+                $this->load->view('student/active_student/_modal_note');
+                $this->load->view('student/active_student/_script');
 	        }
 
             
@@ -44,13 +45,14 @@
             if($result->status == 1) {
                 $this->load->view("maintenance");
             } else {
-                $this->load->view('student/inactive_student/_head.php');
-                $this->load->view('student/inactive_student/_css.php');
-                $this->load->view('student/inactive_student/_page_loader.php');
-                $this->load->view('student/inactive_student/_header.php');
-                $this->load->view('student/inactive_student/_navigation.php');
-                $this->load->view('student/inactive_student/main.php');
-                $this->load->view('student/inactive_student/_script.php');
+                $this->load->view('student/inactive_student/_head');
+                $this->load->view('student/inactive_student/_css');
+                $this->load->view('student/inactive_student/_page_loader');
+                $this->load->view('student/inactive_student/_header');
+                $this->load->view('student/inactive_student/_navigation');
+                $this->load->view('student/inactive_student/main');
+                $this->load->view('student/active_student/_modal_note');
+                $this->load->view('student/inactive_student/_script');
 	        }
            
         }
@@ -70,14 +72,14 @@
 
                 if (isset($result)) {
     
-                    $this->load->view('student/payment/_head.php');
-                    $this->load->view('student/payment/_css.php');
-                    $this->load->view('student/payment/_head.php');
-                    $this->load->view('student/payment/_page_loader.php');
-                    $this->load->view('student/payment/_header.php');
-                    $this->load->view('student/payment/main.php');
-                    $this->load->view('student/payment/_modalPayment.php');
-                    $this->load->view('student/payment/_script.php');
+                    $this->load->view('student/payment/_head');
+                    $this->load->view('student/payment/_css');
+                    $this->load->view('student/payment/_head');
+                    $this->load->view('student/payment/_page_loader');
+                    $this->load->view('student/payment/_header');
+                    $this->load->view('student/payment/main');
+                    $this->load->view('student/payment/_modalPayment');
+                    $this->load->view('student/payment/_script');
 
                     $this->session->set_flashdata('rid', $request_id);
     
@@ -161,6 +163,15 @@
 
     
                     $identity = $request->identity_file;
+
+                    $identity_text = '';
+                    if (!empty($identity)) {
+                        $identity_text = '<div class="info-data">
+                                            <label for="" class="form-label">Identification: </label>
+                                            <a href="'.base_url('/assets/uploads/identities/'.$identity).'" download="'.$identity.'" class="text-uppercase mb-3 fw-500">Click here to download file</a>
+                                        </div>';
+                    }
+
                     $status = $request->status;
 
 
@@ -197,7 +208,17 @@
 
                     } else if ($status == 5) {
 
-                        $status_text = "Payment has been updated.";
+                        $status_text = "Reviewing Payment.";
+                        $remarksText = "Please wait while we review your proof of payment.";
+
+                    } else if ($status == 6) {
+
+                        $status_text = "Insufficient Payment.";
+                        $remarksText = "Please update your payment to complete your transaction.";
+
+                    } else if ($status == 7) {
+
+                        $status_text = "Reviewing Payment.";
                         $remarksText = "Please wait while we review your proof of payment.";
 
                     }
@@ -214,7 +235,8 @@
                                         </div>';
                     }
 
-
+                    $this->load->library('encryption');
+                    $this->encryption->initialize(array('driver' => 'mcrypt'));
 
                         
                     $firstname = $request->firstname;
@@ -228,9 +250,9 @@
                     
                     $year = $request->year;
 
-                    $email = $request->email;
-                    $contact = $request->contact_no;
-                    $address = strtoupper($request->barangay.', '.$request->city.', '.$request->province.', '.$request->region);
+                    $email = $this->encryption->decrypt($request->email);
+                    $contact = $this->encryption->decrypt($request->contact_no);
+                    $address = strtoupper($this->encryption->decrypt($request->barangay).', '.$this->encryption->decrypt($request->city).', '.$this->encryption->decrypt($request->province).', '.$this->encryption->decrypt($request->region));
 
                     $message = $request->message;
 
@@ -247,16 +269,34 @@
                     $showUpdatePayment = "";
                     $textUpdatePayment = "";
                     
-                    
+
                     if ($payment == "0") {
                         $showUpdatePayment = "<p>Does not require payment.</p>";
-                    } else if ($payment == "1") {
-                        $showUpdatePayment = '<button class="btn btn-primary poppins px-5 btnUpdatePayment" id="btnUpdatePayment">Update payment</button>';
                     } else {
-                        $showUpdatePayment = '<button class="btn btn-primary poppins px-5 btnUpdatePayment" id="btnUpdatePayment">Update payment</button>';
-                        $textUpdatePayment = '<a class="poppins" href="'.base_url('/assets/uploads/payments/'.$payment).'" download="'.$payment.'"><i class="fas fa-file-download fs-18 me-2"></i> Download file requirement</a>';
+
+                        if ($status == 0 || $status == 1 || $status == 2 || $status == 3) {
+                            $showUpdatePayment = '<a class="poppins" href="'.base_url('/assets/uploads/payments/'.$payment).'" download="'.$payment.'"><i class="fas fa-file-download fs-18 me-2"></i> Download file requirement</a>';
+                        }
+
+
+                        if ($status == 4 || $status == 5) {
+                            if ($payment == "1") {
+                                $showUpdatePayment = '<button class="btn btn-primary poppins px-5 btnUpdatePayment" id="btnUpdatePayment">Update payment</button>';
+                            } else {
+                                $showUpdatePayment = '<button class="btn btn-primary poppins px-5 btnUpdatePayment" id="btnUpdatePayment">Update payment</button>';
+                                $textUpdatePayment = '<a class="poppins" href="'.base_url('/assets/uploads/payments/'.$payment).'" download="'.$payment.'"><i class="fas fa-file-download fs-18 me-2"></i> Download file requirement</a>';
+                            }
+                        }
+
+
+                        if ($status == 6 || $status == 7) {
+                            $showUpdatePayment = '<button class="btn btn-primary poppins px-5 btnUpdatePayment" id="btnUpdatePayment">Update payment</button>';
+                            $textUpdatePayment = '<a class="poppins" href="'.base_url('/assets/uploads/payments/'.$payment).'" download="'.$payment.'"><i class="fas fa-file-download fs-18 me-2"></i> Download file requirement</a>';
+                        }
+
                     }
 
+                    
 
                     $purpose = $request->purpose;
                     $delivery = $request->delivery_option;
@@ -318,10 +358,7 @@
                         
                                         <h4 class="info-title">Personal Information</h4>
                         
-                                        <div class="info-data">
-                                            <label for="" class="form-label">Identification: </label>
-                                            <a href="'.base_url('/assets/uploads/identities/'.$identity).'" download="'.$identity.'" class="text-uppercase mb-3 fw-500">Click here to download file</a>
-                                        </div>
+                                        '.$identity_text.'
 
                                         '.$stud_no_text.'
                         
@@ -464,7 +501,6 @@
             $payment_file_error = $_FILES['fileUploadPaymentUpdate']['error'];
 
             if ($payment_file_error === 0) {
-                $status = 5;
                 $fileExtPayment = explode(".", $payment_filename);
                 $fileMainExtPayment = strtolower(end($fileExtPayment));
                 $filePaymentNewName = uniqid().".".$fileMainExtPayment;
@@ -472,7 +508,6 @@
                 $payment['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
                 $payment['file_name'] = $filePaymentNewName;
                 $payment['file_ext_tolower'] = TRUE;
-                // $payment['max_size']     = '3024';
                 $payment['upload_path'] = './assets/uploads/payments/';
     
                 $this->load->library('upload', $payment);
@@ -485,23 +520,46 @@
 
                 } else {
 
+
+                    $this->load->model('StudentModel');
+                    
+                    $result = $this->StudentModel->searchRequestID($rid);
+
+                    $status = 0;
+
+                    if (isset($result)) {
+                        if ($result->status == 4 || $result->status == 5) {
+                            $status = 5;
+                        }
+
+                        if ($result->status == 6 || $result->status == 7) {
+                            $status = 7;
+                        }
+                    }
+                    
+
                     $data = array (
                         'payment_file'      =>      $filePaymentNewName,
                         'status'            =>      $status
                     );
 
-                    $this->load->model('StudentModel');
                     $this->StudentModel->updateUploadPayment($rid, $data);
 
                     $staff = $this->StudentModel->getDesignatedRIC($course);
                     $staff_text = "";
+
+                    $designated_staff_details = "";
                     if (isset($staff)) {
                         if($staff->staff_id_ric != 0) {
                             $fname = $staff->staff_fname;
                             $middlename = $staff->staff_mname;
                             $lastname = $staff->staff_lname;
                             $staff_name = ucwords($fname."  ".$lastname);
-                            $staff_email = $staff->staff_email;
+
+                            $this->load->library('encryption');
+                            $this->encryption->initialize(array('driver' => 'mcrypt'));
+                            $staff_email = $this->encryption->decrypt($staff->staff_email);
+
 
                             $staff_type = $staff->staff_type;
 
@@ -512,6 +570,14 @@
                             if ($staff_type == 2) {
                                 $staff_text = "(Frontline)";
                             }
+
+
+                            $designated_staff_details = "<br>
+                                                         <br>
+                                                         <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                                         <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                                         <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                                         <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>";
                         }
                     }
 
@@ -519,17 +585,17 @@
                     try {
         
                         $mail->isSMTP();
-                        $mail->Host       = 'smtp-relay.sendinblue.com';
+                        $mail->Host       = 'smtp.gmail.com';
                         $mail->SMTPAuth   = true;
-                        $mail->Username   = 'personal.darwinlabiste@gmail.com';
-                        $mail->Password   = 'jbBL6Wd2EKQvpyqR';
-                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-                        $mail->Port       = 465;
+                        $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                        $mail->Password   = 'nifjnvzlrfrbskwu';
+                        $mail->SMTPSecure = 'tls';
+                        $mail->Port       = 587;
                         
                         
                         $mail->ClearReplyTos();
                         $mail->addAddress($email, $fullname);
-                        $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
+                        $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
         
         
                         $mail->isHTML(true);
@@ -542,15 +608,10 @@
 
                                             <br>
 
-                                            <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                            <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
-                                            <br>
-                                            <br>
-
-                                            <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                            <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                            <p style='margin: 0; line-height: 1.4;'>".$email_contact_ric."</p>
-                                            <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                            ".$designated_staff_details."
+                                            
                                             
                                             <br>
                                             <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
@@ -567,12 +628,12 @@
 
         
                         if(!$mail->send()) {
-                            echo "There was a problem sending your inquiry. Please try again later or <a href='mailto:unofficial.oadtesting@gmail.com'>contact the administrator</a>.";
+                            echo "There was a problem sending your inquiry. Please try again later or email <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a>.";
                         } else {
                             
                             $this->session->set_flashdata('rid', $rid);
-                            echo $_SESSION['rid'];
                             echo "You have successfully updated your payment.";
+
                         }
         
                     } catch (Exception $e) {
@@ -593,6 +654,95 @@
 
 
 
+
+
+        public function checkStudentIDEmail() {
+
+            $user_id = $this->input->post('sid');
+            $email = $this->input->post('email');
+
+            
+            $this->load->model('StudentModel');
+            $user_id = $this->StudentModel->checkStudentID($user_id);
+
+            $countValidation = 0;
+            $countInvalid = 0;
+
+            if (isset($user_id)) {
+                $countValidation++;
+            } else {
+                $validate = array(
+                    'status'        =>  0,
+                    'icon'          =>  'error',
+                    'title'         =>  'Invalid Student ID',
+                    'message'       =>  'If problem persist, please email your concern to  <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>'
+                );
+
+                $countInvalid++;
+
+            }
+
+
+            $email = $this->StudentModel->checkEmail($email);
+
+            if (isset($email)) {
+                $countValidation++;
+            } else {
+                $validate = array(
+                    'status'        =>  0,
+                    'icon'          =>  'error',
+                    'title'         =>  'Invalid CLSU email',
+                    'message'       =>  'If problem persist, please email your concern to <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com'
+                );
+
+                $countInvalid++;
+
+            }
+
+            if ($countValidation == 2) {
+
+                $validate = array(
+                    'status'        =>  1
+                );
+
+            } else {
+                if ($countInvalid == 2) {
+                    $validate = array(
+                        'status'        =>  0,
+                        'icon'          =>  'error',
+                        'title'         =>  'Student ID and CLSU email are invalid',
+                        'message'       =>  'If problem persist, please email your concern to <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com'
+                    );
+                }
+            }
+            
+
+
+
+            echo json_encode($validate);
+
+        }
+
+
+
+        public function getCourseActiveStudent() {
+            $this->load->model('StudentModel');
+            $college = $this->StudentModel->getColleges();
+            $course = $this->StudentModel->getCourses();
+
+            foreach($college as $row_college):
+                if (($row_college->college_id != "11") && ($row_college->college_id != "12")) {
+                    echo "<optgroup label='".$row_college->college_desc."'>";
+                    foreach($course as $row_course):
+                        if($row_college->college_id == $row_course->college_id && $row_course->course_status == 1) {
+                            echo "<option value='".$row_course->course_id."'>".$row_course->course_desc." (".$row_course->course_name.")</option>";
+                        }
+                    endforeach;
+                    echo "</optgroup>";
+                }
+            endforeach;
+        }
+
         
         public function getCourse() {
             $this->load->model('StudentModel');
@@ -604,7 +754,7 @@
                     echo "<optgroup label='".$row_college->college_desc."'>";
                     foreach($course as $row_course):
                         if($row_college->college_id == $row_course->college_id) {
-                            echo "<option value='".$row_course->course_id."'>".$row_course->course_desc."</option>";
+                            echo "<option value='".$row_course->course_id."'>".$row_course->course_desc." (".$row_course->course_name.")</option>";
                         }
                     endforeach;
                     echo "</optgroup>";
@@ -616,6 +766,9 @@
 
 
         public function insert_active_request() {
+
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
 
             $today = date('Y-m-d H:i:s');
             $date_created = $today;
@@ -655,22 +808,32 @@
                     $payment['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
                     $payment['file_name'] = $filePaymentNewName;
                     $payment['file_ext_tolower'] = TRUE;
-                    $payment['max_size']     = '3024';
                     $payment['upload_path'] = './assets/uploads/payments/';
         
                     $this->load->library('upload', $payment);
                     $this->upload->initialize($payment);
                     
                     if(!$this->upload->do_upload('getPaymentUpload')) {
-                        print_r($error = array('error' => $this->upload->display_errors()));
-                        echo "There was a problem moving your payment file. File is not uploaded!";
+
+                        $data = array (
+                            "status"        =>  0,
+                            "title"         =>  "There was a problem moving your payment file. File was not uploaded! ".$error = array('error' => $this->upload->display_errors())
+                        );
+        
+                        echo json_encode($data);
                     }
                     
                 }
                 
 
             } else {
-                echo "There was an error in the uploaded payment file. File error: Error-".$payment_file_error.". Please contact the administrator.";
+
+                $data = array (
+                    "status"        =>  0,
+                    "title"         =>  "There was an error in the uploaded payment file. File error: Error-".$payment_file_error.". Please contact the administrator."
+                );
+
+                echo json_encode($data);
             }
            
            
@@ -705,26 +868,26 @@
             // echo json_encode($request_data);
 
 
-            $identity_filename = $_FILES['getIdentityUpload']['name'];
+            // $identity_filename = $_FILES['getIdentityUpload']['name'];
             
             // Upload identity file
-            $fileExtIdentity = explode(".", $identity_filename);
-            $fileMainExtIdentity = strtolower(end($fileExtIdentity));
-            $fileIdentityNewName = uniqid().".".$fileMainExtIdentity;
+            // $fileExtIdentity = explode(".", $identity_filename);
+            // $fileMainExtIdentity = strtolower(end($fileExtIdentity));
+            // $fileIdentityNewName = uniqid().".".$fileMainExtIdentity;
 
-            $identity['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
-            $identity['file_name'] = $fileIdentityNewName;
-            $identity['file_ext_tolower'] = TRUE;
+            // $identity['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
+            // $identity['file_name'] = $fileIdentityNewName;
+            // $identity['file_ext_tolower'] = TRUE;
             // $identity['max_size']     = '3024';
-            $identity['upload_path'] = './assets/uploads/identities/';
+            // $identity['upload_path'] = './assets/uploads/identities/';
 
-            $this->load->library('upload', $identity);
-            $this->upload->initialize($identity);
+            // $this->load->library('upload', $identity);
+            // $this->upload->initialize($identity);
             
-            if(!$this->upload->do_upload('getIdentityUpload')) {
-                print_r($error = array('error' => $this->upload->display_errors()));
-                echo "There was a problem moving your identity file. File is not uploaded!";
-            }
+            // if(!$this->upload->do_upload('getIdentityUpload')) {
+            //     print_r($error = array('error' => $this->upload->display_errors()));
+            //     echo "There was a problem moving your identity file. File is not uploaded!";
+            // }
 
             $stud_no  = $this->input->post('getStudentID');
             $firstname  = strtolower($this->input->post('getFirstname'));
@@ -735,16 +898,16 @@
             $course_final  = strtolower($this->input->post('getFinalCourseText'));
             $year  = $this->input->post('getSchoolYear');
             $email  = $this->input->post('getEmail');
-            $contact_no  = $this->input->post('getPhone');
+            $contact_no  = $this->encryption->encrypt("+63".$this->input->post('getPhone'));
 
-            $region = strtolower($this->input->post('setRegion'));
-            $province = strtolower($this->input->post('setProvince'));
-            $city = strtolower($this->input->post('setCity'));
-            $barangay = strtolower($this->input->post('setBarangay'));
+            $region = $this->encryption->encrypt(strtolower($this->input->post('setRegion')));
+            $province = $this->encryption->encrypt(strtolower($this->input->post('setProvince')));
+            $city = $this->encryption->encrypt(strtolower($this->input->post('setCity')));
+            $barangay = $this->encryption->encrypt(strtolower($this->input->post('setBarangay')));
 
 
             $info_data = array (
-                "identity_file"    =>      $fileIdentityNewName,
+                // "identity_file"    =>      $fileIdentityNewName,`
                 "student_no"       =>      $stud_no,
                 "firstname"        =>      $firstname,
                 "middlename"       =>      $middlename,
@@ -752,8 +915,8 @@
                 "suffix"           =>      $suffix,
                 "course_name"      =>      $course_final,
                 "year"             =>      $year,
-                "email"            =>      $email,
-                "contact_no"       =>      "+63".$contact_no,
+                "email"            =>      $this->encryption->encrypt($email),
+                "contact_no"       =>      $contact_no,
                 "region"           =>      $region,
                 "province"         =>      $province,
                 "city"             =>      $city,
@@ -772,14 +935,16 @@
             
             if ($result !== true) {
 
-                echo "There was a problem sending your request. Please contact administrator.";
+                
+                $data = array (
+                    'status'        =>  0,
+                    'title'         =>  'There was a problem sending your request.  If problem persist, Please email <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                );
 
-                if (file_exists('./assets/uploads/identities/')) {
-                    unlink('./assets/uploads/identities/'.$fileIdentityNewName);
-                }
+                echo json_encode($data);
 
-                if (file_exists('./assets/uploads/identities/')) {
-                    unlink('./assets/uploads/identities/'.$filePaymentNewName);
+                if (file_exists('./assets/uploads/payments/'.$filePaymentNewName)) {
+                    unlink('./assets/uploads/payments/'.$filePaymentNewName);
                 }
 
             } else {
@@ -788,11 +953,26 @@
                 $staff = $this->StudentModel->getDesignatedRIC($course);
 
                 $email_contact_ric = "";
+                $designated_staff_details = "";
+
+
                 if (isset($staff)) {
                     if($staff->staff_id_ric != 0) {
                         $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
-                        $staff_email = $staff->staff_email;
-                        $email_contact_ric = "<a href='mailto:".$staff_email."'>".$staff_email."</a>)";
+
+                        $this->load->library('encryption');
+                        $this->encryption->initialize(array('driver' => 'mcrypt'));
+                        $staff_email = $this->encryption->decrypt($staff->staff_email);
+
+                        $email_contact_ric = "<a href='mailto:".$staff_email."'>".$staff_email."</a>";
+
+                        $designated_staff_details = "<br>
+                                                     <br>
+                                                     <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                                     <p style='margin: 0; line-height: 1.4;'>(Record-in-Charge)</p>
+                                                     <p style='margin: 0; line-height: 1.4;'>".$email_contact_ric."</p>
+                                                     <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>";
+
                     }
                 }
 
@@ -801,19 +981,18 @@
                 try {
     
                     $mail->isSMTP();
-                    $mail->Host       = 'smtp-relay.sendinblue.com';
+                    $mail->Host       = 'smtp.gmail.com';
                     $mail->SMTPAuth   = true;
-                    $mail->Username   = 'personal.darwinlabiste@gmail.com';
-                    $mail->Password   = 'jbBL6Wd2EKQvpyqR';
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-                    $mail->Port       = 465;
+                    $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                    $mail->Password   = 'nifjnvzlrfrbskwu';
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port       = 587;
                     
                     
                     $mail->ClearReplyTos();
                     $mail->addAddress($email, $fullname);
-                    $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
-    
-                    $mail->Priority = 1; // High priority flag is set.
+                    $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
+                    
                     
                     $mail->isHTML(true);
                     $mail->Subject = "Request confirmed [Request ID: ".$uniq_request_id."]";
@@ -825,15 +1004,9 @@
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
-                                      <br>
-                                      <br>
-
-                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                      <p style='margin: 0; line-height: 1.4;'>(Record-in-Charge)</p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$email_contact_ric."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      ".$designated_staff_details."
                                       
                                       <br>
                                       <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
@@ -849,18 +1022,44 @@
     
                     if(!$mail->send()) {
 
-                        echo "There was a problem sending your inquiry. Please try again later or <a href='mailto:unofficial.oadtesting@gmail.com'>contact the administrator</a>.";
+
+                        $data = array (
+                            'status'        =>  0,
+                            'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                        );
+
+                        echo json_encode($data);
+                        $this->StudentModel->deleteRequest($uniq_request_id);
+
+                        if (file_exists('./assets/uploads/payments/'.$filePaymentNewName)) {
+                            unlink('./assets/uploads/payments/'.$filePaymentNewName);
+                        }
 
                     } else {
 
-                        echo "Request was successfully sent!";
+                        $data = array (
+                            'status'        =>  1,
+                            'title'         =>  'Request was successfully sent. <br>Please screenshot or take note of your REQUEST ID for futher concerns.',
+                            'request_id'    =>  $uniq_request_id
+                        );
+
+                        echo json_encode($data);
                         $this->session->set_userdata('user', $student_type);
                         $this->session->set_flashdata('upload', true);
     
                     }
     
                 } catch (Exception $e) {
-                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+
+                    $data = array (
+                        'status'        =>  0,
+                        'title'         =>  'Message could not be sent. Mailer Error: {'.$mail->ErrorInfo.'}'
+                    );
+
+                    echo json_encode($data);
+                    $this->StudentModel->deleteRequest($uniq_request_id);
+                    
+
                 }
 
             }
@@ -904,7 +1103,7 @@
                     $payment['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
                     $payment['file_name'] = $filePaymentNewName;
                     $payment['file_ext_tolower'] = TRUE;
-                    $payment['max_size']     = '3024';
+                    // $payment['max_size']     = '3024';
                     $payment['upload_path'] = './assets/uploads/payments/';
         
                     $this->load->library('upload', $payment);
@@ -912,14 +1111,23 @@
                     
                     $status = 1;
                     if(!$this->upload->do_upload('getPaymentUpload')) {
-                        print_r($error = array('error' => $this->upload->display_errors()));
-                        echo "There was a problem moving your payment file. File is not uploaded!";
+                        $data = array (
+                            "status"        =>  0,
+                            "title"         =>  "There was a problem moving your payment file. File was not uploaded! ".$error = array('error' => $this->upload->display_errors())
+                        );
+        
+                        echo json_encode($data);
                     }
                     
                 }
 
             } else {
-                echo "There was an error in the uploaded payment file. File error: Error-".$payment_file_error.". Please contact the administrator.";
+                $data = array (
+                    "status"        =>  0,
+                    "title"         =>  "There was an error in the uploaded payment file. File error: Error-".$payment_file_error.". Please contact the administrator."
+                );
+
+                echo json_encode($data);
             }
 
             // initializing form data for request_tbl 
@@ -968,8 +1176,17 @@
             $this->upload->initialize($identity);
             
             if(!$this->upload->do_upload('getIdentityUpload')) {
-                print_r($error = array('error' => $this->upload->display_errors()));
-                echo "There was a problem moving your identity file. File is not uploaded!";
+
+                $data = array (
+                    "status"        =>  0,
+                    "title"         =>  "There was a problem moving your identity file. File was not uploaded! ".$error = array('error' => $this->upload->display_errors())
+                );
+
+                echo json_encode($data);
+
+                if (file_exists('./assets/uploads/identities/'.$fileIdentityNewName)) {
+                    unlink('./assets/uploads/identities/'.$fileIdentityNewName);
+                }
             }
 
 
@@ -981,12 +1198,12 @@
             $course_final  = strtolower($this->input->post('getFinalCourseText'));
             $year  = $this->input->post('getSchoolYear');
             $email  = $this->input->post('getEmail');
-            $contact_no  = $this->input->post('getPhone');
+            $contact_no  = $this->encryption->encrypt("+63".$this->input->post('getPhone'));
 
-            $region = strtolower($this->input->post('setRegion'));
-            $province = strtolower($this->input->post('setProvince'));
-            $city = strtolower($this->input->post('setCity'));
-            $barangay = strtolower($this->input->post('setBarangay'));
+            $region = $this->encryption->encrypt(strtolower($this->input->post('setRegion')));
+            $province = $this->encryption->encrypt(strtolower($this->input->post('setProvince')));
+            $city = $this->encryption->encrypt(strtolower($this->input->post('setCity')));
+            $barangay = $this->encryption->encrypt(strtolower($this->input->post('setBarangay')));
 
             $info_data = array (
                 "identity_file"    =>      $fileIdentityNewName,
@@ -996,8 +1213,8 @@
                 "suffix"           =>      $suffix,
                 "course_name"      =>      $course_final,
                 "year"             =>      $year,
-                "email"            =>      $email,
-                "contact_no"       =>      "+63".$contact_no,
+                "email"            =>      $this->encryption->encrypt($email),
+                "contact_no"       =>      $contact_no,
                 "region"           =>      $region,
                 "province"         =>      $province,
                 "city"             =>      $city,
@@ -1032,8 +1249,8 @@
                     $requirement['allowed_types'] = 'pdf';
                     $requirement['file_name'] = $document_upload;
                     $requirement['file_ext_tolower'] = TRUE;
-                    $requirement['max_size']     = '3024';
-                    $requirement['encrypt_name'] = '1024';
+                    // $requirement['max_size']     = '3024';
+                    // $requirement['encrypt_name'] = '1024';
                     $requirement['upload_path'] = './assets/uploads/requirements/';
                     $requirement['encrpyt_name'] = TRUE;
         
@@ -1061,7 +1278,12 @@
             $result = $this->StudentModel->insertRequestInactive($request_data, $info_data, $document_data, $requirements_upload, $today, $uniq_request_id);
             if ($result !== true) {
 
-                echo "There was a problem sending your request. Please contact administrator.";
+                $data = array (
+                    'status'        =>  0,
+                    'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                );
+
+                echo json_encode($data);
 
                 for($i=0 ; $i<$countUploadedRequirements ; $i++) {
                     if(file_exists("../uploads/requirements/".$requirements_upload[$i])) {
@@ -1069,12 +1291,12 @@
                     }
                 }
 
-                if (file_exists('./assets/uploads/identities/')) {
+                if (file_exists('./assets/uploads/identities/'.$fileIdentityNewName)) {
                     unlink('./assets/uploads/identities/'.$fileIdentityNewName);
                 }
 
-                if (file_exists('./assets/uploads/identities/')) {
-                    unlink('./assets/uploads/identities/'.$filePaymentNewName);
+                if (file_exists('./assets/uploads/payments/'.$filePaymentNewName)) {
+                    unlink('./assets/uploads/payments/'.$filePaymentNewName);
                 }
 
             } else {
@@ -1082,33 +1304,45 @@
                 $this->load->model('studentModel');
                 $staff = $this->StudentModel->getDesignatedFrontline($course);
 
+                $designated_staff_details = "";
                 $email_contact_frontline = "";
                 if (isset($staff)) {
                     if($staff->staff_id_frontline != 0) {
                         $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
-                        $staff_email = $staff->staff_email;
-                        $email_contact_frontline = "<a href='mailto:".$staff_email."'>".$staff_email."</a>)";
+                        
+                        $this->load->library('encryption');
+                        $this->encryption->initialize(array('driver' => 'mcrypt'));
+                        $staff_email = $this->encryption->decrypt($staff->staff_email);
+
+                        $email_contact_frontline = "<a href='mailto:".$staff_email."'>".$staff_email."</a>";
+
+                        $designated_staff_details = "<br>
+                                                     <br>
+                                                     <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                                     <p style='margin: 0; line-height: 1.4;'>(Record-in-Charge)</p>
+                                                     <p style='margin: 0; line-height: 1.4;'>".$email_contact_frontline."</p>
+                                                     <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>";
                     }
                 }
 
                 $mail = new PHPMailer(true);
                 try {
-    
+                    
                     $mail->isSMTP();
-                    $mail->Host       = 'smtp-relay.sendinblue.com';
+                    $mail->Host       = 'smtp.gmail.com';
                     $mail->SMTPAuth   = true;
-                    $mail->Username   = 'personal.darwinlabiste@gmail.com';
-                    $mail->Password   = 'jbBL6Wd2EKQvpyqR';
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-                    $mail->Port       = 465;
+                    $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                    $mail->Password   = 'nifjnvzlrfrbskwu';
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port       = 587;
                     
                     
                     $mail->ClearReplyTos();
                     $mail->addAddress($email, $fullname);
-                    $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
+                    $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
     
     
-                    $mail->Priority = 1; // High priority flag is set.
+                    
                     
                     $mail->isHTML(true);
                     $mail->Subject = "Request confirmed [Request ID: ".$uniq_request_id."]";
@@ -1120,15 +1354,9 @@
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
-                                      <br>
-                                      <br>
-
-                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                      <p style='margin: 0; line-height: 1.4;'>(Frontline)</p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$email_contact_frontline."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      ".$designated_staff_details."
                                       
                                       <br>
                                       <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
@@ -1145,18 +1373,67 @@
 
                     if(!$mail->send()) {
 
-                        echo "There was a problem sending your inquiry. Please try again later or <a href='mailto:unofficial.oadtesting@gmail.com'>contact the administrator</a>.";
+                        $data = array (
+                            'status'        =>  0,
+                            'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or email <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                        );
+
+                        echo json_encode($data);
+                        
+                        $this->StudentModel->deleteRequest($uniq_request_id);
+
+                        for($i=0 ; $i<$countUploadedRequirements ; $i++) {
+                            if(file_exists("../uploads/requirements/".$requirements_upload[$i])) {
+                                unlink("../uploads/requirements/".$requirements_upload[$i]);
+                            }
+                        }
+        
+                        if (file_exists('./assets/uploads/identities/'.$fileIdentityNewName)) {
+                            unlink('./assets/uploads/identities/'.$fileIdentityNewName);
+                        }
+        
+                        if (file_exists('./assets/uploads/payments/'.$filePaymentNewName)) {
+                            unlink('./assets/uploads/payments/'.$filePaymentNewName);
+                        }
 
                     } else {
 
-                        echo "Request was successfully sent!";
+                        $data = array (
+                            'status'        =>  1,
+                            'title'         =>  'Request was successfully sent. <br>Please screenshot or take note of your REQUEST ID for futher concerns.',
+                            'request_id'    =>  $uniq_request_id
+                        );
+
+                        echo json_encode($data);
                         $this->session->set_userdata('user', $student_type);
                         $this->session->set_flashdata('upload', true);
                         
                     }
     
                 } catch (Exception $e) {
-                    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                    $data = array (
+                        'status'        =>  0,
+                        'title'         =>  'Message could not be sent. Mailer Error: {'.$mail->ErrorInfo.'}'
+                    );
+
+                    echo json_encode($data);
+
+                    $this->StudentModel->deleteRequest($uniq_request_id);
+
+                    for($i=0 ; $i<$countUploadedRequirements ; $i++) {
+                        if(file_exists("../uploads/requirements/".$requirements_upload[$i])) {
+                            unlink("../uploads/requirements/".$requirements_upload[$i]);
+                        }
+                    }
+    
+                    if (file_exists('./assets/uploads/identities/'.$fileIdentityNewName)) {
+                        unlink('./assets/uploads/identities/'.$fileIdentityNewName);
+                    }
+    
+                    if (file_exists('./assets/uploads/payments/'.$filePaymentNewName)) {
+                        unlink('./assets/uploads/payments/'.$filePaymentNewName);
+                    }
+
                 }
 
             }

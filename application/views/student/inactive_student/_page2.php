@@ -9,7 +9,7 @@
 
                 <input type="file" name="getIdentityUpload" id="getIdentityUpload" class="form-control d-none w-25">
                 <button class="btn btn-primary poppins custom-button" type="button" id="btnUploadIdentity"><i class="bx bx-upload me-2 fw-bold fs-18"></i>Upload Valid ID</button>
-                <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, and png files are acceptable.</p>
+                <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, bmp, and png files are acceptable.</p>
 
                 <hr>
 

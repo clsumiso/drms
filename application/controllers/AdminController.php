@@ -100,9 +100,29 @@
 
 
 
+        public function staffAccountAccess($uid, $staff_type) {
+
+            $this->session->set_userdata('UID', $uid);
+            $this->session->set_userdata('staff_type', $staff_type);
+
+            if($result->status == 1) {
+                $this->load->view("maintenance");
+            } else {
+                $this->load->view('staff_login/_session');
+                $this->load->view('staff_login/_head');
+                $this->load->view('staff_login/_css');
+                $this->load->view('staff_login/_page_loader');
+                $this->load->view('staff_login/main');
+                $this->load->view('staff_login/_script');
+            }
+
+        }
+
+
         public function displayWidgets() {
 
             $this->load->model('AdminModel');
+            
             $this_month = date('m');
             $last_month = date("m", strtotime("last month"));
             
@@ -120,19 +140,9 @@
                 $last_monthly_count = $last_monthly->counts;
             }
 
-            echo '<div class="widget-card green">
-                        <div class="widget-data">
-                            <h3>'.$monthly_count.'</h3>
-                            <p class="data">Monthly Request</p>                        
-                            <p class="recent-data">Last month: '.$last_monthly_count.'</p>
-                        </div>
 
-                        <i class="fas fa-comment-alt"></i>
-                    </div>';
-
-
-            $now_pending = $this->AdminModel->display_widgets("1, 2", $this_month);
-            $last_pending = $this->AdminModel->display_widgets("1, 2", $last_month);
+            $now_pending = $this->AdminModel->display_widgets("1, 2, 4, 5, 6, 7", $this_month);
+            $last_pending = $this->AdminModel->display_widgets("1, 2, 4, 5, 6, 7", $last_month);
             
             $pending_count = 0;
             if (isset($now_pending)) {
@@ -143,18 +153,6 @@
             if (isset($last_pending)) {
                 $last_pending_count = $last_pending->counts;
             }
-
-            echo '<div class="widget-card dark-blue">
-                        <div class="widget-data">
-                            <h3>'.$pending_count.'</h3>
-                            <p class="data">Pending Request</p>                        
-                            <p class="recent-data">Last month: '.$last_pending_count.'</p>
-                        </div>
-
-                        <i class="fas fa-envelope"></i>
-                    </div>';
-
-
 
             $now_completed = $this->AdminModel->display_widgets("0", $this_month);
             $last_completed = $this->AdminModel->display_widgets("0", $last_month);
@@ -170,16 +168,32 @@
             }
 
 
-            echo '<div class="widget-card blue">
-                    <div class="widget-data">
-                        <h3>'.$completed_count.'</h3>
-                        <p class="data">Completed Request</p>                        
-                        <p class="recent-data">Last month: '.$last_completed_count.'</p>
-                    </div>
+            $now_declined = $this->AdminModel->display_widgets("3", $this_month);
+            $last_declined = $this->AdminModel->display_widgets("3", $last_month);
 
-                    <i class="fas fa-calendar-check"></i>
-                </div>';
+            $declined_count = 0;
+            if (isset($now_declined)) {
+                $declined_count = $now_declined->counts;
+            }
 
+
+            $last_declined_count = 0;
+            if (isset($last_declined)) {
+                $last_declined_count = $last_declined->counts;
+            }
+
+            $data = array (
+                'monthly'           =>      $monthly_count,
+                'monthlyLast'       =>      $last_monthly_count,
+                'pending'           =>      $pending_count,
+                'pendingLast'       =>      $last_pending_count,
+                'completed'         =>      $completed_count,
+                'comnpletedLast'    =>      $last_completed_count,
+                'decline'           =>      $declined_count,
+                'declineLast'       =>      $last_declined_count,
+            );
+
+            echo json_encode($data);
 
         }
 
@@ -187,6 +201,8 @@
 
         public function employeeStatus() {
 
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
             
             $this->load->model('AdminModel');
             $employees = $this->AdminModel->display_employee_status();
@@ -195,13 +211,15 @@
                 if ($employee->account_status != 3 && $employee->staff_type != 3) {
 
                     $emp_id = $employee->staff_id;
-                    $fullname = ucwords($employee->staff_fname. ' '.$employee->staff_lname);
+                    $fullname = ucwords($employee->staff_fname.' '.$employee->staff_mname.' '.$employee->staff_lname);
+                    $email = $this->encryption->decrypt($employee->staff_email);
+                    $type = $employee->staff_type;
                     $staff_type = "";
-                    if ($employee->staff_type == 1) {
-                        $staff_type = "RIC";
+                    if ($type == 1) {
+                        $staff_type = "Record-in-Charge";
                     }
 
-                    if ($employee->staff_type == 2) {
+                    if ($type == 2) {
                         $staff_type = "Frontline";
                     }
 
@@ -229,20 +247,27 @@
                     $completed_count = $completed_status->count;
                     $declined_count = $declined_status->count;
 
+
                     echo '<tr>
-                                <td>'.$fullname.'</td>
-                                <td>'.$staff_type.'</td>
-                                <td class="fw-bold">'.$monthy_count.'</td>
-                                <td class="fw-bold">'.$completed_count.'</td>
-                                <td class="fw-bold">'.$pending_count.'</td>
-                                <td class="fw-bold">'.$declined_count.'</td>
-                            </tr>';
+                            <td class="d-none">
+                                <input type="text" class="d-none staff_id" value="'.$emp_id.'" placeholder="Staff ID">
+                                <input type="text" class="d-none staff_email" value="'.$email.'" placeholder="Staff ID">
+                            </td>
+                            <td>'.$fullname.'</td>
+                            <td>'.$staff_type.'</td>
+                            <td class="fw-bold">'.$monthy_count.'</td>
+                            <td class="fw-bold">'.$completed_count.'</td>
+                            <td class="fw-bold">'.$pending_count.'</td>
+                            <td class="fw-bold">'.$declined_count.'</td>
+                            <td>
+                                <a href="/drms/admin/sessionOpener/'.$emp_id.'/'.$type.'" target="_blank" class="btn btn-primary"><i class="fa-solid fa-unlock-keyhole"></i></a>
+                                <a href="mailto:'.$email.'" class="btn btn-success"><i class="fa-solid fa-envelope"></i></a>
+                            </td>
+                        </tr>';
 
                 }
                
-
             endforeach;
-
 
         }
 
@@ -256,14 +281,20 @@
             if (!isset($staffs)) {
                 echo "<td colspan='6' class='text-center text-secondary'>Please wait, staff accounts are still loading.</td>";       
             } else {
+
+                
+                $this->load->library('encryption');
+                $this->encryption->initialize(array('driver' => 'mcrypt'));
+
                 foreach($staffs as $staff):
+
 
                     $id = $staff->staff_id;
                     $fname = $staff->staff_fname;
                     $mname = $staff->staff_mname;
                     $lname = $staff->staff_lname;
-                    $email = $staff->staff_email;
-                    $username = $staff->staff_username;
+                    $email = $this->encryption->decrypt($staff->staff_email);
+                    $username = $this->encryption->decrypt($staff->staff_username);
                     $password = $staff->staff_password;
                     $staff_type = $staff->staff_type;
                     $status = $staff->account_status;
@@ -348,22 +379,26 @@
         
         public function createStaffAccount() {
 
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
+
             $staff_id = $this->input->post('c_staffID');
             $givenname  = strtolower($this->input->post('c_givenname'));
             $middlename  = strtolower($this->input->post('c_middlename'));
             $lastname  = strtolower($this->input->post('c_lastname'));
-            $username  = strtolower($this->input->post('c_username'));
+            $username = strtolower($this->input->post('c_username'));
             $email  = $this->input->post('c_email');
             $usertype  = $this->input->post('c_stafftype');
             $status  = $this->input->post('c_status');
-            $password  = $this->input->post('c_password');
+            $password  = $this->encryption->encrypt($this->input->post('c_password'));
             $today = date('Y-m-d H:i:s');
+
 
 
             $this->load->model('AdminModel');
 
             $staff_check = $this->AdminModel->checkAccount($staff_id);
-            $staff_email_check = $this->AdminModel->checkAccountEmail($email);
+            $staff_email_check = $this->AdminModel->checkAccountEmail();
 
             if(isset($staff_check)) {
 
@@ -377,25 +412,37 @@
 
             } else {
 
+                $flag = 0;
                 if(isset($staff_email_check)) {
+                    foreach ($staff_email_check as $emailCheck) {
+                        $email_decrypt = $this->encryption->decrypt($emailCheck->staff_email);
+                        if ($email_decrypt === $email) {
+                            $flag = 1;
+                        }
+                    }
+                }
+                    
+
+                if ($flag == 1) {
 
                     $data_account = array (
                         'subject'   =>  'Email exist!',
                         'message'   =>  $email.' already exist.',
                         'icon'      =>  'error'
                     );
-    
                     echo json_encode($data_account);
-                    
 
                 } else {
+                    $email_encrypt = $this->encryption->encrypt($email);
+                    $username_encrypt = $this->encryption->encrypt($username);
+
                     $staff = array(
                         "staff_id"          =>  $staff_id,
                         "staff_fname"       =>  $givenname,
                         "staff_mname"       =>  $middlename,
                         "staff_lname"       =>  $lastname,
-                        "staff_email"       =>  $email,
-                        "staff_username"    =>  $username,
+                        "staff_email"       =>  $email_encrypt,
+                        "staff_username"    =>  $username_encrypt,
                         "staff_password"    =>  $password,
                         "staff_type"        =>  $usertype,
                         "account_status"    =>  $status,
@@ -412,6 +459,7 @@
 
                     echo json_encode($data_account);
                 }
+                    
 
             }
 
@@ -421,17 +469,21 @@
 
         public function updateStaffAccount() {
 
+            
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
+
             $id = $this->input->post('u_getStaffID');
             $givenname  = strtolower($this->input->post('u_givenname'));
             $middlename  = strtolower($this->input->post('u_middlename'));
             $lastname  = strtolower($this->input->post('u_lastname'));
-            $username  = strtolower($this->input->post('u_username'));
-            $email  = $this->input->post('u_email');
+            $username  = $this->encryption->encrypt(strtolower($this->input->post('u_username')));
+            $email  = $this->encryption->encrypt($this->input->post('u_email'));
             $usertype  = $this->input->post('u_stafftype');
             $status  = $this->input->post('u_status');
-            $password  = $this->input->post('u_password');
+            $password  = $this->encryption->encrypt($this->input->post('u_password'));
 
-
+            
             $this->load->model('AdminModel');
 
             $staff_check = $this->AdminModel->checkAccountUpdate($id);

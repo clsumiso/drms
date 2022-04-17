@@ -1,6 +1,20 @@
 $(document).ready(function() {
 
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer)
+          toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+
+
+
     // Reusable functions for validations
     function validateEmail(email) {
         const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -76,8 +90,19 @@ $(document).ready(function() {
                 url: window.location.origin + '/drms/admin/dashboard_widgets',
                 type: 'GET',
                 success: function(data) {
-                    $('.widgets').empty()
-                    $('.widgets').append(data)
+
+                    let request = JSON.parse(data)
+
+                    $('#monthlyCount').text(request.monthly)
+                    $('#monthlyCountLast').text(request.monthlyLast)
+                    $('#pendingCount').text(request.pending)
+                    $('#pendingCountLast').text(request.pendingLast)
+                    $('#completedCount').text(request.completed)
+                    $('#completedCountLast').text(request.comnpletedLast)
+                    $('#declinedCount').text(request.decline)
+                    $('#declinedCountLast').text(request.declineLast)
+                    
+
                 },
                 error: function(xhr, status, error) {
                     console.log(xhr)
@@ -313,7 +338,6 @@ $(document).ready(function() {
 
         $('#formCreateAccount').submit(function(e) {
 
-            console.log('asdslajkhdsakjbdb')
 
             e.preventDefault()
             $('.account-validation').remove()
@@ -446,11 +470,16 @@ $(document).ready(function() {
 
                         let request = JSON.parse(data)
 
-                        Swal.fire(
-                            request.subject,
-                            request.message,
-                            request.icon
-                        )
+                        Toast.fire({
+                            icon: request.icon,
+                            title: request.message
+                        })
+
+                        // Swal.fire(
+                        //     request.subject,
+                        //     request.message,
+                        //     request.icon
+                        // )
 
                         $('#toggleAccountClose2').click()
                         resetCreateAccount()
@@ -478,6 +507,7 @@ $(document).ready(function() {
             let name = $(this).parent().parent().parent().find('.set_givenname').val()
 
             Swal.fire({
+
                 title: 'Are you sure you want to delete "'+name.toUpperCase()+'"?',
                 text: "You won't be able to revert this!",
                 icon: 'warning',
@@ -485,10 +515,10 @@ $(document).ready(function() {
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
+
             }).then((result) => {
 
                 if (result.isConfirmed) {
-                    
                     
                     let id = $(this).parent().parent().parent().find('.getStaffID').val()
                     
@@ -500,11 +530,16 @@ $(document).ready(function() {
                         },
                         success: function(data) {
 
-                            Swal.fire(
-                                'Deleted!',
-                                'You have successfully deleted '+name.toUpperCase()+'!',
-                                'success'
-                            )
+                            // Swal.fire(
+                            //     'Deleted!',
+                            //     'You have successfully deleted '+name.toUpperCase()+'!',
+                            //     'success'
+                            // )
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'You have successfully deleted '+name.toUpperCase()
+                            })
 
                             displayStaffAccounts()
 
@@ -821,6 +856,11 @@ $(document).ready(function() {
                     success: function(data) {
                         
                         let request = JSON.parse(data)
+
+                        // Toast.fire({
+                        //     icon: request.icon,
+                        //     title: request.message
+                        // })
 
                         Swal.fire(
                             request.subject,
@@ -1489,12 +1529,17 @@ $(document).ready(function() {
                 },
                 success: function(data) {
                     $(self).parent().parent().parent().find('.handlerID').val(data)
-                    Swal.fire({
-                        position: 'top-end',
+                    // Swal.fire({
+                    //     position: 'top-end',
+                    //     icon: 'success',
+                    //     title: 'Record-in-charge updated!',
+                    //     showConfirmButton: false,
+                    //     timer: 1500
+                    // })
+
+                    Toast.fire({
                         icon: 'success',
-                        title: 'Record-in-charge updated!',
-                        showConfirmButton: false,
-                        timer: 1500
+                        title: 'Record-in-charge updated'
                     })
                 },
                 error: function(xhr, status, error) {
@@ -1528,12 +1573,17 @@ $(document).ready(function() {
                 },
                 success: function(data) {
                     $(self).parent().parent().parent().find('.handlerID').val(data)
-                    Swal.fire({
-                        position: 'top-end',
+                    // Swal.fire({
+                    //     position: 'top-end',
+                    //     icon: 'success',
+                    //     title: 'Frontline updated!',
+                    //     showConfirmButton: false,
+                    //     timer: 1500
+                    // })
+
+                    Toast.fire({
                         icon: 'success',
-                        title: 'Frontline updated!',
-                        showConfirmButton: false,
-                        timer: 1500
+                        title: 'Frontline updated'
                     })
                 },
                 error: function(xhr, status, error) {

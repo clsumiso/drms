@@ -29,6 +29,24 @@ class StudentModel extends CI_Model
     }
 
 
+    
+    public function checkStudentID($id) {
+		$db2 = $this->load->database('admissions', TRUE);
+        $query = $db2->query("SELECT * FROM tbl_profile WHERE user_id = '$id'");
+
+        return $query->row();
+    }
+
+
+
+    public function checkEmail($email) {
+		$db2 = $this->load->database('admissions', TRUE);
+        $query = $db2->query("SELECT * FROM tbl_profile WHERE email = '$email'");
+
+        return $query->row();
+    }
+
+
     public function getCourses() {
 		$db2 = $this->load->database('admissions', TRUE);
         $query = $db2->query('SELECT * FROM tbl_course WHERE course_type NOT IN ("EMP")');
@@ -163,6 +181,14 @@ class StudentModel extends CI_Model
 
         return $result->row();
     }
+    
+
+    public function deleteRequest($rid) {
+        $this->db->query("DELETE FROM request_tbl WHERE request_id = '$rid'");
+        $this->db->query("DELETE FROM requestor_info_tbl WHERE request_id = '$rid'");
+        $this->db->query("DELETE FROM document_request_tbl WHERE request_id = '$rid'");
+    }
+
 
 
 }

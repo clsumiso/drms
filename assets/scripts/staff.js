@@ -227,6 +227,7 @@ $(document).ready(function() {
                 $('#outboxCount').text(request.outbox)
                 $('#reminderCount').text(request.reminder)
                 $('#incompleteCount').text(request.incomplete)
+                $('#insufficientCount').text(request.insufficient)
 
             },
             error: function(xhr, status, error) {
@@ -249,6 +250,31 @@ $(document).ready(function() {
 
         let id = $('#navID').val()
 
+
+        $.ajax ({
+            url: window.location.origin + '/drms/staff/getRequest',
+            type: 'POST',
+            data: {
+                request_type: id
+            },
+            success: function(data) {
+                $('.request-container').empty()
+                $('.request-container').append(data)
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr)
+                console.log(status)
+                console.log(error)
+            }
+        })
+
+    }
+
+
+
+    function getRequestLists() {
+
+        let id = $('#navID').val()
 
         $.ajax ({
             url: window.location.origin + '/drms/staff/getRequest',
@@ -325,6 +351,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             
             $('#navAllRequest').addClass('active')
@@ -340,6 +367,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             
             $('#navPendingRequest').addClass('active')
@@ -355,6 +383,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             
             $('#navDeliveryRequest').addClass('active')
@@ -370,6 +399,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             
             $('#navSentRequest').addClass('active')
@@ -385,6 +415,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             $('#navDeclinedRequest').addClass('active')
         }
@@ -399,6 +430,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             $('#navDrafts').addClass('active')
         }
@@ -413,6 +445,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             $('#navOutbox').addClass('active')
         }
@@ -427,6 +460,7 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             $('#navReminders').addClass('active')
         }
@@ -442,8 +476,24 @@ $(document).ready(function() {
             $('#navDrafts').removeClass('active')
             $('#navOutbox').removeClass('active')
             $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
 
             $('#navIncompleteRequest').addClass('active')
+        }
+
+        else if ($('#navID').val() == 10) {
+            $('#navAllRequest').removeClass('active')
+            $('#navPendingRequest').removeClass('active')
+            $('#navDeliveryRequest').removeClass('active')
+            $('#navSentRequest').removeClass('active')
+            $('#navDeclinedRequest').removeClass('active')
+            $('#navReminders').removeClass('active')
+            $('#navDrafts').removeClass('active')
+            $('#navOutbox').removeClass('active')
+            $('#navIncompleteRequest').removeClass('active')
+            $('#navInsufficientRequest').removeClass('active')
+
+            $('#navInsufficientRequest').addClass('active')
         }
 
 
@@ -502,6 +552,13 @@ $(document).ready(function() {
             $('#incompleteCount').click()
             navActive()
         }
+
+
+        else if ($('#navID').val() == 10) {
+            $('#navInsufficientRequest').click()
+            navActive()
+        }
+
 
         resetSendDocForm()
         resetDeclineForm()
@@ -716,34 +773,6 @@ $(document).ready(function() {
     })
 
 
-    $('#navDrafts').click(function(e) {
-        e.preventDefault()
-        e.stopPropagation()
-
-        // $(document).prop('title', 'Drafts Documents')
-        // $('.page-title').text('Drafts Documents')
-        // $('#navID').val('6')
-        // navActive()
-
-        Swal.fire({
-            title: 'This feature is not yet available.',
-            width: 600,
-            padding: '3em',
-            color: '#716add',
-            background: '#fff url(/images/trees.png)',
-            backdrop: `
-              rgba(0,0,123,0.4)
-              url("/images/nyan-cat.gif")
-              left top
-              no-repeat
-            `
-        })
-
-        // $('.request-review-wrapper').hide()
-        // $('.request-list-wrapper-contents').fadeIn()
-
-    })
-
     $('#navOutbox').click(function(e) {
         e.preventDefault()
         e.stopPropagation()
@@ -793,6 +822,28 @@ $(document).ready(function() {
         $('.page-title').text('Incomplete Requests')
 
         $('#navID').val('9')
+
+        navActive()
+        getRequestLists()
+
+        $('.request-review-wrapper').hide()
+        $('.request-list-wrapper-contents').fadeIn()
+
+
+        $('.form-search').css('visibility', 'visible')
+        $('.form-search2').css('display', 'block')
+
+    })
+
+
+    $('#navInsufficientRequest').click(function(e) {
+        e.preventDefault()
+        e.stopPropagation()
+        
+        $(document).prop('title', 'Insufficient Requests')
+        $('.page-title').text('Insufficient Requests')
+
+        $('#navID').val('10')
 
         navActive()
         getRequestLists()
@@ -884,6 +935,10 @@ $(document).ready(function() {
 
     function resetDeliveredForm() {
         $('#formDelivered').trigger('reset')
+    }
+
+    function resetInsufficientPayment() {
+        $('#formInsufficientPayment').trigger('reset')
     }
 
 
@@ -1090,7 +1145,6 @@ $(document).ready(function() {
                     
                     $("#webLoader").fadeOut()
 
-                    
 
                     resetSendDocForm()
 
@@ -1212,5 +1266,145 @@ $(document).ready(function() {
             }
         })
     })
+
+
+
+
+    $('#formInsufficientPayment').submit(function(e) {
+
+        e.preventDefault()
+
+        let dataForm = $(this).serialize()
+
+        $.ajax ({
+            url: window.location.origin + '/drms/staff/insufficient',
+            type: 'POST',
+            data: dataForm,
+            beforeSend: function() {
+                $("#webLoader").fadeIn()
+                $('.btn-close').click()
+            },
+            success: function(data) {
+            
+                $('.request-review-wrapper').hide()
+                $('.request-list-wrapper-contents').fadeIn()
+                
+                $("#webLoader").fadeOut()
+
+
+                let request = JSON.parse(data)
+
+                Swal.fire(
+                    request.title,
+                    request.message,
+                    request.icon
+                )
+
+                navigationClick()
+                navigationCount()
+
+                resetInsufficientPayment()
+
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr)
+                console.log(status)
+                console.log(error)
+            }
+        })
+
+    })
+
+
+
+
+
+    $(document).on('click', '.btnInsufficientPaymentCompleted', function() {
+        Swal.fire({
+            title: 'Confirm Payment?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let id = $(".requestIDUniq").val()
+                let email = $(".emailUniq").val()
+                $.ajax ({
+                    url: window.location.origin + '/drms/staff/insufficientCompleted',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        email: email
+                    }, 
+                    beforeSend: function() {
+                        $("#webLoader").fadeIn()
+                    },
+                    success: function(data) {
+
+                        navigationClick()
+                        navigationCount()
+                    
+                        $('.request-review-wrapper').hide()
+                        $('.request-list-wrapper-contents').fadeIn()
+                        
+                        $("#webLoader").fadeOut()
+
+                        let request = JSON.parse(data)
+
+                        Swal.fire (
+                            request.title,
+                            request.message,
+                            request.icon
+                        )
+
+                    },
+                    error: function(xhr, status, error) {
+                        console.log(xhr)
+                        console.log(status)
+                        console.log(error)
+                    }
+
+                })
+            
+            }
+        })
+    })
+
+
+
+
+    // session control
+    // function sessionControll() {
+
+    //     let id = $('#sessionID').val()
+
+    //     $.ajax ({
+    //         url: window.location.origin + '/drms/staff/sessControll',
+    //         type: 'GET',
+    //         data: {
+    //             id: id
+    //         },
+    //         success: function(data) {
+    //             sessionCountDown(data);
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.log(xhr)
+    //             console.log(status)
+    //             console.log(error)
+    //         }
+    //     })
+
+    // }
+
+
+    // function sessionCountDown(datetime) {
+    //     console.log(datetime)
+    // }
+
+    
+    // sessionControll()
+
 
 })

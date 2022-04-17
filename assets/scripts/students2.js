@@ -480,8 +480,6 @@ $(document).ready(function() {
 
     
     $(document).on('change', '.getDocument', function() {
-        
-        console.log($(this).val())
 
         updateTablePayment()
 
@@ -958,8 +956,32 @@ $(document).ready(function() {
         if($(this).val() == 0) {
             $(this).addClass('is-invalid')
         } else {
+
             $(this).removeClass('is-invalid')
             $('#getDeliveryFinal').val($(this).find('option:selected').text())
+
+            $('#modalBodyChangeText').empty()
+
+            if ($(this).val() == 2) {
+
+                $('.modalTitleChangeHeader').text('Courier')
+
+                $('#modalBodyChangeText').append('<p class="poppins">Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique minima temporibus facilis. Numquam quisquam dolores voluptas repudiandae delectus in quia nobis magnam. Quo, maxime. Provident, nobis! Necessitatibus quibusdam excepturi accusamus consequuntur natus nihil ipsum nisi assumenda, sed vel provident labore deserunt enim esse facere perspiciatis dolorem harum expedita consequatur, officiis corrupti dolores. Fuga temporibus excepturi animi modi recusandae sed architecto.</p>')
+
+                $('#btnToggleModalCourierNote').click()
+
+            }
+
+            if ($(this).val() == 3) {
+
+                
+                $('.modalTitleChangeHeader').text('Claim at CLSU Main Gate')
+
+                $('#modalBodyChangeText').append('<p class="poppins">Darwin</p>')
+
+                $('#btnToggleModalCourierNote').click()
+            }
+            
         }
     })
 
@@ -1567,7 +1589,22 @@ $(document).ready(function() {
             //     $("#webLoader").fadeIn()
             // },
             success: function(data) {
-                $('#validationSubmit').text(data)
+                $('#validationSubmit').empty()
+
+                let request = JSON.parse(data)
+
+                if (request.status != 1) {
+
+                    $('#validationSubmit').append('<p>'+request.title+'</p>')
+
+                } else {
+
+                    $('#validationSubmit').append('<p>'+request.title+'</p>')
+                    $('#validationSubmit').append('<h3>'+request.request_id+'</h3>')
+
+                }
+
+               
                 $('.bg-logo-web-load .spinlogo').css('animation-iteration-count', '0')
                 $('#validationSubmit').append('<div class="mt-3"><a href="'+window.location.origin+'/drms" class="btn btn-primary poppins w-25 p-2" id="btnBackSubmit">Go back</a></div>')
             },

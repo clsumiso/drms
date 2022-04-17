@@ -772,3 +772,12 @@ label.custom {
 }
 
 
+
+.modalTitleChangeHeader {
+    font-family: var(--poppins);
+    font-weight: 600;
+}
+
+#modalBodyChangeText p {
+    line-height: 2;
+}

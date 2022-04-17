@@ -38,7 +38,7 @@
                         <div class="row">
                             <div class="form-group col-lg-5 mb-3">
                                 <label for="u_username" class="form-label">Username</label>
-                                <input type="text" name="u_username" id="u_username" class="form-control" readonly autocomplete="off">
+                                <input type="text" name="u_username" id="u_username" class="form-control" autocomplete="off">
                             </div>
 
                             <div class="form-group col-lg-7 mb-3">
@@ -55,7 +55,6 @@
                                     <option value="0">-- Select staff type --</option>
                                     <option value="1">RIC</option>
                                     <option value="2">Frontline</option>
-                                    <option value="3">Dean</option>
                                 </select>
                             </div>
 

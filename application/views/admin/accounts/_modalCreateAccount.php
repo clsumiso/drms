@@ -54,7 +54,6 @@
                                     <option value="0">-- Select staff type --</option>
                                     <option value="1">RIC</option>
                                     <option value="2">Frontline</option>
-                                    <option value="3">Dean</option>
                                 </select>
                             </div>
 

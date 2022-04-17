@@ -25,6 +25,9 @@
 
         public function login() {
             
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
+
             $username = $this->input->post('getUsername');
             $password = $this->input->post('getPassword');
             
@@ -33,9 +36,8 @@
             $flag = 0;
 
             foreach($staffs as $staff):
-                if ($username === $staff->staff_username && $password === $staff->staff_password) {
+                if ($username === $this->encryption->decrypt($staff->staff_username) && $password === $this->encryption->decrypt($staff->staff_password)) {
 
-                    
                     $now = date('Y-m-d H:i:s');
 
                     $this->load->model('LoginModel');
@@ -59,19 +61,12 @@
 
         public function loginAdmin() {
 
-            $this->load->model('SystemMaintenanceModel', 'maintenance');
-            $result = $this->maintenance->getMaintenanceStatus();
-
-            if($result->status == 1) {
-                $this->load->view("maintenance");
-            } else {
-                $this->load->view('admin_login/_session');
-                $this->load->view('admin_login/_head');
-                $this->load->view('admin_login/_css');
-                $this->load->view('admin_login/_page_loader');
-                $this->load->view('admin_login/main');
-                $this->load->view('admin_login/_script');
-            }
+            $this->load->view('admin_login/_session');
+            $this->load->view('admin_login/_head');
+            $this->load->view('admin_login/_css');
+            $this->load->view('admin_login/_page_loader');
+            $this->load->view('admin_login/main');
+            $this->load->view('admin_login/_script');
             
         }
 
@@ -88,7 +83,7 @@
             foreach($admins as $admin):
                 if ($username === $admin->admin && $password === $admin->pass) {
 
-                    $this->session->set_userdata('UID', $admin->id);
+                    $this->session->set_userdata('admin_ID', $admin->id);
                     $flag = 1;
                     echo '1';
                     
@@ -100,6 +95,13 @@
             }
             
         }
+
+        public function logout_staff() {
+            $des_sess = array('UID', 'staff_type');
+            $this->session->unset_userdata($des_sess);
+            header("Location: ".base_url());
+        }
+
 
         public function logout() {
             $this->session->sess_destroy();

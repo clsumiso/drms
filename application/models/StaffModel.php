@@ -14,6 +14,12 @@ class StaffModel extends CI_Model
 	}
 
 
+    public function sessControll($uid) {
+        $query = $this->db->query("SELECT * FROM staff_account_tbl where staff_id = '$uid'");
+        
+        return $query->row();
+    }
+
     public function get_navigation_count($uid, $staff_type, $student_type, $status) {
         $query = $this->db->query("SELECT count(*) as count FROM course_handler_tbl, request_tbl WHERE course_handler_tbl.course_id = request_tbl.course_id AND request_tbl.status IN (".$status.") AND course_handler_tbl.".$staff_type." = '".$uid."' AND request_tbl.student_type = '".$student_type."' AND request_tbl.outbox_status = 0");
 
@@ -21,7 +27,7 @@ class StaffModel extends CI_Model
     }
 
     public function get_navigation_count_reminder($uid, $staff_type, $student_type) {
-        $query = $this->db->query("SELECT count(*) as count FROM course_handler_tbl, request_tbl WHERE (CURDATE() >= (request_tbl.date_created + interval 3 day)) AND course_handler_tbl.course_id = request_tbl.course_id AND request_tbl.status IN (1, 2) AND course_handler_tbl.".$staff_type." = '".$uid."' AND request_tbl.student_type = '".$student_type."'");
+        $query = $this->db->query("SELECT count(*) as count FROM course_handler_tbl, request_tbl WHERE (CURDATE() >= (request_tbl.date_created + interval 3 day)) AND course_handler_tbl.course_id = request_tbl.course_id AND request_tbl.status IN (1, 2, 5, 7) AND course_handler_tbl.".$staff_type." = '".$uid."' AND request_tbl.student_type = '".$student_type."'");
 
         return $query->row();
     }
@@ -34,10 +40,9 @@ class StaffModel extends CI_Model
 
     public function get_remind_requests($uid, $staff, $student_type) {
 		
-		//$db1 = $this->load->database('admissions', TRUE);
-		//$db2 = $this->load->database('drms', TRUE);
-        $query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$student_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN (1,2) AND admissions.tbl_course.course_id = request_tbl.course_id AND (CURDATE() >= (request_tbl.date_created + interval 3 day)) ORDER BY request_tbl.date_created ASC");
+        $query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$student_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN (1,2,5,7) AND admissions.tbl_course.course_id = request_tbl.course_id AND (CURDATE() >= (request_tbl.date_created + interval 3 day)) ORDER BY request_tbl.date_created ASC");
         return $query->result();
+
     }
 
     
@@ -49,7 +54,7 @@ class StaffModel extends CI_Model
 
     
     public function get_search($uid, $staff, $student_type, $name) {
-        $query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$student_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND tbl_course.course_id = request_tbl.course_id AND CONCAT(requestor_info_tbl.firstname,' ',requestor_info_tbl.middlename,' ',requestor_info_tbl.lastname) LIKE '%".$name."%'  ORDER BY request_tbl.date_created ASC");
+        $query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$student_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND tbl_course.course_id = request_tbl.course_id AND request_tbl.request_id LIKE '%".$name."%' OR CONCAT(requestor_info_tbl.firstname,' ',requestor_info_tbl.middlename,' ',requestor_info_tbl.lastname) LIKE '%".$name."%' GROUP BY CONCAT(requestor_info_tbl.firstname,' ',requestor_info_tbl.middlename,' ',requestor_info_tbl.lastname) ORDER BY request_tbl.date_created ASC");
 
         return $query->result();
     }

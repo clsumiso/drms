@@ -46,7 +46,9 @@ body {
     margin: 0;
     top: 0;
     left: 0;
-    counter-reset: my-sec-counter;
+    width: 100vw;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 *, 
@@ -199,13 +201,14 @@ ul {
     box-shadow: 0 0 6px rgba(78, 78, 78, 0.842);
 }
 
-.bg-logo-web-load .logo-wrapper p {
+.bg-logo-web-load .logo-wrapper #validationSubmit {
     font-size: 16px;
     font-family: var(--poppins);
     font-weight: 500;
     margin-top: 15px;
     margin-bottom: 0;
 }
+
 @keyframes spin3D {
   from { transform: rotateY(0deg) }
   to { transform: rotateY(360deg) }

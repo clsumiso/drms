@@ -44,9 +44,9 @@ class AdminModel extends CI_Model
 		return $query->row();
 	}
 
-	public function checkAccountEmail($email) {
-		$query = $this->db->query("SELECT * FROM staff_account_tbl WHERE staff_email = '".$email."'");
-		return $query->row();
+	public function checkAccountEmail() {
+		$query = $this->db->query("SELECT * FROM staff_account_tbl");
+		return $query->result();
 	}
 
 

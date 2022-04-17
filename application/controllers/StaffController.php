@@ -2,11 +2,11 @@
 
     defined('BASEPATH') or exit('No direct script access allowed');
 
-    
 
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
+
 
     require 'vendor/autoload.php';
 
@@ -31,12 +31,27 @@
                 $this->load->view('staff/_modalCreateSendDocument');
                 $this->load->view('staff/_modalOnDeliveryRequest');
                 $this->load->view('staff/_modalDeliveredRequest');
-                $this->load->view('staff/_modalDeliveredRequest');
                 $this->load->view('staff/_modalDeclineRequest');
+                $this->load->view('staff/_modalPaymentInsufficient');
                 $this->load->view('staff/_script');
             }
             
         }
+
+
+        public function sessionControll() {
+
+            $uid = $_SESSION["UID"];
+
+            $this->load->model('StaffModel');
+            $result = $this->StaffModel->sessControll($uid);
+
+            if (isset($result)) {
+                echo $result->last_logged;
+            }
+
+        }
+
 
 
         public function getNavigationCount() {
@@ -92,13 +107,20 @@
                 $pending_incomplete = $incomplete->count;
             }
 
+
+            $insufficient = $this->StaffModel->get_navigation_count($uid, $staff_type, $student_type, '6, 7');
+            if (isset($insufficient)) {
+                $pending_insufficient = $insufficient->count;
+            }
+
             
             $request_count = array (
-                'pending'    =>     $pending_count,
-                'delivery'   =>     $delivery_count,
-                'outbox'     =>     $outbox_count,
-                'reminder'   =>     $reminder_count,
-                'incomplete' =>     $pending_incomplete,
+                'pending'       =>     $pending_count,
+                'delivery'      =>     $delivery_count,
+                'outbox'        =>     $outbox_count,
+                'reminder'      =>     $reminder_count,
+                'incomplete'    =>     $pending_incomplete,
+                'insufficient'  =>     $pending_insufficient,
             );
             
 
@@ -175,10 +197,9 @@
             // 3 - Declined
             
 
-            // for record-in-charge
-                $outbox_stats = "0";
+            $outbox_stats = "0";
             if ($request_type == 1) {
-                $req_status = "0, 1, 2, 3, 4";
+                $req_status = "0, 1, 2, 3, 4, 5, 6, 7";
 
                 $message = "There are no requests yet!";
                 $undraw_icon = "";
@@ -218,6 +239,12 @@
                 
                 $message = "There are no incomplete requests yet!";
                 $undraw_icon = "";
+
+            } elseif ($request_type == 10) {
+                $req_status = "6, 7";
+                
+                $message = "There are no insufficient payment requests yet!";
+                $undraw_icon = "";
             }
 
 
@@ -246,12 +273,17 @@
                 
 
 
+                $this->load->library('encryption');
+                $this->encryption->initialize(array('driver' => 'mcrypt')); 
+                
+                $email = $this->encryption->decrypt($request->email);
+
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
                 $lastname = $request->lastname;
                 $suffix = $request->suffix;
                 $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
-                $email = $request->email;
+               
                 $purpose = ucwords('| '.$request->purpose);
                 $status = $request->status;
 
@@ -281,6 +313,12 @@
                 } else if ($status == 5) {
                     $statusColor = "bg-light border text-success";
                     $statusText = "Paid";
+                } else if ($status == 6) {
+                    $statusColor = "bg-warning text-dark";
+                    $statusText = "Insufficient";
+                } else if ($status == 7) {
+                    $statusColor = "bg-light border text-dark";
+                    $statusText = "To review";
                 }
 
 
@@ -392,6 +430,20 @@
             return $string ? implode(', ', $string) . ' ago' : 'just now';
         }
 
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
         public function getReminderRequest() {
 
             $uid = $_SESSION['UID'];
@@ -422,12 +474,17 @@
                 $time = date_format($getDate, 'g:i A');
                 $date = date_format($getDate, 'M d, Y');
 
+
+                $this->load->library('encryption');
+                $this->encryption->initialize(array('driver' => 'mcrypt')); 
+                
+                $email = $this->encryption->decrypt($request->email);
+
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
                 $lastname = $request->lastname;
                 $suffix = $request->suffix;
                 $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
-                $email = $request->email;
                 $purpose = ucwords('| '.$request->purpose);
                 $status = $request->status;
 
@@ -452,9 +509,17 @@
                     $statusText = "Declined";
                 } else if ($status == 4) {
                     $statusColor = "bg-light border text-danger";
-                    $statusText = "Incomplete";
+                    $statusText = "Unpaid";
+                } else if ($status == 5) {
+                    $statusColor = "bg-light border text-success";
+                    $statusText = "Paid";
+                } else if ($status == 6) {
+                    $statusColor = "bg-warning text-dark";
+                    $statusText = "Insufficient";
+                } else if ($status == 7) {
+                    $statusColor = "bg-light border text-dark";
+                    $statusText = "To review";
                 }
-
 
 
 
@@ -565,12 +630,16 @@
                 $time = date_format($getDate, 'g:i A');
                 $date = date_format($getDate, 'M d, Y');
 
+                $this->load->library('encryption');
+                $this->encryption->initialize(array('driver' => 'mcrypt')); 
+                
+                $email = $this->encryption->decrypt($request->email);
+
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
                 $lastname = $request->lastname;
                 $suffix = $request->suffix;
                 $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
-                $email = $request->email;
                 $purpose = ucwords('| '.$request->purpose);
                 $status = $request->status;
 
@@ -595,7 +664,16 @@
                     $statusText = "Declined";
                 } else if ($status == 4) {
                     $statusColor = "bg-light border text-danger";
-                    $statusText = "Incomplete";
+                    $statusText = "Unpaid";
+                } else if ($status == 5) {
+                    $statusColor = "bg-light border text-success";
+                    $statusText = "Paid";
+                } else if ($status == 6) {
+                    $statusColor = "bg-warning text-dark";
+                    $statusText = "Insufficient";
+                } else if ($status == 7) {
+                    $statusColor = "bg-light border text-dark";
+                    $statusText = "To review";
                 }
 
 
@@ -703,14 +781,16 @@
                 $time = date_format($getDate, 'g:i A');
                 $date = date_format($getDate, 'M d, Y');
 
-               
+                $this->load->library('encryption');
+                $this->encryption->initialize(array('driver' => 'mcrypt')); 
+                
+                $email = $this->encryption->decrypt($request->email);
 
                 $firstname = $request->firstname;
                 $middlename = $request->middlename;
                 $lastname = $request->lastname;
                 $suffix = $request->suffix;
                 $fullname = strtoupper($firstname." ".$middlename." ".$lastname." ".$suffix);
-                $email = $request->email;
                 $purpose = ucwords('| '.$request->purpose);
                 $status = $request->status;
 
@@ -736,9 +816,15 @@
                 } else if ($status == 4) {
                     $statusColor = "bg-light border text-danger";
                     $statusText = "Unpaid";
-                }  elseif ($status == 5) {
+                } else if ($status == 5) {
                     $statusColor = "bg-light border text-success";
                     $statusText = "Paid";
+                } else if ($status == 6) {
+                    $statusColor = "bg-warning text-dark";
+                    $statusText = "Insufficient";
+                } else if ($status == 7) {
+                    $statusColor = "bg-light border text-dark";
+                    $statusText = "To review";
                 }
 
                
@@ -820,6 +906,11 @@
 
         public function getRequestReview() {
 
+
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
+
+
             $request_id = $this->input->post('request_id');
             
             $this->load->model('StaffModel');
@@ -833,21 +924,43 @@
                 $identity = $request->identity_file;
 
                 
-                $extIdentity = explode(".", $identity);
-                $mainExtIdentity = strtolower(end($extIdentity));
-                $identity_file = "";
-                $display_file_design = "";
+               
+                $showIdentity =  "";
+                $showIdentityModal = "";
+
+                if (!empty($identity)) {
+                    $extIdentity = explode(".", $identity);
+                    $mainExtIdentity = strtolower(end($extIdentity));
+                    $identity_file = "";
+                    $display_file_design = "";
+
+                    if($mainExtIdentity == "pdf") {
+                        $identity_file = '<iframe src="'.base_url('/assets/uploads/identities/'.$identity).'"></iframe>';
+                        $display_file_design = '<i class="fa-solid fa-file-pdf"></i>';
+                    } else {
+                        $identity_file = '<img src="'.base_url('/assets/uploads/identities/'.$identity).'" alt="'.$identity.'">';
+                        $display_file_design = '<i class="fa-solid fa-images"></i>';
+                    }
 
 
-                
-                if($mainExtIdentity == "pdf") {
-                    $identity_file = '<iframe src="'.base_url('/assets/uploads/identities/'.$identity).'"></iframe>';
-                    $display_file_design = '<i class="fa-solid fa-file-pdf"></i>';
-                } else {
-                    $identity_file = '<img src="'.base_url('/assets/uploads/identities/'.$identity).'" alt="'.$identity.'">';
-                    $display_file_design = '<i class="fa-solid fa-images"></i>';
+                    $showIdentity = '<div class="form-group mb-3">
+                                        <label for="">Identitication</label>
+                                        <div class="img-wrapper poppins fs-16">
+                                            <a href="#" class="toggleOpenIdentity" id="toggleOpenIdentity">'.$display_file_design.' Click here to view identity</a>
+                                        </div>
+                                    </div>';
+
+
+                    $showIdentityModal = '<div class="modal-view-identity">
+                                            <i class="fas fa-times toggleCloseIdentity"></i>
+                                            '.$identity_file.'
+                                        </div>';
+
                 }
+               
 
+
+                            
 
                 $remarks = $request->remarks;
 
@@ -868,6 +981,10 @@
                 $showRemarks = "";
 
 
+                $showPaymentCompleted = "";
+                $showPaymentInsufficient = "";
+
+
                 if ($status == 0) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
@@ -878,6 +995,8 @@
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "d-none";
                     $showPaymentBtn = "d-none";
+                    $showPaymentCompleted = "d-none";
+                    $showPaymentInsufficient = "d-none";
                 } else if($status == 1) {
                     $showSendDocumentBtn = "";
                     $showSetDeliveryBtn = "";
@@ -886,6 +1005,8 @@
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "d-none";
                     $showPaymentBtn = "d-none";
+                    $showPaymentCompleted = "d-none";
+                    $showPaymentInsufficient = "";
                 } else if ($status == 2) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
@@ -894,6 +1015,8 @@
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "";
                     $showPaymentBtn = "d-none";
+                    $showPaymentCompleted = "d-none";
+                    $showPaymentInsufficient = "";
                 } else if ($status == 3) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
@@ -904,6 +1027,8 @@
                     $showRemarks = "d-block";
                     $showSetDeliveredBtn = "d-none";
                     $showPaymentBtn = "d-none";
+                    $showPaymentCompleted = "d-none";
+                    $showPaymentInsufficient = "d-none";
                 } else if ($status == 4) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
@@ -912,6 +1037,8 @@
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "d-none";
                     $showPaymentBtn = "";
+                    $showPaymentCompleted = "d-none";
+                    $showPaymentInsufficient = "d-none";
                 } else if ($status == 5) {
                     $showSendDocumentBtn = "d-none";
                     $showSetDeliveryBtn = "d-none";
@@ -920,6 +1047,28 @@
                     $showRemarks = "d-none";
                     $showSetDeliveredBtn = "d-none";
                     $showPaymentBtn = "";
+                    $showPaymentCompleted = "d-none";
+                    $showPaymentInsufficient = "";
+                } else if ($status == 6) {
+                    $showSendDocumentBtn = "d-none";
+                    $showSetDeliveryBtn = "d-none";
+                    $showDeclineBtn = "";
+                    $showDateCompleted = "d-none";
+                    $showRemarks = "d-none";
+                    $showSetDeliveredBtn = "d-none";
+                    $showPaymentBtn = "d-none";
+                    $showPaymentCompleted = "d-none";
+                    $showPaymentInsufficient = "d-none";
+                } else if ($status == 7) {
+                    $showSendDocumentBtn = "d-none";
+                    $showSetDeliveryBtn = "d-none";
+                    $showDeclineBtn = "";
+                    $showDateCompleted = "d-none";
+                    $showRemarks = "d-none";
+                    $showSetDeliveredBtn = "d-none";
+                    $showPaymentBtn = "d-none";
+                    $showPaymentCompleted = "";
+                    $showPaymentInsufficient = "";
                 }
 
 
@@ -944,9 +1093,15 @@
                 $course = $request->course_name;
                 $year = $request->year;
 
-                $email = $request->email;
-                $contact = $request->contact_no;
-                $address = strtoupper($request->barangay.', '.$request->city.', '.$request->province.', '.$request->region);
+                $email = $this->encryption->decrypt($request->email);
+                $contact = $this->encryption->decrypt($request->contact_no);
+
+                $barangay = $this->encryption->decrypt($request->barangay);
+                $city = $this->encryption->decrypt($request->city);
+                $province = $this->encryption->decrypt($request->province);
+                $region = $this->encryption->decrypt($request->region);
+
+                $address = strtoupper($barangay.', '.$city.', '.$province.', '.$region);
 
                 $message = $request->message;
 
@@ -1069,6 +1224,14 @@
                                 <i class="fa-solid fa-money-check"></i> Payment Received</button>
                             </button>
             
+                            <button type="button" class="btn-deliver btn-secondary btn poppins '.$showPaymentInsufficient.'" data-bs-toggle="modal" data-bs-target="#exampleModal5">
+                                <i class="fa-solid fa-circle-exclamation"></i> Insufficient Payment
+                            </button>
+
+                            <button type="button" class="btn-deliver btn-dark btn poppins '.$showPaymentCompleted.' btnInsufficientPaymentCompleted">
+                                <i class="fa-solid fa-money-bill-1-wave"></i> Payment Completed</button>
+                            </button>
+
                             <button type="button" class="btn-deliver btn-danger btn poppins '.$showDeclineBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal3">
                                 <i class="fas fa-times-circle"></i> Decline request</button>
                             </button>
@@ -1100,12 +1263,7 @@
                             <h3 class="wrapper-title">Personal Information</h3>
             
 
-                            <div class="form-group mb-3">
-                                <label for="">Identitication</label>
-                                <div class="img-wrapper poppins fs-16">
-                                    <a href="#" class="toggleOpenIdentity" id="toggleOpenIdentity">'.$display_file_design.' Click here to view identity</a>
-                                </div>
-                            </div>
+                            
 
                             '.$stud_no_text.'
 
@@ -1194,10 +1352,8 @@
                     </div>
                     
                     
-                    <div class="modal-view-identity">
-                        <i class="fas fa-times toggleCloseIdentity"></i>
-                        '.$identity_file.'
-                    </div>
+                    '.$showIdentityModal.'
+                    
                     
                     <div class="modal-view-payment">
                         <i class="fas fa-times toggleClosePayment"></i>
@@ -1242,6 +1398,10 @@
         public function mailDeclineRequest() {
             $uid = $this->session->UID;
 
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt')); 
+            
+
             $this->load->model('StaffModel');
             $staff = $this->StaffModel->get_staff_details($uid);
             $staff_text = "";
@@ -1250,7 +1410,7 @@
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
                 $staff_name = ucwords($firstname." ".$lastname);
-                $staff_email = $staff->staff_email;
+                $staff_email = $this->encryption->decrypt($staff->staff_email);
                 $staff_type = $staff->staff_type;
 
                 if ($staff_type == 1) {
@@ -1271,6 +1431,7 @@
 
             $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
+                $fullname = $request->firstname.' '.$request->middlename.' '.$request->lastname.' '.$request->suffix;
                 $temp_status = $request->status;
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -1301,20 +1462,18 @@
             $mail = new PHPMailer(true);
 
             try {
-                $mail->isSMTP();                                            
-                $mail->Host       = 'smtp-relay.sendinblue.com';                  
-                $mail->SMTPAuth   = true;                                 
-                $mail->Username   = 'personal.darwinlabiste@gmail.com';                  
-                $mail->Password   = 'jbBL6Wd2EKQvpyqR';                         
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;           
-                $mail->Port       = 465;                                    
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
 
-                //Recipients 
                 $mail->ClearReplyTos();
-                $mail->addAddress($email);    
-                $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
-            
-                $mail->Priority = 1; // High priority flag is set.
+                $mail->addAddress($email, $fullname);
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
 
                 //Content
                 $mail->isHTML(true);                                 
@@ -1330,7 +1489,7 @@
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1410,6 +1569,10 @@
 
             $uid = $this->session->UID;
 
+            
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt')); 
+
             $this->load->model('StaffModel');
             $staff = $this->StaffModel->get_staff_details($uid);
             $staff_text = "";
@@ -1419,7 +1582,7 @@
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
                 $staff_name = ucwords($firstname." ".$middlename." ".$lastname);
-                $staff_email = $staff->staff_email;
+                $staff_email = $this->encryption->decrypt($staff->staff_email);
 
                 $staff_type = $staff->staff_type;
 
@@ -1451,6 +1614,7 @@
 
             $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
+                $fullname = $request->firstname.' '.$request->middlename.' '.$request->lastname.' '.$request->suffix;
                 $temp_status = $request->status;
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -1468,25 +1632,25 @@
 
             $addition_message = "";
             if(!empty($message)) {
-                $addition_message = "<br><b class='margin: 0; line-height: 1.8'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
             }
 
 
             $mail = new PHPMailer(true);
 
             try {
-                $mail->isSMTP();                                            
-                $mail->Host       = 'smtp-relay.sendinblue.com';                  
-                $mail->SMTPAuth   = true;                                 
-                $mail->Username   = 'personal.darwinlabiste@gmail.com';                  
-                $mail->Password   = 'jbBL6Wd2EKQvpyqR';                         
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;           
-                $mail->Port       = 465;                                    
-
-                //Recipients 
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
+                
                 $mail->ClearReplyTos();
-                $mail->addAddress($email);    
-                $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
+                $mail->addAddress($email, $fullname);
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
             
 
                 //Content
@@ -1501,7 +1665,7 @@
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1585,6 +1749,9 @@
         public function mailDelivered() {
 
             $uid = $this->session->UID;
+
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt')); 
             
             $request_id = $this->input->post('setRequestID');
             $email = $this->input->post('setEmail');
@@ -1600,7 +1767,7 @@
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
                 $staff_name = ucwords($firstname." ".$lastname);
-                $staff_email = $staff->staff_email;
+                $staff_email = $this->encryption->decrypt($staff->staff_email);
 
                 $staff_type = $staff->staff_type;
 
@@ -1618,6 +1785,7 @@
 
             $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
+                $fullname = $request->firstname.' '.$request->middlename.' '.$request->lastname.' '.$request->suffix;
                 $temp_status = $request->status;
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -1636,25 +1804,25 @@
 
             $addition_message = "";
             if(!empty($message)) {
-                $addition_message = "<br><b class='margin: 0; line-height: 1.8'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
             }
 
 
             $mail = new PHPMailer(true);
 
             try {
-                $mail->isSMTP();                                            
-                $mail->Host       = 'smtp-relay.sendinblue.com';                  
-                $mail->SMTPAuth   = true;                                 
-                $mail->Username   = 'personal.darwinlabiste@gmail.com';                  
-                $mail->Password   = 'jbBL6Wd2EKQvpyqR';                         
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;           
-                $mail->Port       = 465;                                    
-
-                //Recipients 
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
+                
                 $mail->ClearReplyTos();
-                $mail->addAddress($email);    
-                $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
+                $mail->addAddress($email, $fullname);
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
             
 
                 //Content
@@ -1673,7 +1841,7 @@
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1757,6 +1925,10 @@
 
             $uid = $this->session->UID;
             
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt')); 
+            
+
             $request_id = $this->input->post('setRequestID');
             $email = $this->input->post('setEmail');
             $message = $this->input->post('getMessage');
@@ -1774,7 +1946,7 @@
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
                 $staff_name = ucwords($firstname." ".$lastname);
-                $staff_email = $staff->staff_email;
+                $staff_email = $this->encryption->decrypt($staff->staff_email);
 
                 $staff_type = $staff->staff_type;
 
@@ -1792,6 +1964,7 @@
 
             $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
+                $fullname = $request->firstname.' '.$request->middlename.' '.$request->lastname.' '.$request->suffix;
                 $temp_status = $request->status;
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -1808,25 +1981,25 @@
 
             $addition_message = "";
             if(!empty($message)) {
-                $addition_message = "<br><b class='margin: 0; line-height: 1.8'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
             }
 
 
             $mail = new PHPMailer(true);
 
             try {
-                $mail->isSMTP();                                            
-                $mail->Host       = 'smtp-relay.sendinblue.com';                  
-                $mail->SMTPAuth   = true;                                 
-                $mail->Username   = 'personal.darwinlabiste@gmail.com';                  
-                $mail->Password   = 'jbBL6Wd2EKQvpyqR';                         
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;           
-                $mail->Port       = 465;                                    
-
-                //Recipients 
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
+                
                 $mail->ClearReplyTos();
-                $mail->addAddress($email);    
-                $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
+                $mail->addAddress($email, $fullname);
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
             
 
                 //Content
@@ -1842,7 +2015,7 @@
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1967,6 +2140,9 @@
 
             $uid = $this->session->UID;
 
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt')); 
+
             $this->load->model('StaffModel');
             $staff = $this->StaffModel->get_staff_details($uid);
             
@@ -1975,7 +2151,7 @@
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
                 $staff_name = ucwords($firstname." ".$lastname);
-                $staff_email = $staff->staff_email;
+                $staff_email = $this->encryption->decrypt($staff->staff_email);
 
                 $staff_type = $staff->staff_type;
 
@@ -1995,6 +2171,7 @@
 
             $request = $this->StaffModel->getRequestReview($request_id);
             if (isset($request)) {
+                $fullname = $request->firstname.' '.$request->middlename.' '.$request->lastname.' '.$request->suffix;
                 $temp_status = $request->status;
                 $date = $request->date_created;
                 $student_type = $request->student_type;
@@ -2014,18 +2191,18 @@
             $mail = new PHPMailer(true);
 
             try {
-                $mail->isSMTP();                                            
-                $mail->Host       = 'smtp-relay.sendinblue.com';                  
-                $mail->SMTPAuth   = true;                                 
-                $mail->Username   = 'personal.darwinlabiste@gmail.com';                  
-                $mail->Password   = 'jbBL6Wd2EKQvpyqR';                         
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;           
-                $mail->Port       = 465;                                    
-
-                //Recipients 
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
+                
                 $mail->ClearReplyTos();
-                $mail->addAddress($email);    
-                $mail->setFrom('personal.darwinlabiste@gmail.com', 'Darwin Bulgado Labiste');
+                $mail->addAddress($email, $fullname);
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
             
 
                 //Content
@@ -2040,7 +2217,7 @@
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:unofficial.oadtesting@gmail.com'>contact us</a> for other inquiries.</p>
+                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
 
                                     <br>
                                     <br>
@@ -2117,6 +2294,356 @@
             }
 
         }
+
+
+
+
+        public function mailInsufficientPayment() {
+
+            $uid = $this->session->UID;
+
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt')); 
+
+
+            $request_id = $this->input->post('setRequestID');
+            $email = $this->input->post('setEmail');
+
+
+            $totalPayment = $this->input->post('getTotalPayment');
+            $insufficientPayment = $this->input->post('getInsufficientPayment');
+            $messageInserted = $this->input->post('getMessage');
+
+            $this->load->model('StaffModel');
+            $staff = $this->StaffModel->get_staff_details($uid);
+            
+            if (isset($staff)) {
+                $firstname = $staff->staff_fname;
+                $middlename = $staff->staff_mname;
+                $lastname = $staff->staff_lname;
+                $staff_name = ucwords($firstname." ".$lastname);
+                $staff_email = $this->encryption->decrypt($staff->staff_email);
+
+                $staff_type = $staff->staff_type;
+
+                if ($staff_type == 1) {
+                    $staff_text = "(Record-in-Charge)";
+                }
+
+                if ($staff_type == 2) {
+                    $staff_text = "(Frontline)";
+                }
+            }
+
+            $temp_status = 0;
+
+            $request = $this->StaffModel->getRequestReview($request_id);
+            if (isset($request)) {
+                $fullname = $request->firstname.' '.$request->middlename.' '.$request->lastname.' '.$request->suffix;
+                $temp_status = $request->status;
+                $date = $request->date_created;
+                $student_type = $request->student_type;
+                $delivery_option = $request->delivery_option;
+                $student_fname = $request->firstname;
+            }
+
+            $addition_message = "";
+            if(!empty($messageInserted)) {
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$messageInserted."</p>";
+            }
+
+
+            $status = 6;
+            $outbox_status = 0;
+
+            $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+
+
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
+                
+                $mail->ClearReplyTos();
+                $mail->addAddress($email, $fullname);
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
+            
+
+                //Content
+                $mail->isHTML(true);                                 
+                $mail->Subject = "Insufficient Payment [Request ID: ".$request_id."]";
+                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hi, ".ucwords($student_fname)."!</p>
+                    
+                                    <br>
+                
+                                    <p style='margin: 0; line-height: 1.8;'>This is to inform you that your payment is insufficient. The total cost of your requested document is <b>".$totalPayment." PHP</b> and you still need <b>".$insufficientPayment." PHP</b> to complete this transaction.</p>
+
+                                    ".$addition_message."
+
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.8;'>Kindly click the link provided to update your payment. Link: ".base_url('/student/request/'.$request_id)."</p>
+
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+
+                                    <br>
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                    <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                    <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                    <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                    
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+
+                                    <br>
+                                    
+                                    <br>
+                                    <hr>
+                                    
+                                    <p style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'><b>CONFIDENTIALITY NOTICE</b> -- This email is intended only for the person(s) named in the message header. Unless otherwise indicated, it contains information that is confidential, privileged and/or exempt from disclosure under applicable law. If you have received this message in error, please notify the sender of the error and delete the message. Thank you.</p>
+                                    
+                                    <br>
+
+                                    <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
+                            
+
+
+                if(!$mail->send()) {
+                    
+                    $status = $temp_status; 
+                    $outbox_status = 1;
+                    $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+                    
+                    $message = "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                
+                    $request_json = array (
+                        'title'     =>     "FAILED TO SEND EMAIL",
+                        'icon'      =>     "error",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
+
+                } else {
+
+                    $message = "Student was successfully informed for his/her insufficient balance.";
+                
+                    $request_json = array (
+                        'title'     =>     "EMAIL SENT",
+                        'icon'      =>     "success",
+                        'message'   =>     $message
+                    );
+
+                    echo json_encode($request_json);
+
+                }
+                
+            } catch (Exception $e) {
+                
+                $status = $temp_status; 
+                $outbox_status = 1;
+                $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+
+                $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+
+                $request_json = array (
+                    'title'     =>     "FAILED TO SEND EMAIL",
+                    'icon'      =>     "error",
+                    'message'   =>     $message
+                );
+                
+                echo json_encode($request_json);
+
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+
+        public function mailPaymentCompleted() {
+
+            $uid = $this->session->UID;
+
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt')); 
+
+            $this->load->model('StaffModel');
+            $staff = $this->StaffModel->get_staff_details($uid);
+            
+            if (isset($staff)) {
+                $firstname = $staff->staff_fname;
+                $middlename = $staff->staff_mname;
+                $lastname = $staff->staff_lname;
+                $staff_name = ucwords($firstname." ".$lastname);
+                $staff_email = $this->encryption->decrypt($staff->staff_email);
+
+                $staff_type = $staff->staff_type;
+
+                if ($staff_type == 1) {
+                    $staff_text = "(Record-in-Charge)";
+                }
+
+                if ($staff_type == 2) {
+                    $staff_text = "(Frontline)";
+                }
+            }
+            
+            $request_id = $this->input->post('id');
+            $email = $this->input->post('email');
+
+            $temp_status = 0;
+
+            $request = $this->StaffModel->getRequestReview($request_id);
+            if (isset($request)) {
+                $fullname = $request->firstname.' '.$request->middlename.' '.$request->lastname.' '.$request->suffix;
+                $temp_status = $request->status;
+                $date = $request->date_created;
+                $student_type = $request->student_type;
+                $delivery_option = $request->delivery_option;
+                $student_fname = $request->firstname;
+            }
+
+
+
+            $status = 1;
+            $outbox_status = 0;
+
+            $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
+                
+                $mail->ClearReplyTos();
+                $mail->addAddress($email, $fullname);
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
+            
+
+                //Content
+                $mail->isHTML(true);                                 
+                $mail->Subject = "Payment Reviewed [Request ID: ".$request_id."]";
+                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hello, ".ucwords($student_fname)."!</p>
+                    
+                                    <br>
+                
+                                    <p style='margin: 0; line-height: 1.8;'>We have already reviewed your payment. Kindly wait as you will be duly informed regarding the processing of the document/s.</p>
+
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+
+                                    <br>
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
+                                    <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
+                                    <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
+                                    <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                    
+                                    <br>
+
+                                    <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+
+                                    <br>
+                                    
+                                    <br>
+                                    <hr>
+                                    
+                                    <p style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'><b>CONFIDENTIALITY NOTICE</b> -- This email is intended only for the person(s) named in the message header. Unless otherwise indicated, it contains information that is confidential, privileged and/or exempt from disclosure under applicable law. If you have received this message in error, please notify the sender of the error and delete the message. Thank you.</p>
+                                    
+                                    <br>
+
+                                    <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
+                            
+
+
+                if(!$mail->send()) {
+                    
+                    $status = $temp_status; 
+                    $outbox_status = 1;
+                    $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+                    
+                    $message = "There was a problem sending the request. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+                
+                    $request_json = array (
+                        'title'     =>     "FAILED TO APPROVE PAYMENT",
+                        'icon'      =>     "error",
+                        'message'   =>     $message
+                    );
+                    
+                    echo json_encode($request_json);
+
+                } else {
+
+                    $message = "Payment is now approve. You may now proceed with the request.";
+                
+                    $request_json = array (
+                        'title'     =>     "PAYMENT COMPLETED",
+                        'icon'      =>     "success",
+                        'message'   =>     $message
+                    );
+
+                    echo json_encode($request_json);
+
+                }
+                
+            } catch (Exception $e) {
+                
+                $status = $temp_status; 
+                $outbox_status = 1;
+                $this->StaffModel->updateRequest($request_id, "", $status, $outbox_status);
+
+                $message = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}. Please check your outbox to resend this request. If problem persist, please contact the administrator.";
+
+
+                $request_json = array (
+                    'title'     =>     "FAILED TO APPROVE PAYMENT",
+                    'icon'      =>     "error",
+                    'message'   =>     $message
+                );
+                
+                echo json_encode($request_json);
+
+            }
+
+        }
+
+
+
+
+
+
+
 
 
     }

@@ -15,7 +15,7 @@
                 <p>or</p>
                 <span></span>
             </div>
-            <a href="<?php echo base_url('student/inactive'); ?>" class="btn btn-primary w-100 p-3">Inactive Student</a>
+            <a href="<?php echo base_url('student/inactive'); ?>" class="btn btn-primary w-100 p-3">Alumni/ Inactive Students</a>
         </div>
 
  
@@ -26,32 +26,17 @@
             </div>
 
             <div class="faq-wrapper">
-                <h3>How to follow up requested document?</h3>
-                <p>An automated email is utilised to notify the student regarding their requested documents. In some cases, if the student urgently needs the requested document, sending a direct email to the designated RIC or Frontline are allowed. Personal details, including full name, subject to concern and message, are required before sending follow up email.</p>
+                <h3>Track request</h3>
+                <p>Request ID is required for tracking the request, it is used for checking the status of the request and uploading follow up of the payment file for the completion of the request details. In addition, an automated email is utilized to notify the student regarding their requested documents. In some cases, if the student urgently needs the requested document, sending a direct email to the designated staff is allowed.</p>
+
+                <button class="btn btn-primary p-2" id="btnTrack">Track</button>
             </div>
         </div>
 
 
 
         <div class="flex-content-faq mt-3 mb-3">
-            <div class="faq-wrapper">
-                <h3>Track Request</h3>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officia quas tempore eius nulla odit veritatis eaque. Distinctio commodi eligendi voluptatem? Doloremque itaque animi iure consequuntur quas beatae, architecto corrupti nulla omnis optio illo obcaecati quos!</p>
 
-                <button class="btn btn-primary p-2" id="btnTrack">Track</button>
-            </div>
-
-            <div class="faq-wrapper">
-                <h3>Contact us for inquiries</h3>
-                <p>Document request related inquiries are the information we provide, including the lists of the documents you can request and the lists of designated RICs and Frontlines. Send us your other inquiries and concerns regarding requesting a document through this site.</p>
-
-                <button class="btn btn-primary p-2" id="btnEmailUs">Email Us<i class='bx bxs-envelope' ></i></button>
-            </div>
-        </div>
-
-
-
-        <div class="flex-content-faq mt-3 mb-5">
             <div class="faq-wrapper">
                 <h3>Login as staff</h3>
                 <p>RIC, Frontline and the Dean accounts must be logged in through their preferred devices. Login requires access to all the necessary staff credentials, including username, password and role.</p>
@@ -59,10 +44,15 @@
                 <button class="btn btn-success p-2" id="btnLogin">Login<i class='bx bxs-lock-alt'></i></button>
             </div>
 
-            <div class="faq-wrapper">
 
-            </div>
+            <div class="faq-wrapper">
+                <h3>Contact us for inquiries</h3>
+                <p>Document request related inquiries are the information we provide, including the lists of the documents you can request and the lists of designated RICs and Frontlines. Send us your other inquiries and concerns regarding requesting a document through this site.</p>
+
+                <button class="btn btn-primary p-2" id="btnEmailUs">Email Us<i class='bx bxs-envelope' ></i></button>
+            </div>        
             
         </div>
+
 
     </div>

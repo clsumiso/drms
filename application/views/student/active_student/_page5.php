@@ -10,10 +10,10 @@
                         <p class="page-title fs-18 text-capitalize bg-success text-white p-3">Personal Information<i class="bx bxs-edit" title="Edit" id="btnEditPeronsalInfo"></i></p>
                         
 
-                        <div class="flex-request-info">
+                        <!-- <div class="flex-request-info">
                             <p class="label">Proof of Identity: </p>
                             <p class="data" id="setIdentityUpload"></p>
-                        </div>
+                        </div> -->
         
                         <div class="flex-request-info">
                             <p class="label">Student ID: </p>

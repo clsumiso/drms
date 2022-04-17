@@ -1,17 +1,17 @@
             <div class="request-form-contents" id="personalInfoContentPage">
                 
-                <p class="page-title">proof of identity</p>
+                <!-- <p class="page-title">proof of identity</p>
                 <p class="default-text">Please upload your latest FORM 6 as a proof that you are currently enrolled in Central Luzon State University. You can download your FORM 6 in the CLSU Student Portal at the “Enroll now” section.</p>
 
                 <div class="validate-identity-upload mb-2">
-                    <!-- append validation here -->
+
                 </div>
 
                 <input type="file" name="getIdentityUpload" id="getIdentityUpload" class="form-control d-none w-25">
                 <button class="btn btn-primary poppins custom-button" type="button" id="btnUploadIdentity"><i class="bx bx-upload me-2 fw-bold fs-18"></i>Upload Form 6</button>
-                <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, and png files are acceptable.</p>
+                <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, bmp, and png files are acceptable.</p>
 
-                <hr>
+                <hr> -->
 
                 <p class="page-title">personal information</p>
                 <p class="default-text">Please fill up the form with valid information. The information provided will be used to contact and validate the information of the student. Unable to provide the required information may prevent staffs in processing the requested document/s.</p>

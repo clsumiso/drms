@@ -64,7 +64,10 @@ $route = array (
     'student/inactive'                  => 'studentController/inactive_student',
     'student/inactive_request'          => 'studentController/insert_inactive_request',
 
+    'student/coursesActive'             => 'studentController/getCourseActiveStudent',
     'student/courses'                   => 'studentController/getCourse',
+
+    'student/checkSIDEmail'             => 'studentController/checkStudentIDEmail',
 
     'student/searchRequest'             => 'studentController/getRequestID',
     'student/request/(:any)'            => 'studentController/getRequest/$1',
@@ -74,17 +77,19 @@ $route = array (
     
     'login'                             => 'loginController',
     'staff_login'                       => 'loginController/login',
-    'staff_logout'                      => 'loginController/logout',
+    'staff_logout'                      => 'loginController/logout_staff',
     'admin_login'                       => 'loginController/loginAdmin',
     'admin_signinAdmin'                 => 'loginController/signinAdmin',
     
     'staff'                             => 'staffController',
+    'staff/sessControll'                => 'staffController/sessionControll',
     'staff/getStaffName'                => 'staffController/getStaffDetails',
     'staff/getRemindPop'                => 'staffController/getReminderCountPopup',
     'staff/navCount'                    => 'staffController/getNavigationCount',
     'staff/getRequest'                  => 'staffController/getListDocument',
     'staff/getReminderRequest'          => 'staffController/getReminderRequest',
     'staff/getOutboxRequest'            => 'staffController/getOutboxRequest',
+    'staff/getInsufficientRequest'      => 'staffController/getInsufficientRequest',
     'staff/review'                      => 'staffController/getRequestReview',
     'staff/notes'                       => 'staffController/notes',
     'staff/getSearch'                   => 'staffController/get_search_request',
@@ -93,6 +98,8 @@ $route = array (
     'staff/deliveredRequest'            => 'staffController/mailDelivered',
     'staff/sendDocumentRequest'         => 'staffController/mailSendDocument',
     'staff/approvePayment'              => 'staffController/mailApprovePayment',
+    'staff/insufficient'                => 'staffController/mailInsufficientPayment',
+    'staff/insufficientCompleted'       => 'staffController/mailPaymentCompleted',
 
 
     'admin'                             => 'adminController',
@@ -102,6 +109,8 @@ $route = array (
     'admin/feedbacks'                   => 'adminController/feedbackManagement',
     'admin/reports'                     => 'adminController/reportManagement',
     'admin/maintenance'                 => 'adminController/maintenanceManagement',
+
+    'admin/sessionOpener/(:any)/(:any)' => 'adminController/staffAccountAccess/$1/$2',
 
     'admin/dashboard_employee_status'   => 'adminController/employeeStatus',
     'admin/dashboard_widgets'           => 'adminController/displayWidgets',

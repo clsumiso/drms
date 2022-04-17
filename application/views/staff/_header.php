@@ -7,7 +7,7 @@
             <form id="formSearchRequest">
                 <div class="form-search">
                     <i class="fas fa-search"></i>
-                    <input type="text" name="getSearchName" id="searchName" placeholder="Search name" autocomplete="off">
+                    <input type="text" name="getSearchName" id="searchName" placeholder="Request ID or Name" autocomplete="off">
                 </div>
                 <button class="btn btn-primary d-none">Search</button>
             </form>

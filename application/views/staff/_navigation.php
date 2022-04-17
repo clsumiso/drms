@@ -12,7 +12,7 @@
         <div class="search-mobile-wrapper">
             <form id="formSearchRequest2">
                 <div class="form-search2">
-                    <input type="text" name="getSearchName" id="searchName2" placeholder="Search name" autocomplete="off">
+                    <input type="text" name="getSearchName" id="searchName2" placeholder="Request ID or Name" autocomplete="off">
                     <button class="btn btn-primary d-none">Search</button>
                 </div>
             </form>
@@ -38,6 +38,13 @@
                 <a href="" id="navIncompleteRequest">
                     <i class="fa-solid fa-file-waveform"></i>
                     <p>Incomplete <div class="content-counts" id="incompleteCount">0</div></p>
+                </a>
+            </li>
+
+            <li>
+                <a href="" id="navInsufficientRequest">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <p>Insufficient <div class="content-counts" id="insufficientCount">0</div></p>
                 </a>
             </li>
 

@@ -56,7 +56,6 @@ $(document).ready(function() {
                 $("#webLoader").fadeIn()
             },
             success: function(data) {
-                console.log(data)
                 switch (data) {
                     case "0":
                         $('#printValidation').removeClass('d-none')

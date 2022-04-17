@@ -52,19 +52,20 @@
 
             try {
                 //Server settings
-                $mail->isSMTP();                                            
-                $mail->Host       = 'smtp-relay.sendinblue.com';    // 
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
-                $mail->Username   = 'personal.darwinlabiste@gmail.com';
-                $mail->Password   = 'jbBL6Wd2EKQvpyqR';
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-                $mail->Port       = 465;                                    
-
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                                                 
                 //Recipients
+                $mail->addAddress('personal.darwinlabiste@gmail.com', 'DRMS Concerns');
+                $mail->setFrom($email, $fullname); 
+
                 $mail->ClearReplyTos();
                 $mail->AddReplyTo($email, $fullname);
-                $mail->addAddress('unofficial.oadtesting@gmail.com', 'Capstone Testing');
-                $mail->setFrom($email, $fullname);
             
 
                 //Content
