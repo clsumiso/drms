@@ -604,7 +604,7 @@
                     
                                             <br>
                         
-                                            <p style='margin: 0; line-height: 1.8;'>This is to inform you that you have successfully uploaded and updated your proof of payment. Kindly wait as you will be duly informed regarding the processing of the document/s.</p>
+                                            <p style='margin: 0; line-height: 1.8;'>This is to inform you that you have successfully updated your proof of payment. Kindly wait as we will review it as soon as possible.</p>
 
                                             <br>
 
@@ -614,7 +614,7 @@
                                             
                                             
                                             <br>
-                                            <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                            <p style='margin: 0; line-height: 1.8;'>Thank you for your understanding.</p>
                                             
                                             <br>
                                             <hr>
@@ -675,7 +675,7 @@
                     'status'        =>  0,
                     'icon'          =>  'error',
                     'title'         =>  'Invalid Student ID',
-                    'message'       =>  'If problem persist, please email your concern to  <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>'
+                    'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
                 );
 
                 $countInvalid++;
