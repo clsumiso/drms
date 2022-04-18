@@ -175,7 +175,7 @@ CREATE TABLE `tbl_profile` (
 INSERT INTO `tbl_profile` (`user_id`, `email`) VALUES
 ('18-1673', 'sarmiento.christine@clsu2.edu.ph'),
 ('18-2079', 'labiste.darwin@clsu2.edu.ph'),
-('18-2161', 'peneyra.phoebe@clsu2.edu.ph');
+('18-1252', 'peneyra.phoebe@clsu2.edu.ph');
 
 --
 -- Indexes for dumped tables
