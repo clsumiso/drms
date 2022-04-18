@@ -127,8 +127,8 @@
             $last_month = date("m", strtotime("last month"));
             
 
-            $now_monthly = $this->AdminModel->display_widgets("0, 1, 2, 3", $this_month);
-            $last_monthly = $this->AdminModel->display_widgets("0, 1, 2, 3", $last_month);
+            $now_monthly = $this->AdminModel->display_widgets("0, 1, 2, 3, 4, 5, 6, 7", $this_month);
+            $last_monthly = $this->AdminModel->display_widgets("0, 1, 2, 3, 4, 5, 6, 7", $last_month);
             
             $monthly_count = 0;
             if (isset($now_monthly)) {
