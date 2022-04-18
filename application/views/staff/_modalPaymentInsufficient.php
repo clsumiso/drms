@@ -25,7 +25,7 @@
                             </div>
 
                             <div class="form-group col-lg-6 mb-3">
-                                <label for="getInsufficientPayment" class="form-label">Insufficient Payment</label>
+                                <label for="getInsufficientPayment" class="form-label">Balance</label>
                                 <input type="number" class="form-control" name="getInsufficientPayment" id="getInsufficientPayment" min="0" max="9999" placeholder="0 PHP" required>
                             </div>
                         </div>
