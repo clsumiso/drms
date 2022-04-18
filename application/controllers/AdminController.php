@@ -224,15 +224,15 @@
                     }
 
                     if ($employee->staff_type == 1) {
-                        $monthly_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '0,1,2,3', '1');
-                        $pending_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '1', '1');
+                        $monthly_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '0,1,2,3,4,5,6,7', '1');
+                        $pending_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '1,2,4,5,6,7', '1');
                         $completed_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '0', '1');
                         $declined_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_ric', '3', '1');
                     }
 
                     if ($employee->staff_type == 2) {
-                        $monthly_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '0,1,2,3', '2');
-                        $pending_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '1', '2');
+                        $monthly_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '0,1,2,3,4,5,6,7', '2');
+                        $pending_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '1,2,4,5,6,7', '2');
                         $completed_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '0', '2');
                         $declined_status = $this->AdminModel->count_employee_status($emp_id, 'staff_id_frontline', '3', '2');
                     }
