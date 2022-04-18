@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 10, 2022 at 11:41 PM
+-- Generation Time: Apr 18, 2022 at 02:01 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -157,6 +157,26 @@ INSERT INTO `tbl_course` (`course_id`, `college_id`, `course_name`, `course_desc
 (133, 8, 'MCHEM', 'MASTER OF CHEMISTRY', 'MS', 1),
 (142, 8, 'CROSS ENROLLEE', 'CROSS ENROLLEE', 'BS', 1);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_profile`
+--
+
+CREATE TABLE `tbl_profile` (
+  `user_id` varchar(11) NOT NULL,
+  `email` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `tbl_profile`
+--
+
+INSERT INTO `tbl_profile` (`user_id`, `email`) VALUES
+('18-1673', 'sarmiento.christine@clsu2.edu.ph'),
+('18-2079', 'labiste.darwin@clsu2.edu.ph'),
+('18-2161', 'peneyra.phoebe@clsu2.edu.ph');
+
 --
 -- Indexes for dumped tables
 --
@@ -172,6 +192,12 @@ ALTER TABLE `tbl_college`
 --
 ALTER TABLE `tbl_course`
   ADD PRIMARY KEY (`course_id`);
+
+--
+-- Indexes for table `tbl_profile`
+--
+ALTER TABLE `tbl_profile`
+  ADD PRIMARY KEY (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
