@@ -1112,6 +1112,10 @@
             $date_subject = date_format($today_subject, "md-is");
 
 
+            $this->load->library('encryption');
+            $this->encryption->initialize(array('driver' => 'mcrypt'));
+
+            
             // Upload payment file
             $payment_filename = $_FILES['getPaymentUpload']['name'];
             $payment_file_error = $_FILES['getPaymentUpload']['error'];
@@ -1345,8 +1349,6 @@
                     if($staff->staff_id_frontline != 0) {
                         $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
                         
-                        $this->load->library('encryption');
-                        $this->encryption->initialize(array('driver' => 'mcrypt'));
                         $staff_email = $this->encryption->decrypt($staff->staff_email);
 
                         $email_contact_frontline = "<a href='mailto:".$staff_email."'>".$staff_email."</a>";
