@@ -210,14 +210,21 @@ $(document).ready(function() {
             let g_name = $('#c_givenname').val()
             let givenname = g_name.split(' ')[0].toLowerCase()
 
-            $('#c_username').val($('#c_lastname').val().toLowerCase() +"." +givenname)
+            
+            let l_name = $('#c_lastname').val()
+            let lastname = $.trim(l_name)
+
+            $('#c_username').val(lastname.toLowerCase() + "." + givenname.toLowerCase())
         })
 
         $('#c_lastname').keyup(function() {
             let g_name = $('#c_givenname').val()
             let givenname = g_name.split(' ')[0].toLowerCase()
 
-            $('#c_username').val($('#c_lastname').val().toLowerCase() +"." +givenname)
+            let l_name = $('#c_lastname').val()
+            let lastname = $.trim(l_name)
+
+            $('#c_username').val(lastname.toLowerCase() + "." + givenname.toLowerCase())
         })
 
         $('#c_staffID').change(function() {
@@ -327,7 +334,7 @@ $(document).ready(function() {
         $('#c_password').change(function() {
             $(this).parent().find('.account-validation').remove()
             if ($('#c_password').val()) {
-                if ($('#c_password').val().length > 8 && $('#c_password').val().length < 32) {
+                if ($('#c_password').val().length >= 8 && $('#c_password').val().length < 32) {
                     $('#c_password').removeClass('is-invalid')
                     $('#c_password').addClass('is-valid')
                 } else {
@@ -440,7 +447,7 @@ $(document).ready(function() {
 
 
             if ($('#c_password').val()) {
-                if ($('#c_password').val().length > 8 && $('#c_password').val().length < 32) {
+                if ($('#c_password').val().length >= 8 && $('#c_password').val().length < 32) {
                     $('#c_password').removeClass('is-invalid')
                     $('#c_password').addClass('is-valid')
                     countValidation++
@@ -638,14 +645,25 @@ $(document).ready(function() {
             let g_name = $('#u_givenname').val()
             let givenname = g_name.split(' ')[0] 
 
-            $('#u_username').val($('#u_lastname').val() +"." +givenname)
+            
+            let l_name = $('#u_lastname').val()
+            console.log(l_name)
+            let lastname = $.trim(l_name)
+            console.log(lastname)
+
+            $('#u_username').val(lastname.toLowerCase() + "." + givenname.toLowerCase())
         })
 
         $('#u_lastname').keyup(function() {
             let g_name = $('#u_givenname').val()
             let givenname = g_name.split(' ')[0] 
 
-            $('#u_username').val($('#u_lastname').val() +"." +givenname)
+            
+            let l_name = $('#u_lastname').val()
+            let lastname = $.trim(l_name)
+
+            $('#u_username').val(lastname.toLowerCase() + "." + givenname.toLowerCase())
+            
         })
 
 
@@ -726,7 +744,7 @@ $(document).ready(function() {
         $('#u_password').change(function() {
             $(this).parent().find('.account-validation').remove()
             if ($('#u_password').val()) {
-                if ($('#u_password').val().length > 8 && $('#u_password').val().length < 32) {
+                if ($('#u_password').val().length >= 8 && $('#u_password').val().length < 32) {
                     $('#u_password').removeClass('is-invalid')
                     $('#u_password').addClass('is-valid')
                 } else {
@@ -825,7 +843,7 @@ $(document).ready(function() {
         
             if ($('#u_password').val()) {
                 totalValidation++
-                if ($('#u_password').val().length > 8 && $('#u_password').val().length < 32) {
+                if ($('#u_password').val().length >= 8 && $('#u_password').val().length < 32) {
                     $('#u_password').removeClass('is-invalid')
                     $('#u_password').addClass('is-valid')
                     countValidation++

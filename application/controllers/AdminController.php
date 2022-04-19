@@ -260,7 +260,7 @@
                             <td class="fw-bold">'.$pending_count.'</td>
                             <td class="fw-bold">'.$declined_count.'</td>
                             <td>
-                                <a href="/drms/admin/sessionOpener/'.$emp_id.'/'.$type.'" target="_blank" class="btn btn-primary"><i class="fa-solid fa-unlock-keyhole"></i></a>
+                                <a href="/drms/admin/sessionOpener/'.$emp_id.'/'.$type.'" target="_blank" class="btn btn-primary"><i class="fas fa-eye"></i></a>
                                 <a href="mailto:'.$email.'" class="btn btn-success"><i class="fa-solid fa-envelope"></i></a>
                             </td>
                         </tr>';
