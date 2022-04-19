@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 18, 2022 at 02:01 PM
+-- Generation Time: Apr 19, 2022 at 07:17 AM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -52,15 +52,6 @@ CREATE TABLE `ci_sessions` (
   `timestamp` int(10) UNSIGNED NOT NULL DEFAULT 0,
   `data` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `ci_sessions`
---
-
-INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('lo4mv3jdm493preiqp1vvijnf6c0gshg', '127.0.0.1', 1650224244, 0x5f5f63695f6c6173745f726567656e65726174657c693a313635303232343234343b),
-('46nijegq6iu0l0gd5ubeh26d4l3f9ah0', '127.0.0.1', 1650224474, 0x5f5f63695f6c6173745f726567656e65726174657c693a313635303232343437343b),
-('psl3es62g1vhr3ui3kvjda59d159vv6p', '::1', 1650228008, 0x5f5f63695f6c6173745f726567656e65726174657c693a313635303232373636353b);
 
 -- --------------------------------------------------------
 
@@ -204,13 +195,6 @@ CREATE TABLE `staff_account_tbl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `staff_account_tbl`
---
-
-INSERT INTO `staff_account_tbl` (`staff_id`, `staff_fname`, `staff_mname`, `staff_lname`, `staff_email`, `staff_username`, `staff_password`, `staff_type`, `account_status`, `last_logged`, `date_created`) VALUES
-('21512213213', 'darwin', 'bulgado', 'labiste', '3cc948d966353be15a7b1d3b32df02a0bdea7a0df7c23e3c0f65b536997c9eaa5a69907f109c1a08539779892b4d345b1c214ecadd2c79544a5ba1b079c28b99WoxjMlLHeQSyb7vBd1gO1+5wUYbslBtX7+au40r/FXjFfd2KdErP6GvBDssRqWTh', '5f339c989901538c11e9a21592b91ce88633faad8946a9eb7a23c303f952f52f99ef992bc29ca3527d5b66eba9d0704776f86437e84b174e3c42ae4c38199c3bsPfZl7aisn9q5OMAy/6elD1JeB+MaVbQfthAuzIXFmE=', 'a2f55305c734b94bb1176884cf91abbd52e96e878cc0ec34b799cb6a766892386c2581d65fcddced3f9af00614035bc7343204ba9f468f3b73362246c3e9e900dm2Cs/Jds29WUX3HsIbaP25mFZlitGTC7qjGwkmM7GQ=', 1, 1, '2022-04-18 01:06:12', '2022-04-16 00:02:55');
-
---
 -- Indexes for dumped tables
 --
 
@@ -300,7 +284,7 @@ ALTER TABLE `draft_note_tbl`
 -- AUTO_INCREMENT for table `feedback_tbl`
 --
 ALTER TABLE `feedback_tbl`
-  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `maintenance_tbl`

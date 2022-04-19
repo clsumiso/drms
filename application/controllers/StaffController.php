@@ -1489,7 +1489,7 @@
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1665,7 +1665,7 @@
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1841,7 +1841,7 @@
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -2015,7 +2015,7 @@
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -2217,7 +2217,7 @@
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                     <br>
                                     <br>
@@ -2384,7 +2384,7 @@
                     
                                     <br>
                 
-                                    <p style='margin: 0; line-height: 1.8;'>This is to inform you that your payment is insufficient. The total cost of your requested document is <b>".$totalPayment." PHP</b> and you still need <b>".$insufficientPayment." PHP</b> to complete this transaction.</p>
+                                    <p style='margin: 0; line-height: 1.8;'>This is to inform you that your payment is insufficient. The total cost of your requested document is <b>".$totalPayment." PHP</b> and you have a balance of <b>".$insufficientPayment." PHP</b> to complete this transaction.</p>
 
                                     ".$addition_message."
 
@@ -2394,7 +2394,7 @@
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                     <br>
                                     <br>
@@ -2560,7 +2560,7 @@
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                     <br>
                                     <br>

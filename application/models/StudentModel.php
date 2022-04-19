@@ -47,7 +47,7 @@ class StudentModel extends CI_Model
 
 
 
-    public function checkEmaiUserID($id, $email) {
+    public function checkEmaiUserID() {
 		$db2 = $this->load->database('admissions', TRUE);
         $query = $db2->query("SELECT * FROM tbl_profile");
         return $query->result();

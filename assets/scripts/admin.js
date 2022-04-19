@@ -249,19 +249,24 @@ $(document).ready(function() {
 
 
         $('#c_middlename').change(function() {
+            
             $(this).parent().find('.account-validation').remove()
-            if ($('#c_middlename').val()) {
-                if (validateName($('#c_middlename').val())) {
-                    $('#c_middlename').removeClass('is-invalid')
-                    $('#c_middlename').addClass('is-valid')
-                } else {
-                    $('#c_middlename').addClass('is-invalid')
-                    $('#c_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Invalid input</p>')
-                }
-            } else {
-                $('#c_middlename').addClass('is-invalid')
-                $('#c_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
-            }
+            
+                if ($('#c_middlename').val()) {
+                    if (validateName($('#c_middlename').val())) {
+                        $('#c_middlename').removeClass('is-invalid')
+                        $('#c_middlename').addClass('is-valid')
+                    } else {
+                        $('#c_middlename').addClass('is-invalid')
+                        $('#c_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Invalid input</p>')
+                    }
+                } 
+                // else {
+                //     $('#c_middlename').addClass('is-invalid')
+                //     $('#c_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
+                // }
+            
+            
         })
 
         $('#c_lastname').change(function() {
@@ -379,8 +384,7 @@ $(document).ready(function() {
                     $('#c_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Invalid input</p>')
                 }
             } else {
-                $('#c_middlename').addClass('is-invalid')
-                $('#c_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
+                countValidation++
             }
 
 
@@ -665,6 +669,7 @@ $(document).ready(function() {
         
         $('#u_middlename').change(function() {
             $(this).parent().find('.account-validation').remove()
+
             if ($('#u_middlename').val()) {
                 if (validateName($('#u_middlename').val())) {
                     $('#u_middlename').removeClass('is-invalid')
@@ -673,10 +678,8 @@ $(document).ready(function() {
                     $('#u_middlename').addClass('is-invalid')
                     $('#u_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Invalid input</p>')
                 }
-            } else {
-                $('#u_middlename').addClass('is-invalid')
-                $('#u_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
             }
+
         })
         
         $('#u_lastname').change(function() {
@@ -775,8 +778,7 @@ $(document).ready(function() {
                     $('#u_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Invalid input</p>')
                 }
             } else {
-                $('#u_middlename').addClass('is-invalid')
-                $('#u_middlename').parent().append('<p class="m-0 fs-14 poppins fw-normal text-danger account-validation">Cannot be blank</p>')
+                countValidation++
             }
         
         

@@ -78,7 +78,6 @@
                     $this->load->view('student/payment/_page_loader');
                     $this->load->view('student/payment/_header');
                     $this->load->view('student/payment/main');
-                    $this->load->view('student/payment/_modalPayment');
                     $this->load->view('student/payment/_script');
 
                     $this->session->set_flashdata('rid', $request_id);
@@ -455,7 +454,7 @@
                                                 <input type="text" class="form-control mb-3 d-none" id="getEmail" name="getEmail" value="'.$email.'">
                                                 <input type="text" class="form-control mb-3 d-none" id="getFullname" name="getFullname" value="'.$fullname.'">
                                                 <input type="text" class="form-control mb-3 d-none" id="getFirstname" name="getFirstname" value="'.$firstname.'">
-                                                <p class="text-description"><b>Note:</b> If you have not yet uploaded your proof of payment for your request you may do so here. Otherwise, if you have to update your payment due to insufficient payment, please create a PDF file that has your recent and new payment.</p>
+                                                <p class="text-description"><b>Note:</b> If you have not yet uploaded your proof of payment for your request you may do so here. <br>Otherwise, for the insufficient payment, you can update your payment by submitting a PDF file including the recent and the additional payments. You can also download your recent payment file below.</p>
                                 
                                                 '.$textUpdatePayment.'
                                 
@@ -608,7 +607,7 @@
 
                                             <br>
 
-                                            <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                            <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                             ".$designated_staff_details."
                                             
@@ -628,7 +627,7 @@
 
         
                         if(!$mail->send()) {
-                            echo "There was a problem sending your inquiry. Please try again later or email <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a>.";
+                            echo "There was a problem sending your inquiry. Please try again later or email <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a>.";
                         } else {
                             
                             $this->session->set_flashdata('rid', $rid);
@@ -667,90 +666,41 @@
 
             $this->load->model('StudentModel');
             $user = $this->StudentModel->checkStudentID($user_id);
-
-            $countValidation = 0;
-            $countInvalid = 0;
-
-            if (isset($user)) {
-                $countValidation++;
-            } else {
-                $validate = array(
-                    'status'        =>  0,
-                    'icon'          =>  'error',
-                    'title'         =>  'Invalid Student ID',
-                    'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
-                );
-
-                $countInvalid++;
-
-            }
-
-
-            $emailcheck = $this->StudentModel->checkEmail($email);
-
-            if (isset($emailcheck)) {
-                $countValidation++;
-            } else {
-                $validate = array(
-                    'status'        =>  0,
-                    'icon'          =>  'error',
-                    'title'         =>  'Invalid CLSU email',
-                    'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
-                );
-
-                $countInvalid++;
-
-            }
-
-            if ($countValidation == 2) {
-
-                $result = $this->StudentModel->checkEmaiUserID("18-2079", "labiste.darwin@clsu2.edu.ph");
+            $result = $this->StudentModel->checkEmaiUserID();
                 
-                if (isset($result)) {
-                    $countings = 0;
 
-                    foreach ($result as $res):
-                       
-                        if ($res->user_id == $user_id && $res->email == $email) {
-                            $validate = array(
-                                                    'status'        =>  1
-                                                );
-                            $countings = 1;
-                        }
-                        
-                    endforeach;
+            if (isset($result)) {
+                $countings = 0;
 
-                    if ($countings == 0) {
+                foreach ($result as $res):
+                   
+                    if ($res->user_id == $user_id && $res->email == $email) {
                         $validate = array(
-                                    'status'        =>  0,
-                                    'icon'          =>  'error',
-                                    'title'         =>  'Student ID and CLSU email are invalid',
-                                    'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
-                                );
+                                                'status'        =>  1
+                                            );
+                        $countings = 1;
                     }
+                    
+                endforeach;
 
-
-                } else {
+                if ($countings == 0) {
                     $validate = array(
-                        'status'        =>  0,
-                        'icon'          =>  'error',
-                        'title'         =>  'Student ID and CLSU email are invalid',
-                        'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
-                    );
+                                'status'        =>  0,
+                                'icon'          =>  'error',
+                                'title'         =>  'Student ID and CLSU Email does not match',
+                                'message'       =>  'If problem persist, please email your concern to drms.concerns@gmail.com'
+                            );
                 }
-               
+
 
             } else {
-                if ($countInvalid == 2) {
-                    $validate = array(
-                        'status'        =>  0,
-                        'icon'          =>  'error',
-                        'title'         =>  'Student ID and CLSU email are invalid',
-                        'message'       =>  'If problem persist, please email your concern to drms_concerns@gmail.com'
-                    );
-                }
+                $validate = array(
+                    'status'        =>  0,
+                    'icon'          =>  'error',
+                    'title'         =>  'Invalid Student ID or CLSU Email',
+                    'message'       =>  'If problem persist, please email your concern to drms.concerns@gmail.com'
+                );
             }
-            
 
 
 
@@ -973,7 +923,7 @@
                 
                 $data = array (
                     'status'        =>  0,
-                    'title'         =>  'There was a problem sending your request.  If problem persist, Please email <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                    'title'         =>  'There was a problem sending your request.  If problem persist, Please email <a href="mailto:drms.concerns@gmail.com">drms.concerns@gmail.com</a>.'
                 );
 
                 echo json_encode($data);
@@ -1039,7 +989,7 @@
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       ".$designated_staff_details."
                                       
@@ -1060,7 +1010,7 @@
 
                         $data = array (
                             'status'        =>  0,
-                            'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                            'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or <a href="mailto:drms.concerns@gmail.com">drms.concerns@gmail.com</a>.'
                         );
 
                         echo json_encode($data);
@@ -1074,7 +1024,7 @@
 
                         $data = array (
                             'status'        =>  1,
-                            'title'         =>  'Request was successfully sent. <br>Please screenshot or take note of your REQUEST ID for futher concerns.',
+                            'title'         =>  'Request was successfully sent. <br>Please screenshot or take note of your REQUEST ID for further concerns.',
                             'request_id'    =>  $uniq_request_id
                         );
 
@@ -1319,7 +1269,7 @@
 
                 $data = array (
                     'status'        =>  0,
-                    'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                    'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or <a href="mailto:drms.concerns@gmail.com">drms.concerns@gmail.com</a>.'
                 );
 
                 echo json_encode($data);
@@ -1356,7 +1306,7 @@
                         $designated_staff_details = "<br>
                                                      <br>
                                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                                     <p style='margin: 0; line-height: 1.4;'>(Record-in-Charge)</p>
+                                                     <p style='margin: 0; line-height: 1.4;'>(Frontline)</p>
                                                      <p style='margin: 0; line-height: 1.4;'>".$email_contact_frontline."</p>
                                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>";
                     }
@@ -1391,7 +1341,7 @@
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms_concerns@gmail.com'>drms_concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       ".$designated_staff_details."
                                       
@@ -1412,7 +1362,7 @@
 
                         $data = array (
                             'status'        =>  0,
-                            'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or email <a href="mailto:drms_concerns@gmail.com">drms_concerns@gmail.com</a>.'
+                            'title'         =>  'There was a problem sending your inquiry. <br>Please try again later or email <a href="mailto:drms.concerns@gmail.com">drms.concerns@gmail.com</a>.'
                         );
 
                         echo json_encode($data);
@@ -1437,7 +1387,7 @@
 
                         $data = array (
                             'status'        =>  1,
-                            'title'         =>  'Request was successfully sent. <br>Please screenshot or take note of your REQUEST ID for futher concerns.',
+                            'title'         =>  'Request was successfully sent. <br>Please screenshot or take note of your REQUEST ID for further concerns.',
                             'request_id'    =>  $uniq_request_id
                         );
 

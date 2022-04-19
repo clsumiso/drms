@@ -413,14 +413,14 @@
             } else {
 
                 $flag = 0;
-                if(isset($staff_email_check)) {
-                    foreach ($staff_email_check as $emailCheck) {
-                        $email_decrypt = $this->encryption->decrypt($emailCheck->staff_email);
-                        if ($email_decrypt === $email) {
-                            $flag = 1;
-                        }
-                    }
-                }
+                // if(isset($staff_email_check)) {
+                //     foreach ($staff_email_check as $emailCheck) {
+                //         $email_decrypt = $this->encryption->decrypt($emailCheck->staff_email);
+                //         if ($email_decrypt === $email) {
+                //             $flag = 1;
+                //         }
+                //     }
+                // }
                     
 
                 if ($flag == 1) {
@@ -490,31 +490,31 @@
             $flag = 0;
             if(isset($staff_check)) {
 
-                foreach($staff_check as $check):
+                // foreach($staff_check as $check):
 
-                    if ($check->staff_id == $id) {
-                        $data_account = array (
-                            'subject'   =>  'Account was not updated!',
-                            'message'   =>  $staff_id.' already exist.',
-                            'icon'      =>  'error'
-                        );
-                        $flag = 1;
-                        echo json_encode($data_account);
+                //     if ($check->staff_id == $id) {
+                //         $data_account = array (
+                //             'subject'   =>  'Account was not updated!',
+                //             'message'   =>  $staff_id.' already exist.',
+                //             'icon'      =>  'error'
+                //         );
+                //         $flag = 1;
+                //         echo json_encode($data_account);
 
-                    } 
+                //     } 
                     
-                    if ($check->staff_email == $email) {
+                //     if ($check->staff_email == $email) {
 
-                        $data_account = array (
-                            'subject'   =>  'Account was not updated!',
-                            'message'   =>  $email.' already exist.',
-                            'icon'      =>  'error'
-                        );
-                        $flag = 1;
-                        echo json_encode($data_account);
-                    }
+                //         $data_account = array (
+                //             'subject'   =>  'Account was not updated!',
+                //             'message'   =>  $email.' already exist.',
+                //             'icon'      =>  'error'
+                //         );
+                //         $flag = 1;
+                //         echo json_encode($data_account);
+                //     }
 
-                endforeach;
+                // endforeach;
 
 
                 if ($flag == 0) {

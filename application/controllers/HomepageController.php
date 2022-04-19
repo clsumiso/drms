@@ -61,8 +61,8 @@
                 $mail->Port       = 587;
                                                  
                 //Recipients
-                $mail->addAddress('personal.darwinlabiste@gmail.com', 'DRMS Concerns');
-                $mail->setFrom($email, $fullname); 
+                $mail->addAddress('drms.concerns@gmail.com', 'DRMS Concerns');
+                $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS'); 
 
                 $mail->ClearReplyTos();
                 $mail->AddReplyTo($email, $fullname);
@@ -70,7 +70,7 @@
 
                 //Content
                 $mail->isHTML(false);
-                $mail->Subject = $subject;
+                $mail->Subject = "Concern: ".$subject;
                 $mail->Body    = $message;
 
                 if($mail->send()) {
