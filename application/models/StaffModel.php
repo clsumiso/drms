@@ -54,11 +54,17 @@ class StaffModel extends CI_Model
 
     
     public function get_search($uid, $staff, $student_type, $name) {
-        $query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$student_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND tbl_course.course_id = request_tbl.course_id AND request_tbl.request_id LIKE '%".$name."%' OR CONCAT(requestor_info_tbl.firstname,' ',requestor_info_tbl.middlename,' ',requestor_info_tbl.lastname) LIKE '%".$name."%' GROUP BY CONCAT(requestor_info_tbl.firstname,' ',requestor_info_tbl.middlename,' ',requestor_info_tbl.lastname) ORDER BY request_tbl.date_created ASC");
+        $query = $this->db->query("SELECT * FROM request_tbl JOIN requestor_info_tbl JOIN course_handler_tbl JOIN admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$student_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND tbl_course.course_id = request_tbl.course_id AND request_tbl.request_id AND (request_tbl.request_id LIKE '%".$name."%' OR CONCAT(requestor_info_tbl.firstname,' ',requestor_info_tbl.middlename,' ',requestor_info_tbl.lastname) LIKE '%".$name."%') ORDER BY request_tbl.date_created ASC");
 
         return $query->result();
     }
 
+
+    public function fetchActivityLog($rid) {
+        $query = $this->db->query("SELECT * FROM request_log WHERE request_id = '$rid'");
+        
+        return $query->result();
+    }
 
 
     public function get_staff_details($id) {

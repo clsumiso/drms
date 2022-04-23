@@ -550,6 +550,7 @@
                     $designated_staff_details = "";
                     if (isset($staff)) {
                         if($staff->staff_id_ric != 0) {
+                            $staff_id = $staff->staff_id;
                             $fname = $staff->staff_fname;
                             $middlename = $staff->staff_mname;
                             $lastname = $staff->staff_lname;
@@ -573,10 +574,10 @@
 
                             $designated_staff_details = "<br>
                                                          <br>
-                                                         <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                                         <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                                         <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                                         <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>";
+                                                         <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                                         <p style='margin: 0; '>".$staff_text."</p>
+                                                         <p style='margin: 0; '>".$staff_email."</p>
+                                                         <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>";
                         }
                     }
 
@@ -599,21 +600,21 @@
         
                         $mail->isHTML(true);
                         $mail->Subject = "Payment Updated [Request ID: ".$rid."]";
-                        $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hello, ".ucwords($firstname)."!</p>
+                        $mail->Body    =  "<p style='margin: 0; '>Hello, ".ucwords($firstname)."!</p>
                     
                                             <br>
                         
-                                            <p style='margin: 0; line-height: 1.8;'>This is to inform you that you have successfully updated your proof of payment. Kindly wait as we will review it as soon as possible.</p>
+                                            <p style='margin: 0; '>This is to inform you that you have successfully updated your proof of payment. Kindly wait as we will review it as soon as possible.</p>
 
                                             <br>
 
-                                            <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                            <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                             ".$designated_staff_details."
                                             
                                             
                                             <br>
-                                            <p style='margin: 0; line-height: 1.8;'>Thank you for your understanding.</p>
+                                            <p style='margin: 0; '>Thank you for your understanding.</p>
                                             
                                             <br>
                                             <hr>
@@ -624,7 +625,6 @@
 
                                             <b style='margin: 0; line-height: 1.6; color: #646464; font-size: 10px;'>NOTE -- PLEASE DO NOT RESPOND TO THIS AUTOMATED EMAIL. THIS IS AN UNATTENDED MAILBOX.</b>";
 
-
         
                         if(!$mail->send()) {
                             echo "There was a problem sending your inquiry. Please try again later or email <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a>.";
@@ -633,12 +633,16 @@
                             $this->session->set_flashdata('rid', $rid);
                             echo "You have successfully updated your payment.";
 
+                            $today = date('Y-m-d H:i:s');
+
+                            $this->load->model('LogModel');
+                            $this->LogModel->createRequestLog($rid, $staff_id, 'Payment is successfully updated. Kindly wait while the payment is being reviewed.', $today);
+
                         }
         
                     } catch (Exception $e) {
                         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
                     }
-
 
                 }
 
@@ -772,7 +776,6 @@
 
             if ($payment_file_error === 0 || $payment_file_error === 4) {
 
-
                 $payment_stats = $this->input->post('getTotalPayment');
                 if ($payment_stats == 0) {
                     $filePaymentNewName = "0";
@@ -892,7 +895,7 @@
 
 
             $info_data = array (
-                // "identity_file"    =>      $fileIdentityNewName,`
+                // "identity_file"    =>      $fileIdentityNewName,
                 "student_no"       =>      $stud_no,
                 "firstname"        =>      $firstname,
                 "middlename"       =>      $middlename,
@@ -943,6 +946,7 @@
 
                 if (isset($staff)) {
                     if($staff->staff_id_ric != 0) {
+                        $staff_id = $staff->staff_id;
                         $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
 
                         $this->load->library('encryption');
@@ -953,12 +957,17 @@
 
                         $designated_staff_details = "<br>
                                                      <br>
-                                                     <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                                     <p style='margin: 0; line-height: 1.4;'>(Record-in-Charge)</p>
-                                                     <p style='margin: 0; line-height: 1.4;'>".$email_contact_ric."</p>
-                                                     <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>";
+                                                     <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                                     <p style='margin: 0; '>(Record-in-Charge)</p>
+                                                     <p style='margin: 0; '>".$email_contact_ric."</p>
+                                                     <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>";
 
                     }
+                }
+
+                $payment_mail = "";
+                if ($status == 4) {
+                    $payment_mail = "<br><p style='margin: 0; '>Kindly click the link provided to update your payment. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
                 }
 
 
@@ -981,20 +990,22 @@
                     
                     $mail->isHTML(true);
                     $mail->Subject = "Request confirmed [Request ID: ".$uniq_request_id."]";
-                    $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Good day, ".ucwords($firstname)."!</p>
+                    $mail->Body    =  "<p style='margin: 0; '>Good day, ".ucwords($firstname)."!</p>
                     
                                       <br>
                   
-                                      <p style='margin: 0; line-height: 1.8;'>This is to inform you that your request has been forwarded to the respective personnel. You will be duly informed regarding the process of the document/s.</p>
+                                      <p style='margin: 0; '>This is to inform you that your request has been forwarded to the respective personnel. You will be duly informed regarding the process of the document/s.</p>
+
+                                      ".$payment_mail."
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       ".$designated_staff_details."
                                       
                                       <br>
-                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                      <p style='margin: 0; '>Thank you!</p>
                                       
                                       <br>
                                       <hr>
@@ -1031,6 +1042,9 @@
                         echo json_encode($data);
                         $this->session->set_userdata('user', $student_type);
                         $this->session->set_flashdata('upload', true);
+
+                        $this->load->model('LogModel');
+                        $this->LogModel->createRequestLog($uniq_request_id, $staff_id, 'Request was created and given to the designated record-in-charge.', $today);
     
                     }
     
@@ -1297,6 +1311,7 @@
                 $email_contact_frontline = "";
                 if (isset($staff)) {
                     if($staff->staff_id_frontline != 0) {
+                        $staff_id = $staff->staff_id;
                         $staff_name = ucwords($staff->staff_fname.' '.$staff->staff_lname);
                         
                         $staff_email = $this->encryption->decrypt($staff->staff_email);
@@ -1305,11 +1320,17 @@
 
                         $designated_staff_details = "<br>
                                                      <br>
-                                                     <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                                     <p style='margin: 0; line-height: 1.4;'>(Frontline)</p>
-                                                     <p style='margin: 0; line-height: 1.4;'>".$email_contact_frontline."</p>
-                                                     <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>";
+                                                     <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                                     <p style='margin: 0; '>(Frontline)</p>
+                                                     <p style='margin: 0; '>".$email_contact_frontline."</p>
+                                                     <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>";
                     }
+                }
+
+
+                $payment_mail = "";
+                if ($status == 4) {
+                    $payment_mail = "<br><p style='margin: 0; '>Kindly click the link provided to update your payment. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
                 }
 
                 $mail = new PHPMailer(true);
@@ -1333,20 +1354,23 @@
                     
                     $mail->isHTML(true);
                     $mail->Subject = "Request confirmed [Request ID: ".$uniq_request_id."]";
-                    $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Good day, ".ucwords($firstname)."!</p>
+                    $mail->Body    =  "<p style='margin: 0; '>Good day, ".ucwords($firstname)."!</p>
                     
                                       <br>
                   
-                                      <p style='margin: 0; line-height: 1.8;'>This is to inform you that your request has been forwarded to the respective personnel. You will be duly informed regarding the process of the document/s.</p>
+                                      <p style='margin: 0; '>This is to inform you that your request has been forwarded to the respective personnel. You will be duly informed regarding the process of the document/s.</p>
+
+                                      ".$payment_mail."
 
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      
 
                                       ".$designated_staff_details."
                                       
                                       <br>
-                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                      <p style='margin: 0; '>Thank you!</p>
                                       
                                       <br>
                                       <hr>
@@ -1394,6 +1418,9 @@
                         echo json_encode($data);
                         $this->session->set_userdata('user', $student_type);
                         $this->session->set_flashdata('upload', true);
+
+                        $this->load->model('LogModel');
+                        $this->LogModel->createRequestLog($uniq_request_id, $staff_id, 'Request was created and given to the designated frontline.', $today);
                         
                     }
     

@@ -929,3 +929,73 @@ textarea.notesContent:focus {
     color: var(--bs-red);
     transition: all .3s;
 }
+
+
+.modal-track-status-request {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    width: 100%;
+    height: 100vh;
+    z-index: 3;
+}
+
+.modal-wrapper-request {
+    display: block;
+    position: relative;
+    top: 35%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 650px;
+    background-color: #fff;
+    padding: 15px 25px;
+    border-radius: 6px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.modal-wrapper-request h3 {
+    font-family: var(--poppins);
+    font-size: 25px;
+}
+
+.modal-wrapper-request .closeActivityLog {
+    cursor: pointer;
+}
+
+.bullet-track-desc-stats {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 17px;
+    margin-bottom: 30px;
+}
+
+.bullet-track-desc-stats i {
+    font-size: 12px;
+    color: #000;
+    margin-top: 7px;
+}
+
+
+.date-status-track-req {
+    display: flex;
+    flex-direction: column;
+}
+
+.date-status-track-req p {
+    margin: 0;
+}
+
+.status-desc {
+    font-size: 18px;
+    font-family: var(--poppins);
+}
+
+.date {
+    color: rgb(89, 89, 89);
+    font-size: 15px;
+    font-family: var(--poppins);
+}

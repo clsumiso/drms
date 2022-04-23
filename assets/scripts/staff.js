@@ -1407,4 +1407,16 @@ $(document).ready(function() {
     // sessionControll()
 
 
+    $(document).on('click', '.toggleTrackRequests', function() {
+        $('.modal-track-status-request').fadeIn()
+    })
+
+
+    $(document).on('click', '.closeActivityLog', function() {
+        $('.modal-track-status-request').fadeOut()
+    })
+
+
+
+
 })

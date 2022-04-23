@@ -246,13 +246,13 @@
                 $message = "There are no insufficient payment requests yet!";
                 $undraw_icon = "";
             }
-
+            
 
             $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN ($req_status) AND admissions.tbl_course.course_id =  request_tbl.course_id AND request_tbl.outbox_status IN (".$outbox_stats.") ORDER BY request_tbl.date_created ASC";
 
 
-            if ($request_type == 9) {
-                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN ($req_status) AND admissions.tbl_course.course_id =  request_tbl.course_id AND request_tbl.outbox_status IN (".$outbox_stats.") ORDER BY request_tbl.date_created ASC, status";
+            if ($request_type == 9 || $request_type == 10) {
+                $query = "SELECT * FROM request_tbl, requestor_info_tbl, course_handler_tbl, admissions.tbl_course WHERE request_tbl.course_id = course_handler_tbl.course_id AND request_tbl.student_type = '$staff_type' AND requestor_info_tbl.request_id = request_tbl.request_id AND course_handler_tbl.$staff = '$uid' AND request_tbl.status IN ($req_status) AND admissions.tbl_course.course_id =  request_tbl.course_id AND request_tbl.outbox_status IN (".$outbox_stats.") ORDER BY status DESC, request_tbl.date_created";
             }
 
 
@@ -1206,8 +1206,37 @@
                     $note_button_text = "Add Notes";
                 }
 
+
+
+
+
+                $actity_logs = $this->StaffModel->fetchActivityLog($request_id);
+
+                $text_activity_log = "";
+
+                foreach($actity_logs as $log):
+
+                    $log_desc = $log->description;
+                
+                    $date_act_log = new DateTime($log->date_created);
+                    $log_date = date_format($date_act_log, 'M d Y, g:i:s A');
+
+                    $text_activity_log .= '<div class="bullet-track-desc-stats">
+                
+                                            <i class="fas fa-dot-circle"></i>
+
+                                            <div class="date-status-track-req">
+                                                <p class="status-desc">'.$log_desc.'</p>
+                                                <p class="date">'.$log_date.'</p>
+                                            </div>
+                                        </div>';
+                endforeach;
+
+                
+
                 echo '<div class="action-button-wrapper">
                         <div class="action-main">
+
                             <button type="button" class="btn-send-document btn btn-success poppins '.$showSendDocumentBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="fas fa-paper-plane"></i> Send Document
                             </button>
@@ -1237,9 +1266,11 @@
                             </button>
                         </div>
             
-                        <div class="action-other">
-                            <button class="btn-addNotes btn-light toggleNotes" id="toggleNotes"><i class="fas fa-sticky-note"></i> <p class="m-0">'.$note_button_text.'</p></button>
+                        <div class="action-other d-flex gap-1">
+                            <button class="btn-primary btn toggleTrackRequests"><i class="fas fa-eye m-0"></i></button>
+                            <button class="btn-addNotes btn-light border toggleNotes" id="toggleNotes"><i class="fas fa-sticky-note"></i> <p class="m-0">'.$note_button_text.'</p></button>
                         </div>
+
                         
                     </div>
                     
@@ -1358,6 +1389,21 @@
                     <div class="modal-view-payment">
                         <i class="fas fa-times toggleClosePayment"></i>
                         '.$payment_file.'
+                    </div>
+                    
+                    <div class="modal-track-status-request">
+
+                        <div class="modal-wrapper-request">
+
+                            <div class="d-flex justify-content-between mb-4">
+                                <h3 class="poppins">Track Request</h3>
+                                <i class="fas fa-times closeActivityLog"></i>
+                            </div>
+                
+                            '.$text_activity_log.'
+                            
+                        </div>
+                
                     </div>';
 
             }
@@ -1406,6 +1452,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             $staff_text = "";
             if (isset($staff)) {
+                $staff_id = $staff->staff_id;
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -1424,7 +1471,7 @@
             
             $request_id = $this->input->post('setRequestID');
             $email = $this->input->post('setEmail');
-            $message = $this->input->post('getReason');
+            $reason = $this->input->post('getReason');
 
             
             $temp_status = 0;
@@ -1444,7 +1491,7 @@
             $status = 3;
             $outbox_status = 0;
 
-            $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
+            $this->StaffModel->updateRequest($request_id, $reason, $status, $outbox_status);
 
             
             $documents = $this->StaffModel->get_documents($request_id);
@@ -1478,29 +1525,29 @@
                 //Content
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Requested document is declined [Request ID: ".$request_id."]";
-                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hi, ".ucwords($student_fname)."!</p>
+                $mail->Body    =  "<p style='margin: 0; '>Hi, ".ucwords($student_fname)."!</p>
                     
                                       <br>
                   
-                                      <p style='margin: 0; line-height: 1.8;'>In response to your request, we are sorry to inform you that we won't be able to assess the document/s you have requested (".$docs.") at this point of time.</p>
+                                      <p style='margin: 0; '>In response to your request, we are sorry to inform you that we won't be able to assess the document/s you have requested (".$docs.") at this point of time.</p>
 
-                                      <b style='margin: 0; line-height: 1.8;'>Reasons:</b>
-                                      <p style='margin: 0; line-height: 1.8;'>".$message."</p>
-
-                                      <br>
-
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <b style='margin: 0; '>Reasons:</b>
+                                      <p style='margin: 0; '>".$reason."</p>
 
                                       <br>
+
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+
+                                      <br>
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; '>".$staff_text."</p>
+                                      <p style='margin: 0; '>".$staff_email."</p>
+                                      <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>
                                       
                                       <br>
-                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                      <p style='margin: 0; '>Thank you!</p>
                                       
                                       <br>
                                       <hr>
@@ -1540,6 +1587,12 @@
                     );
                     
                     echo json_encode($request_json);
+                    
+                    $today = date('Y-m-d H:i:s');
+
+                    $this->load->model('LogModel');
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Request is decline. Reason: '.$reason.'.', $today);
+
                 }
                 
             } catch (Exception $e) {
@@ -1578,6 +1631,7 @@
             $staff_text = "";
 
             if (isset($staff)) {
+                $staff_id = $staff->staff_id;
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -1632,7 +1686,7 @@
 
             $addition_message = "";
             if(!empty($message)) {
-                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; '>".$message."</p>";
             }
 
 
@@ -1656,28 +1710,28 @@
                 //Content
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Request is On delivery [Request ID: ".$request_id."]";
-                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hello, ".ucwords($student_fname)."!</p>
+                $mail->Body    =  "<p style='margin: 0; '>Hello, ".ucwords($student_fname)."!</p>
                     
                                       <br>
                   
-                                      <p style='margin: 0; line-height: 1.8;'>This is to inform you that your requests have been processed. Documents will be prepared and will be dropped at the CLSU main gate (drop box) and/or at the courier. You will be duly informed regarding the claiming details of the document/s.</p>
+                                      <p style='margin: 0; '>This is to inform you that your requests have been processed. Documents will be prepared and will be dropped at the CLSU main gate (drop box) and/or at the courier. You will be duly informed regarding the claiming details of the document/s.</p>
 
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; '>".$staff_text."</p>
+                                      <p style='margin: 0; '>".$staff_email."</p>
+                                      <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>
                                       
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                      <p style='margin: 0; '>Thank you!</p>
 
                                       <br>
                                       
@@ -1722,6 +1776,12 @@
                     );
                     
                     echo json_encode($request_json);
+
+                    $today = date('Y-m-d H:i:s');
+
+                    $this->load->model('LogModel');
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Document is already completed and it is ready to be dropped at the CLSU main gate or courier.', $today);
+
                 }
                 
             } catch (Exception $e) {
@@ -1763,6 +1823,7 @@
 
             $staff = $this->StaffModel->get_staff_details($uid);
             if (isset($staff)) {
+                $staff_id = $staff->staff_id;
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -1804,7 +1865,7 @@
 
             $addition_message = "";
             if(!empty($message)) {
-                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; '>".$message."</p>";
             }
 
 
@@ -1828,32 +1889,32 @@
                 //Content
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Document is ready to be claim [Request ID: ".$request_id."]";
-                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Good day, ".ucwords($student_fname)."!</p>
+                $mail->Body    =  "<p style='margin: 0; '>Good day, ".ucwords($student_fname)."!</p>
                     
                                       <br>
                   
-                                      <p style='margin: 0; line-height: 1.8;'>The document/s has been released. To claim it: </p>
-                                      <p style='margin: 0; line-height: 1.8;'>a.) For the drop box, claiming hours will be at  10:00 am - 11:00am and 3:00 pm - 5:00 pm and  located at the CLSU Main Gate.
+                                      <p style='margin: 0; '>The document/s has been released. To claim it: </p>
+                                      <p style='margin: 0; '>a.) For the drop box, claiming hours will be at  10:00 am - 11:00am and 3:00 pm - 5:00 pm and  located at the CLSU Main Gate.
                                       </p>
-                                      <p style='margin: 0; line-height: 1.8;'>b.) For the courier, kindly wait for further notice and delivery of your document/s.
+                                      <p style='margin: 0; '>b.) For the courier, kindly wait for further notice and delivery of your document/s.
                                       </p>
 
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; '>".$staff_text."</p>
+                                      <p style='margin: 0; '>".$staff_email."</p>
+                                      <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>
                                       
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                      <p style='margin: 0; '>Thank you!</p>
 
                                       <br>
                                       
@@ -1895,11 +1956,17 @@
                     );
                     
                     echo json_encode($request_json);
+
+                    $today = date('Y-m-d H:i:s');
+
+                    $this->load->model('LogModel');
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Request is completed. Documents was successfully given at the CLSU main gate or courier.', $today);
+
                 }
                 
             } catch (Exception $e) {
 
-                $status = $temp_status; 
+                $status = $temp_status;
                 $outbox_status = 1;
                 $this->StaffModel->updateRequest($request_id, $message, $status, $outbox_status);
 
@@ -1942,6 +2009,7 @@
 
             $staff = $this->StaffModel->get_staff_details($uid);
             if (isset($staff)) {
+                $staff_id = $staff->staff_id;
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -1981,7 +2049,7 @@
 
             $addition_message = "";
             if(!empty($message)) {
-                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$message."</p>";
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; '>".$message."</p>";
             }
 
 
@@ -2005,29 +2073,37 @@
                 //Content
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Document requested is complete [Request ID: ".$request_id."]";
-                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hi, ".ucwords($student_fname)."!</p>
+                $mail->Body    =  "<p style='margin: 0; '>Hi, ".ucwords($student_fname)."!</p>
                     
                                       <br>
                   
-                                      <p style='margin: 0; line-height: 1.8;'>We have completely processed and released your request/s. The documents requested are attached below, you can now access and download it.
+                                      <p style='margin: 0; '>We have completely processed and released your request/s. The documents requested are attached below, you can now access and download it.
                                       </p>
 
                                       ".$addition_message."
- 
+                                      <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p>Please take time to answer our survey questionnaire in the link provided. Link: <a href='https://forms.gle/FTw6qBw5ED3pDhsu9'>https://forms.gle/FTw6qBw5ED3pDhsu9</a></p>
+
+                                      <br>
+
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+
+                                      <br>
+
+
 
                                       <br>
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                      <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                      <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                      <p style='margin: 0; '>".$staff_text."</p>
+                                      <p style='margin: 0; '>".$staff_email."</p>
+                                      <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>
                                       
                                       <br>
 
-                                      <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                      <p style='margin: 0; '>Thank you!</p>
 
                                       <br>
                                       
@@ -2103,6 +2179,11 @@
                     
                     echo json_encode($request_json);
 
+                    $today = date('Y-m-d H:i:s');
+
+                    $this->load->model('LogModel');
+                    $this->LogModel->createRequestLog($request_id, $staff_id, "Request is completed. Documents was successfully sent to the client''s email address.", $today);
+
                 }
                 
             } catch (Exception $e) {
@@ -2128,12 +2209,10 @@
                 
                 echo json_encode($request_json);
 
-
             }
 
 
         }
-
 
 
         public function mailApprovePayment() {
@@ -2147,6 +2226,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             
             if (isset($staff)) {
+                $staff_id = $staff->staff_id;
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -2208,28 +2288,28 @@
                 //Content
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Payment Received [Request ID: ".$request_id."]";
-                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hello, ".ucwords($student_fname)."!</p>
+                $mail->Body    =  "<p style='margin: 0; '>Hello, ".ucwords($student_fname)."!</p>
                     
                                     <br>
                 
-                                    <p style='margin: 0; line-height: 1.8;'>We have already received your payment. Kindly wait as you will be duly informed regarding the processing of the document/s.
+                                    <p style='margin: 0; '>We have already received and reviewed your payment. Kindly wait as you will be duly informed regarding the processing of the document/s.
                                     </p>
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                     <br>
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                    <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                    <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                    <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                    <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                    <p style='margin: 0; '>".$staff_text."</p>
+                                    <p style='margin: 0; '>".$staff_email."</p>
+                                    <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>
                                     
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                    <p style='margin: 0; '>Thank you!</p>
 
                                     <br>
                                     
@@ -2271,6 +2351,11 @@
                     );
 
                     echo json_encode($request_json);
+
+                    $today = date('Y-m-d H:i:s');
+
+                    $this->load->model('LogModel');
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Payment is now approved. Kindly wait while the request is being processed.', $today);
 
                 }
                 
@@ -2318,6 +2403,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             
             if (isset($staff)) {
+                $staff_id = $staff->staff_id;
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -2349,7 +2435,7 @@
 
             $addition_message = "";
             if(!empty($messageInserted)) {
-                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; line-height: 1.8;'>".$messageInserted."</p>";
+                $addition_message = "<br><b class='margin: 0; line-height: 1.3'>Additional Message:</b><br><p class='margin: 0; '>".$messageInserted."</p>";
             }
 
 
@@ -2380,33 +2466,33 @@
                 //Content
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Insufficient Payment [Request ID: ".$request_id."]";
-                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hi, ".ucwords($student_fname)."!</p>
+                $mail->Body    =  "<p style='margin: 0; '>Hi, ".ucwords($student_fname)."!</p>
                     
                                     <br>
                 
-                                    <p style='margin: 0; line-height: 1.8;'>This is to inform you that your payment is insufficient. The total cost of your requested document is <b>".$totalPayment." PHP</b> and you have a balance of <b>".$insufficientPayment." PHP</b> to complete this transaction.</p>
+                                    <p style='margin: 0; '>This is to inform you that your payment is insufficient. The total cost of your requested document is <b>".$totalPayment." PHP</b> and you have a balance of <b>".$insufficientPayment." PHP</b> to complete this transaction.</p>
 
                                     ".$addition_message."
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>Kindly click the link provided to update your payment. Link: ".base_url('/student/request/'.$request_id)."</p>
+                                    <p style='margin: 0; '>Kindly click the link provided to update your payment. Link: ".base_url('/student/request/'.$request_id)."</p>
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                     <br>
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                    <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                    <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                    <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                    <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                    <p style='margin: 0; '>".$staff_text."</p>
+                                    <p style='margin: 0; '>".$staff_email."</p>
+                                    <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>
                                     
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                    <p style='margin: 0; '>Thank you!</p>
 
                                     <br>
                                     
@@ -2448,6 +2534,11 @@
                     );
 
                     echo json_encode($request_json);
+
+                    $today = date('Y-m-d H:i:s');
+
+                    $this->load->model('LogModel');
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'The payment is insufficient. The total cost of the document/s is '.$totalPayment.' PHP and have a remaining balance of '.$insufficientPayment.' PHP.', $today);
 
                 }
                 
@@ -2492,6 +2583,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             
             if (isset($staff)) {
+                $staff_id = $staff->staff_id;
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -2552,27 +2644,27 @@
                 //Content
                 $mail->isHTML(true);                                 
                 $mail->Subject = "Payment Reviewed [Request ID: ".$request_id."]";
-                $mail->Body    =  "<p style='margin: 0; line-height: 1.8;'>Hello, ".ucwords($student_fname)."!</p>
+                $mail->Body    =  "<p style='margin: 0; '>Hello, ".ucwords($student_fname)."!</p>
                     
                                     <br>
                 
-                                    <p style='margin: 0; line-height: 1.8;'>We have already reviewed your payment. Kindly wait as you will be duly informed regarding the processing of the document/s.</p>
+                                    <p style='margin: 0; '>We have already received and reviewed your payment. Kindly wait as you will be duly informed regarding the processing of the document/s.</p>
 
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                     <br>
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.4;'><b>".$staff_name."</b></p>
-                                    <p style='margin: 0; line-height: 1.4;'>".$staff_text."</p>
-                                    <p style='margin: 0; line-height: 1.4;'>".$staff_email."</p>
-                                    <p style='margin: 0; line-height: 1.4;'>Office of Admission (OAd), Central Luzon State University</p>
+                                    <p style='margin: 0; '><b>".$staff_name."</b></p>
+                                    <p style='margin: 0; '>".$staff_text."</p>
+                                    <p style='margin: 0; '>".$staff_email."</p>
+                                    <p style='margin: 0; '>Office of Admission (OAd), Central Luzon State University</p>
                                     
                                     <br>
 
-                                    <p style='margin: 0; line-height: 1.8;'>Thank you!</p>
+                                    <p style='margin: 0; '>Thank you!</p>
 
                                     <br>
                                     
@@ -2613,7 +2705,13 @@
                         'message'   =>     $message
                     );
 
+
                     echo json_encode($request_json);
+
+                    $today = date('Y-m-d H:i:s');
+
+                    $this->load->model('LogModel');
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Payment is now approved. Kindly wait as we process your request.', $today);
 
                 }
                 
@@ -2637,13 +2735,5 @@
             }
 
         }
-
-
-
-
-
-
-
-
 
     }
