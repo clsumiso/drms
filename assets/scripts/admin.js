@@ -1871,5 +1871,43 @@ $(document).ready(function() {
     
 
    
+    // $('#btnPDFReport').click(function() {
+
+    //     let countValidation = 0
+
+    //     if ($('#getDateFromFeedback').val()) {
+    //         countValidation++
+    //     }
+
+        
+    //     if ($('#getDateToFeedback').val()) {
+    //         countValidation++
+    //     }
+
+    //     if (countValidation == 2) {
+    //         let type = $('#getStudentTypeFeedback').val()
+    //         let fromDate = $('#getDateFromFeedback').val()
+    //         let toDate = $('#getDateToFeedback').val()
+
+    //         $.ajax ({
+    //             url: window.location.origin + '/drms/admin/feedbackReportPDF',
+    //             type: 'POST',
+    //             data: {
+    //                 type: type,
+    //                 fromDate: fromDate,
+    //                 toDate: toDate
+    //             },
+    //             success: function(data) {
+
+    //             }
+    //         })
+
+    //     }
+
+        
+
+    // })
+
+
 
 })

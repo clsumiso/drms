@@ -132,7 +132,7 @@ $(document).ready(function() {
                                                             '<div class="form-group col-lg-8 mb-3 d-none">'+
                                                                 '<input type="text" class="form-control mb-3 getFDocuments" name="document['+appendedDocuments+'][document_name]" id="getFDocuments" placeholder="Document Name" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFCopies" name="document['+appendedDocuments+'][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="1" readonly>'+
                                                                 '<input type="file" class="form-control mb-3 getFUploads" name="getFUploads[]" id="getFUploads" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_type]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+ 
                                                                 '<input type="text" class="form-control mb-3 getFCost" name="document['+appendedDocuments+'][document_cost]" id="getFCost" placeholder="Document Type" value="0" readonly></input>'+    
@@ -964,9 +964,9 @@ $(document).ready(function() {
 
             if ($(this).val() == 2) {
 
-                $('.modalTitleChangeHeader').text('Courier')
+                $('.modalTitleChangeHeader').text('Procedure for Courier')
 
-                $('#modalBodyChangeText').append('<p class="poppins">Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique minima temporibus facilis. Numquam quisquam dolores voluptas repudiandae delectus in quia nobis magnam. Quo, maxime. Provident, nobis! Necessitatibus quibusdam excepturi accusamus consequuntur natus nihil ipsum nisi assumenda, sed vel provident labore deserunt enim esse facere perspiciatis dolorem harum expedita consequatur, officiis corrupti dolores. Fuga temporibus excepturi animi modi recusandae sed architecto.</p>')
+                $('#modalBodyChangeText').append('<p class="poppins"><b>Step 1:</b> Request document/s.</p><p class="poppins"><b>Step 2:</b> Visit to the nearest jrs express branch and avail 2 pouches for the requested document/s.  Write down the sender and receiver details on the pouch.</p><p class="poppins"><b>Step 3:</b> Client will be notified when the document/s is already prepared and when it is already handed to the JRS service courier.</p><p class="poppins"><b>NOTE: </b>JRS express has two way process of delivering a package, the two pouches you avail will be delivered in CLSU and will be handed to the OAd Staff. After the document/s have been processed, the staff will put the document/s in the pouch and will be handed back to the courier for the delivery.</p>')
 
                 $('#btnToggleModalCourierNote').click()
 
@@ -974,12 +974,12 @@ $(document).ready(function() {
 
             if ($(this).val() == 3) {
 
-                
-                $('.modalTitleChangeHeader').text('Claim at CLSU Main Gate')
+                $('.modalTitleChangeHeader').text('Procedure for Dropbox')
 
-                $('#modalBodyChangeText').append('<p class="poppins">Darwin</p>')
+                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU Main Gate allows the receiving of the documents through dropbox. You will receive an email if the document/s are available on the CLSU Main Gate.</p> <p class="poppins">Claiming hours are from <b>10:00 am - 11:00 am</b> and <b>3:00 pm - 5:00 pm</b> Monday to Friday only.</p>')
 
                 $('#btnToggleModalCourierNote').click()
+                
             }
             
         }

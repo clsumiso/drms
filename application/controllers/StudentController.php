@@ -636,7 +636,7 @@
                             $today = date('Y-m-d H:i:s');
 
                             $this->load->model('LogModel');
-                            $this->LogModel->createRequestLog($rid, $staff_id, 'Payment is successfully updated. Kindly wait while the payment is being reviewed.', $today);
+                            $this->LogModel->createRequestLog($rid, $staff_id, 'Payment is successfully updated. Kindly wait while the payment is being reviewed.', 7, $today);
 
                         }
         
@@ -967,7 +967,7 @@
 
                 $payment_mail = "";
                 if ($status == 4) {
-                    $payment_mail = "<br><p style='margin: 0; '>Kindly click the link provided to update your payment. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
+                    $payment_mail = "<br><p style='margin: 0; '>Kindly click this link provided to settle your payment for your request. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
                 }
 
 
@@ -1044,7 +1044,7 @@
                         $this->session->set_flashdata('upload', true);
 
                         $this->load->model('LogModel');
-                        $this->LogModel->createRequestLog($uniq_request_id, $staff_id, 'Request was created and given to the designated record-in-charge.', $today);
+                        $this->LogModel->createRequestLog($uniq_request_id, $staff_id, 'Request was created and given to the designated record-in-charge.', 1, $today);
     
                     }
     
@@ -1330,7 +1330,7 @@
 
                 $payment_mail = "";
                 if ($status == 4) {
-                    $payment_mail = "<br><p style='margin: 0; '>Kindly click the link provided to update your payment. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
+                    $payment_mail = "<br><p style='margin: 0; '>Kindly click this link provided to settle your payment for your request. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
                 }
 
                 $mail = new PHPMailer(true);
@@ -1420,7 +1420,7 @@
                         $this->session->set_flashdata('upload', true);
 
                         $this->load->model('LogModel');
-                        $this->LogModel->createRequestLog($uniq_request_id, $staff_id, 'Request was created and given to the designated frontline.', $today);
+                        $this->LogModel->createRequestLog($uniq_request_id, $staff_id, 'Request was created and given to the designated frontline.', 1, $today);
                         
                     }
     

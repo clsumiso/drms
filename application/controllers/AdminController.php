@@ -6,7 +6,13 @@
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
 
+    
     require 'vendor/autoload.php';
+
+    use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+    
+
 
 
     class AdminController extends CI_Controller {
@@ -1030,6 +1036,135 @@
 
         }
 
+
+
+
+        public function generateReportFeedbacks() {
+
+            $student_type = $this->input->post('getStudentType');
+            $dateFrom = $this->input->post('getDateFrom');
+            $dateTo = $this->input->post('getDateTo');
+
+            $this->load->model('AdminModel');
+
+            $totalCount = 0;
+            $totalCountActive = 0;
+            $totalCountInactive = 0;
+
+            $title = "";
+
+            if ($student_type == '1,2') {
+
+                $title = "Student Feedback (All Student)";
+                
+                $countAll = $this->AdminModel->generateCountFeedbackReports($student_type, $dateFrom, $dateTo);
+                $countActive = $this->AdminModel->generateCountFeedbackReports(1, $dateFrom, $dateTo);
+                $countInactive = $this->AdminModel->generateCountFeedbackReports(2, $dateFrom, $dateTo);
+
+                $totalCount = $countAll->count;
+                $totalCountActive = $countActive->count;
+                $totalCountInactive = $countInactive->count;
+
+            } elseif ($student_type == '1') {
+
+                $title = "Student Feedback (Active Student)";
+                
+                $countAll = $this->AdminModel->generateCountFeedbackReports($student_type, $dateFrom, $dateTo);
+                $countActive = $this->AdminModel->generateCountFeedbackReports(1, $dateFrom, $dateTo);
+
+                $totalCount = $countAll->count;
+                $totalCountActive = $countActive->count;
+                $totalCountInactive = 0;
+
+            } elseif ($student_type == '2') {
+
+                $title = "Student Feedback (Inactive Student)";
+
+                $countAll = $this->AdminModel->generateCountFeedbackReports($student_type, $dateFrom, $dateTo);
+                $countInactive = $this->AdminModel->generateCountFeedbackReports(2, $dateFrom, $dateTo);
+                
+                $totalCount = $countAll->count;
+                $totalCountActive = 0;
+                $totalCountActive = $countInactive->count;
+
+            }
+
+
+            header('Conten-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="hello_world.xlsx"');
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            $sheet->setCellValue('A1', $title);
+            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
+            // date_format($temp_log, "M. d, Y - h:i a");
+            $sheet->setCellValue('A2', '('.$dateFrom.'-'.$dateTo.')');
+            
+            $sheet->setCellValue('A3', 'Total Feedbacks');
+            $sheet->setCellValue('B3', $totalCount);
+            $sheet->getStyle('A3')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('A4', 'Active Student\'s');
+            $sheet->setCellValue('B4', $totalCountActive);
+            $sheet->getStyle('A4')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('A5', 'Inactive Student\'s');
+            $sheet->setCellValue('B5', $totalCountInactive);
+            $sheet->getStyle('A5')->getFont()->setBold(true)->setSize(11);
+
+
+            
+            $sheet->setCellValue('A8', 'Feedback ID');
+            $sheet->getStyle('A8')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('B8', 'Student Type');
+            $sheet->getStyle('B8')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('C8', 'Ratings');
+            $sheet->getStyle('C8')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('D8', 'Suggestions');
+            $sheet->getStyle('D8')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('E8', 'Date Created');
+            $sheet->getStyle('E8')->getFont()->setBold(true)->setSize(11);
+
+
+
+            $result = $this->AdminModel->generateFeedbackReports($student_type, $dateFrom, $dateTo);
+            $count = 9;
+            foreach ($result as $res):
+
+                $fid = $res->feedback_id;
+                $stud_type = $res->student_type;
+                $ratings = $res->user_friendly;
+                $suggestion = $res->suggestion;
+                $date = $res->date_created;
+
+                if ($stud_type == 1) {
+                    $type = "Active Student";
+                }
+                if ($stud_type == 2) {
+                    $type = "Inactive Student";
+                }
+
+                $sheet->setCellValue('A'.$count, $fid);
+                $sheet->setCellValue('B'.$count, $type);
+                $sheet->setCellValue('C'.$count, $ratings);
+                $sheet->setCellValue('D'.$count, $suggestion);
+                $sheet->setCellValue('E'.$count, $date);
+
+                $count++;
+
+            endforeach;
+            
+
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save("php://output");
+
+        }
 
 
     }

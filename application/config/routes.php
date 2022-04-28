@@ -139,8 +139,10 @@ $route = array (
     'admin/display_suggestions'         => 'adminController/displaySuggestion',
     
     'admin/maintenanceStatus'           => 'adminController/maintenancePageOnOff',
-    'admin/setMaintenanceStatus'           => 'adminController/setMaintenance',
+    'admin/setMaintenanceStatus'        => 'adminController/setMaintenance',
 
+    'admin/feedbackReport'              => 'adminController/generateReportFeedbacks'
+    
     
 );
 

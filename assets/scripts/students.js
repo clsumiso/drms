@@ -118,7 +118,7 @@ $(document).ready(function() {
                                                             '<div class="form-group col-lg-8 mb-3">'+
                                                                 '<input type="text" class="form-control mb-3 getFDocuments" name="document['+appendedDocuments+'][document_name]" id="getFDocuments" placeholder="Document Name" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFCopies" name="document['+appendedDocuments+'][document_copies]" id="getFCopies" placeholder="Document Copies" value="0" readonly>'+
-                                                                '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="0" readonly>'+
+                                                                '<input type="text" class="form-control mb-3 getFPages" name="document['+appendedDocuments+'][document_pages]" id="getFPages" placeholder="Document Pages" value="1" readonly>'+
                                                                 '<input type="text" class="form-control mb-3 getFType" name="document['+appendedDocuments+'][document_type]" id="getFType" placeholder="Document Type" value="0" readonly></input>'+    
                                                                 '<input type="text" class="form-control mb-3 getFCost" name="document['+appendedDocuments+'][document_cost]" id="getFCost" placeholder="Document Type" value="0" readonly></input>'+    
                                                                 '</div>'+
@@ -868,9 +868,9 @@ $(document).ready(function() {
 
             if ($(this).val() == 2) {
 
-                $('.modalTitleChangeHeader').text('Please note for Courier')
+                $('.modalTitleChangeHeader').text('Procedure for Courier')
 
-                $('#modalBodyChangeText').append('<p class="poppins">The document/s will be delivered through courier. Receiving the document/s acquires two processes where the recipient will be notified through email, first if the RIC or Frontline is already preparing the requested document/s, second, if the document/s is already handed to the courier. JRS Express is the preferred courier of the Office of Admission, they ship parcels either by dropping off at a branch or picking up from the location, so thus delivery time will depend on the delivery process of the courier. Recipients may inquire from the JRS Express regarding their delivery service.</p>')
+                $('#modalBodyChangeText').append('<p class="poppins"><b>Step 1:</b> Request document/s.</p><p class="poppins"><b>Step 2:</b> Visit to the nearest jrs express branch and avail 2 pouches for the requested document/s.  Write down the sender and receiver details on the pouch.</p><p class="poppins"><b>Step 3:</b> Client will be notified when the document/s is already prepared and when it is already handed to the JRS service courier.</p><p class="poppins"><b>NOTE: </b>JRS express has two way process of delivering a package, the two pouches you avail will be delivered in CLSU and will be handed to the OAd Staff. After the document/s have been processed, the staff will put the document/s in the pouch and will be handed back to the courier for the delivery.</p>')
 
                 $('#btnToggleModalCourierNote').click()
 
@@ -879,9 +879,9 @@ $(document).ready(function() {
             if ($(this).val() == 3) {
 
                 
-                $('.modalTitleChangeHeader').text('Please note for Claiming at CLSU Main Gate')
+                $('.modalTitleChangeHeader').text('Procedure for Dropbox')
 
-                $('#modalBodyChangeText').append('<p class="poppins" style="line-height: 2;">Claim at CLSU Main Gate allows the receiving of the documents through dropbox. You will receive an email if the document/s are available on the dropbox. Claiming hours are from 10:00 am - 11:00am and 3:00 pm - 5:00 pm Monday to Friday only.</p>')
+                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU Main Gate allows the receiving of the documents through dropbox. You will receive an email if the document/s are available on the CLSU Main Gate.</p> <p class="poppins">Claiming hours are from <b>10:00 am - 11:00 am</b> and <b>3:00 pm - 5:00 pm</b> Monday to Friday only.</p>')
 
                 $('#btnToggleModalCourierNote').click()
             }

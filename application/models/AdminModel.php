@@ -174,4 +174,16 @@ class AdminModel extends CI_Model
 		$this->db->query("UPDATE maintenance_tbl SET status = '".$status."' WHERE id = '1'");
 	}
 
+
+	public function generateFeedbackReports($student_type, $dateFrom, $dateTo) {
+		$query = $this->db->query("SELECT * FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN($student_type)");
+		return $query->result();
+	}
+
+
+	public function generateCountFeedbackReports($student_type, $dateFrom, $dateTo) {
+		$query = $this->db->query("SELECT COUNT(*) AS count FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN($student_type)");
+		return $query->row();
+	}
+
 }

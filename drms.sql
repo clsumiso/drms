@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2022 at 12:08 PM
+-- Generation Time: Apr 24, 2022 at 09:53 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 7.4.27
 
@@ -53,14 +53,6 @@ CREATE TABLE `ci_sessions` (
   `data` blob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `ci_sessions`
---
-
-INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('pfv5juhiflvre2nlv5hkfvjrlnps8r9h', '::1', 1650346692, 0x5f5f63695f6c6173745f726567656e65726174657c693a313635303334363037373b),
-('0991frfi55hqaeaaq32bobk0qba12ag6', '::1', 1650362857, 0x5f5f63695f6c6173745f726567656e65726174657c693a313635303336323634383b61646d696e5f49447c733a313a2231223b5549447c733a31313a223335343634353332333433223b73746166665f747970657c733a313a2231223b);
-
 -- --------------------------------------------------------
 
 --
@@ -79,7 +71,7 @@ CREATE TABLE `course_handler_tbl` (
 --
 
 INSERT INTO `course_handler_tbl` (`course_handler_id`, `course_id`, `staff_id_ric`, `staff_id_frontline`) VALUES
-(1, '1', '55351231251', '25122132132'),
+(1, '1', '52326343242', '25122132132'),
 (2, '2', '55351231251', '25122132132'),
 (3, '3', '55351231251', '25122132132'),
 (4, '4', '43534543534', '25122132132'),
@@ -254,6 +246,21 @@ CREATE TABLE `requestor_info_tbl` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `request_log`
+--
+
+CREATE TABLE `request_log` (
+  `id` int(11) NOT NULL,
+  `request_id` int(11) NOT NULL,
+  `staff_id` varchar(11) NOT NULL,
+  `description` text NOT NULL,
+  `status` int(1) NOT NULL,
+  `date_created` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `request_tbl`
 --
 
@@ -281,7 +288,7 @@ CREATE TABLE `request_tbl` (
 CREATE TABLE `staff_account_tbl` (
   `staff_id` varchar(11) NOT NULL,
   `staff_fname` varchar(100) NOT NULL,
-  `staff_mname` varchar(100) NOT NULL,
+  `staff_mname` varchar(100) DEFAULT NULL,
   `staff_lname` varchar(100) NOT NULL,
   `staff_email` text NOT NULL,
   `staff_username` text NOT NULL,
@@ -357,6 +364,12 @@ ALTER TABLE `requestor_info_tbl`
   ADD PRIMARY KEY (`info_id`);
 
 --
+-- Indexes for table `request_log`
+--
+ALTER TABLE `request_log`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `request_tbl`
 --
 ALTER TABLE `request_tbl`
@@ -413,6 +426,12 @@ ALTER TABLE `maintenance_tbl`
 --
 ALTER TABLE `requestor_info_tbl`
   MODIFY `info_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `request_log`
+--
+ALTER TABLE `request_log`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `request_tbl`

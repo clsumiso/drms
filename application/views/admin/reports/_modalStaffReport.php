@@ -37,7 +37,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Generate PDF</button>
+                        <!-- <button type="button" class="btn btn-primary">Generate PDF</button> -->
                         <button type="button" class="btn btn-success">Generate XLS</button>
                     </div>
                 </div>

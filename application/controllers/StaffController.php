@@ -1536,6 +1536,10 @@
 
                                       <br>
 
+                                      <p>Please response on our survey questionnaire here: <a href='https://forms.gle/FTw6qBw5ED3pDhsu9'>https://forms.gle/FTw6qBw5ED3pDhsu9</a></p>
+
+                                      <br>
+
                                       <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
 
                                       <br>
@@ -1591,7 +1595,7 @@
                     $today = date('Y-m-d H:i:s');
 
                     $this->load->model('LogModel');
-                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Request is decline. Reason: '.$reason.'.', $today);
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Request is decline. Reason: '.$reason.'.', 3, $today);
 
                 }
                 
@@ -1780,7 +1784,7 @@
                     $today = date('Y-m-d H:i:s');
 
                     $this->load->model('LogModel');
-                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Document is already completed and it is ready to be dropped at the CLSU main gate or courier.', $today);
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Document is already completed and it is ready to be dropped at the CLSU main gate or courier.', 2, $today);
 
                 }
                 
@@ -1960,7 +1964,7 @@
                     $today = date('Y-m-d H:i:s');
 
                     $this->load->model('LogModel');
-                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Request is completed. Documents was successfully given at the CLSU main gate or courier.', $today);
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Request is completed. Documents was successfully given at the CLSU main gate or courier.', 0, $today);
 
                 }
                 
@@ -2083,7 +2087,7 @@
                                       ".$addition_message."
                                       <br>
 
-                                      <p>Please take time to answer our survey questionnaire in the link provided. Link: <a href='https://forms.gle/FTw6qBw5ED3pDhsu9'>https://forms.gle/FTw6qBw5ED3pDhsu9</a></p>
+                                      <p>Please response on our survey questionnaire here: <a href='https://forms.gle/FTw6qBw5ED3pDhsu9'>https://forms.gle/FTw6qBw5ED3pDhsu9</a></p>
 
                                       <br>
 
@@ -2182,7 +2186,7 @@
                     $today = date('Y-m-d H:i:s');
 
                     $this->load->model('LogModel');
-                    $this->LogModel->createRequestLog($request_id, $staff_id, "Request is completed. Documents was successfully sent to the client''s email address.", $today);
+                    $this->LogModel->createRequestLog($request_id, $staff_id, "Request is completed. Documents was successfully sent to the client''s email address.", 0, $today);
 
                 }
                 
@@ -2355,7 +2359,7 @@
                     $today = date('Y-m-d H:i:s');
 
                     $this->load->model('LogModel');
-                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Payment is now approved. Kindly wait while the request is being processed.', $today);
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Payment is now approved. Kindly wait while the request is being processed.', 1, $today);
 
                 }
                 
@@ -2538,7 +2542,7 @@
                     $today = date('Y-m-d H:i:s');
 
                     $this->load->model('LogModel');
-                    $this->LogModel->createRequestLog($request_id, $staff_id, 'The payment is insufficient. The total cost of the document/s is '.$totalPayment.' PHP and have a remaining balance of '.$insufficientPayment.' PHP.', $today);
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'The payment is insufficient. The total cost of the document/s is '.$totalPayment.' PHP and have a remaining balance of '.$insufficientPayment.' PHP.', 6, $today);
 
                 }
                 
@@ -2711,7 +2715,7 @@
                     $today = date('Y-m-d H:i:s');
 
                     $this->load->model('LogModel');
-                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Payment is now approved. Kindly wait as we process your request.', $today);
+                    $this->LogModel->createRequestLog($request_id, $staff_id, 'Payment is now approved. Kindly wait as we process your request.', 1, $today);
 
                 }
                 

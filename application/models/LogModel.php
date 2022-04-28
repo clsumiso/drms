@@ -13,8 +13,8 @@ class LogModel extends CI_Model
 	}
 
 
-    public function createRequestLog($rid, $sid, $description, $date) {
-        $this->db->query("INSERT INTO request_log (request_id, staff_id, description, date_created) VALUES ('$rid', $sid, '$description', '$date')");
+    public function createRequestLog($rid, $sid, $description, $status, $date) {
+        $this->db->query("INSERT INTO request_log (request_id, staff_id, description, status, date_created) VALUES ('$rid', $sid, '$description', '$status', '$date')");
     }
 
 }
