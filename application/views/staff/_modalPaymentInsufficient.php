@@ -10,7 +10,7 @@
                     </div>
                     <div class="modal-body">
 
-                        <p class="modal-description">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur corporis enim quis, veritatis cumque incidunt eligendi architecto. Itaque, placeat! Provident odit nulla quam molestiae earum?</p>
+                        <p class="modal-description">If the uploaded payment file doesn't fulfil the required fee for the requested document/s set the request status with insufficient payment. Indicate the total payment and balance below to notify the student regarding the payment deficiencies on their request. To include additional message, you can use the provided text below.</p>
 
                         <div class="form-group">
                             <input type="text" class="form-control mb-3 d-none setRequestIDModal" name="setRequestID" value="" placeholder="Email Address">

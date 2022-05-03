@@ -15,13 +15,30 @@ class AdminModel extends CI_Model
 
 
 	public function display_widgets($type, $month) {
-		$query = $this->db->query("SELECT count(*) AS counts FROM request_tbl WHERE MONTH(date_created) = '".$month."' AND YEAR(date_created) = 2022 AND status IN(".$type.")");
+
+		$year = date("Y");
+
+		$query = $this->db->query("SELECT count(*) AS counts FROM request_tbl WHERE MONTH(date_created) = '".$month."' AND YEAR(date_created) = '".$year."' AND status IN(".$type.")");
 		return $query->row();
+
 	}
 
 	public function display_employee_status() {
 		$query = $this->db->query("SELECT * FROM staff_account_tbl, course_handler_tbl WHERE course_handler_tbl.staff_id_ric = staff_account_tbl.staff_id OR course_handler_tbl.staff_id_frontline = staff_account_tbl.staff_id GROUP BY staff_account_tbl.staff_id ORDER BY staff_account_tbl.staff_type");
 		return $query->result();
+	}
+
+
+
+	public function count_employee_status_months($id, $staff_type, $status, $student_type) {
+		
+		$year = date("Y");
+		$month = date('m');
+
+		$query = $this->db->query("SELECT count(*) as count FROM course_handler_tbl, request_tbl where course_handler_tbl.course_id = request_tbl.course_id AND request_tbl.status IN (".$status.") AND course_handler_tbl.".$staff_type." = '".$id."' AND request_tbl.student_type = '".$student_type."' AND MONTH(date_created) = '".$month."' AND YEAR(date_created)");
+		
+		return $query->row();
+		
 	}
 
 

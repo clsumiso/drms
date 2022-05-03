@@ -1294,6 +1294,7 @@
                             <h3 class="wrapper-title">Personal Information</h3>
             
 
+                            '.$showIdentity.'
                             
 
                             '.$stud_no_text.'

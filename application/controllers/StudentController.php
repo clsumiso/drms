@@ -454,7 +454,11 @@
                                                 <input type="text" class="form-control mb-3 d-none" id="getEmail" name="getEmail" value="'.$email.'">
                                                 <input type="text" class="form-control mb-3 d-none" id="getFullname" name="getFullname" value="'.$fullname.'">
                                                 <input type="text" class="form-control mb-3 d-none" id="getFirstname" name="getFirstname" value="'.$firstname.'">
-                                                <p class="text-description"><b>Note:</b> If you have not yet uploaded your proof of payment for your request you may do so here. <br>Otherwise, for the insufficient payment, you can update your payment by submitting a PDF file including the recent and the additional payments. You can also download your recent payment file below.</p>
+                                                <p class="poppins m-0"><b>NOTE: </b>Please upload your Official Receipt (OR) here.</p>
+                                                <p class="poppins m-0">If you have more than 1 receipt, please compile it in a single PDF file.
+                                                </p>
+                                                <br>
+                                                <p class="text-description"><b>Please be reminded</b> that Office of Admissions (OAD) strictly follows the current procedure of paying fees. If you want to learn more click <a class="" href="https://www.facebook.com/CLSU.OAD/posts/267932152222420" target="_blank">HERE</a>.</p>
                                 
                                                 '.$textUpdatePayment.'
                                 
@@ -967,7 +971,19 @@
 
                 $payment_mail = "";
                 if ($status == 4) {
-                    $payment_mail = "<br><p style='margin: 0; '>Kindly click this link provided to settle your payment for your request. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
+                    $payment_mail = "<br><p style='margin: 0; '>Pay your fees thru the following payment options:</p>
+                                        <p style='margin: 0; '>1. CLSU Cashier</p>
+                                        <p style='margin: 0; '>2. Landbank Cashh Deposit</p>
+                                        <p style='margin: 0; '>3. Landbank Online Fund Transfer</p>
+                                        <br>
+                                        <p style='margin: 0; '>Account Name: <b>CLSU INCOME ACCOUNT F-164</b></p>
+                                        <p style='margin: 0; '>Account Number: <b>2961-038416</b></p>
+                                        <br>
+                                        <p style='margin: 0; '><b>NOTE: </b>We strictly accept LANDBANK deposits only.</p>
+                                        <p style='margin: 0; '>For the issuance of the Official Receipt, kindly upload a copy of the DEPOSIT SLIP and fill up the link below.
+                                        Link: <a href='https://tinyurl.com/yn5pzsc4'>https://tinyurl.com/yn5pzsc4</a></p>
+                                        <br>
+                                        <p style='margin: 0;'>After you receive your OFFICIAL RECEIPT, please submit it to the link provided below to settle your payment. Link ".base_url('/student/request/'.$uniq_request_id)."</p>";
                 }
 
 
@@ -1330,7 +1346,19 @@
 
                 $payment_mail = "";
                 if ($status == 4) {
-                    $payment_mail = "<br><p style='margin: 0; '>Kindly click this link provided to settle your payment for your request. Link: ".base_url('/student/request/'.$uniq_request_id)."</p>";
+                    $payment_mail = "<br><p style='margin: 0; '>Pay your fees thru the following payment options:</p>
+                                        <p style='margin: 0; '>1. CLSU Cashier</p>
+                                        <p style='margin: 0; '>2. Landbank Cashh Deposit</p>
+                                        <p style='margin: 0; '>3. Landbank Online Fund Transfer</p>
+                                        <br>
+                                        <p style='margin: 0; '>Account Name: <b>CLSU INCOME ACCOUNT F-164</b></p>
+                                        <p style='margin: 0; '>Account Number: <b>2961-038416</b></p>
+                                        <br>
+                                        <p style='margin: 0; '><b>NOTE: </b>We strictly accept LANDBANK deposits only.</p>
+                                        <p style='margin: 0; '>For the issuance of the Official Receipt, kindly upload a copy of the DEPOSIT SLIP and fill up the link below.
+                                        Link: <a href='https://tinyurl.com/yn5pzsc4'>https://tinyurl.com/yn5pzsc4</a></p>
+                                        <br>
+                                        <p style='margin: 0;'>After you receive your OFFICIAL RECEIPT, please submit it to the link provided below to settle your payment. Link ".base_url('/student/request/'.$uniq_request_id)."</p>";
                 }
 
                 $mail = new PHPMailer(true);

@@ -70,17 +70,17 @@
 
                 <hr class="my-4">
 
-                <p class="page-title">PROOF OF PAYMENT</p>
+                <!-- <p class="page-title">PROOF OF PAYMENT</p>
                 <p class="default-text">The total amount of the document/s requested to be paid is presented below. Proof of payment can be a transfer receipt (screenshot or scan). Optionally, you can upload your proof of payment if you already have your receipt.</p>
                 <p class="default-text">Otherwise, if you haven't processed your payment yet, you can proceed to the next page of the transaction. To manage your payment, you can access the "Track your Request" on the system's homepage.</p>
 
 
                 <div class="table-payment" id="tablePayment">
-                    <!-- table code here -->
+
                 </div>
 
                 <div class="validate-payment-upload mb-2">
-                    <!-- append validation here -->
+
                 </div>
 
                 
@@ -92,6 +92,40 @@
                 <hr class="my-4">
 
                 <button class="btn btn-secondary px-5 poppins" type="button" id="backToPage2">Back</button>
+                <button class="btn btn-success px-5 poppins" type="button" id="nextToPage4">Next</button> -->
+
+
+                <p class="page-title">PAYMENT PROCEDURE</p>
+                <p class="default-text m-0">Pay your fees thru the following payment options:</p>
+                <p class="default-text m-0">1. CLSU Cashier</p>
+                <p class="default-text m-0">2. Landbank Cashh Deposit</p>
+                <p class="default-text">3. Landbank Online Fund Transfer</p>
+
+                <p class="poppins m-0">Account Name: <b>CLSU INCOME ACCOUNT F-164</b></p>
+                <p class="poppins">Account Number: <b>2961-038416</b></p>
+
+                <p class="default-text"><b>NOTE:</b> We strictly accept LANDBANK deposits only. For the issuance of the Official Receipt, kindly upload a copy of the DEPOSIT SLIP and fill up the form here <a href="https://tinyurl.com/yn5pzsc4" target="_blank">https://tinyurl.com/yn5pzsc4</a>.</p>
+                
+                <p class="default-text">Otherwise, if you haven't processed your payment yet, you can proceed to the next page of the transaction. To manage your payment, you can access the "Track your Request" on the system's homepage.</p>
+                
+
+                <div class="table-payment" id="tablePayment">
+                    <!-- table code here -->
+                </div>
+
+                <div class="validate-payment-upload mb-2">
+                    <!-- append validation here -->
+                </div>
+
+                <input type="text" id="getTotalPayment" class="form-control d-none" name="getTotalPayment">
+                <input type="file" name="getPaymentUpload" id="getPaymentUpload" class="form-control d-none w-25">
+                <button class="btn btn-primary poppins custom-button" type="button" id="btnUploadPayment"><i class="bx bx-upload me-2 fw-bold fs-18"></i>Upload your official receipt</button>
+                <p class="m-0 poppins fs-14 w-75">Note: Only pdf, jpeg, jpg, bmp, and png files are acceptable.</p>
+
+                <hr class="my-4">
+
+                <button class="btn btn-secondary px-5 poppins" type="button" id="backToPage2">Back</button>
                 <button class="btn btn-success px-5 poppins" type="button" id="nextToPage4">Next</button>
+
 
             </div>
