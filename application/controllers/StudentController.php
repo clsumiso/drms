@@ -455,10 +455,9 @@
                                                 <input type="text" class="form-control mb-3 d-none" id="getFullname" name="getFullname" value="'.$fullname.'">
                                                 <input type="text" class="form-control mb-3 d-none" id="getFirstname" name="getFirstname" value="'.$firstname.'">
                                                 <p class="poppins m-0"><b>NOTE: </b>Please upload your Official Receipt (OR) here.</p>
-                                                <p class="poppins m-0">If you have more than 1 receipt, please compile it in a single PDF file.
-                                                </p>
+                                                <p class="poppins m-0">If you have more than 1 receipt, please compile it into a single PDF file.</p>
                                                 <br>
-                                                <p class="text-description"><b>Please be reminded</b> that Office of Admissions (OAD) strictly follows the current procedure of paying fees. If you want to learn more click <a class="" href="https://www.facebook.com/CLSU.OAD/posts/267932152222420" target="_blank">HERE</a>.</p>
+                                                <p class="text-description">The Office of Admissions strictly follows the current procedure of paying fees. Please note the following procedures here. <a class="" href="https://www.facebook.com/CLSU.OAD/posts/267932152222420" target="_blank">HERE</a>.</p>
                                 
                                                 '.$textUpdatePayment.'
                                 
