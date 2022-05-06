@@ -141,7 +141,8 @@ $route = array (
     'admin/maintenanceStatus'           => 'adminController/maintenancePageOnOff',
     'admin/setMaintenanceStatus'        => 'adminController/setMaintenance',
 
-    'admin/feedbackReport'              => 'adminController/generateReportFeedbacks'
+    'admin/feedbackReport'              => 'adminController/generateReportFeedbacks',
+    'admin/documentReport'              => 'adminController/generateReportDocumentRequests'
     
     
 );

@@ -1908,6 +1908,23 @@ $(document).ready(function() {
 
     // })
 
+    loadReportCourses()
+
+    function loadReportCourses() {
+
+        $.ajax ({
+            url: window.location.origin + '/drms/student/courses',
+            type: 'GET',
+            success: function(data) {
+                $('#getCourseRequest').append(data)
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr)
+                console.log(status)
+                console.log(error)
+            }
+        })
+    }
 
 
 })

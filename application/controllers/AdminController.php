@@ -1091,14 +1091,14 @@
 
 
             header('Conten-Type: application/vnd.ms-excel');
-            header('Content-Disposition: attachment;filename="hello_world.xlsx"');
+            header('Content-Disposition: attachment;filename="FeedbackReport.xlsx"');
 
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
             $sheet->setCellValue('A1', $title);
             $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
-            // date_format($temp_log, "M. d, Y - h:i a");
+
             $sheet->setCellValue('A2', '('.$dateFrom.'-'.$dateTo.')');
             
             $sheet->setCellValue('A3', 'Total Feedbacks');
@@ -1163,6 +1163,626 @@
 
             $writer = new Xlsx($spreadsheet);
             $writer->save("php://output");
+
+        }
+
+
+
+
+        
+        public function generateReportDocumentRequests() {
+
+            $this->load->model('AdminModel');
+
+
+            $student_type = $this->input->post('getStudentTypeRequest');
+            $course = $this->input->post('getCourseRequest');
+            $dateFrom = $this->input->post('getDateFromRequest');
+            $dateTo = $this->input->post('getDateToRequest');
+
+            
+
+            if ($student_type == '1,2') {
+                $title = "Document Request Report (All Types of Student)";
+            } elseif ($student_type == '1') {
+                $title = "Document Request Report (Active Student)";
+            } elseif ($student_type == '2') {
+                $title = "Document Request Report (Inactive Student)";
+            }
+
+
+            if ($course == 0) {
+                $course_title = "All Courses";
+            } else {
+                $courseTitle = $this->AdminModel->getCourse($course);
+                $course_title = ucwords($courseTitle->course_desc). ' ('.$courseTitle->course_name.')';
+            }
+
+            
+
+            header('Conten-Type: application/vnd.ms-excel');
+            header('Content-Disposition: attachment;filename="DocumentReport.xlsx"');
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            $sheet->setCellValue('A1', $title);
+            $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(18);
+
+            $sheet->setCellValue('A2', $course_title);
+            $sheet->getStyle('A2')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A3', 'Report of '.date("M d, Y", strtotime($dateFrom)). ' - '.date("M d, Y", strtotime($dateTo)));
+            $sheet->getStyle('A3')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A4', 'Date Generated: '.date('M d, Y'));
+            $sheet->getStyle('A4')->getFont()->setBold(false)->setSize(11);
+
+
+
+
+
+            $cog = 0;
+            $cogCost = 0;
+
+            $coe = 0;
+            $coeCost = 0;
+
+            $cue = 0;
+            $cueCost = 0;
+
+            $ccd = 0;
+            $ccdCost = 0;
+            
+            $cgr = 0;
+            $cgrCost = 0;
+
+            $cgah = 0;
+            $cgahCost = 0;
+
+            $cgg = 0;
+            $cggCost = 0;
+
+            $cgs = 0;
+            $cgsCost = 0;
+
+            $cft = 0;
+            $cftCost = 0;
+
+            $cnid = 0;
+            $cnidCost = 0;
+
+            $cr = 0;
+            $crCost = 0;
+
+            $checklist = 0;
+            $checklistCost = 0;
+
+            $tor = 0;
+            $torCost = 0;
+
+            $honorable = 0;
+            $honorableCost = 0;
+
+            $diploma = 0;
+            $diplomaCost = 0;
+
+            $authentication = 0;
+            $authenticationCost = 0;
+
+            $cav_dfa = 0;
+            $cav_dfaCost = 0;
+
+            $cav = 0;
+            $cavCost = 0;
+
+            $endorsement = 0;
+            $endorsementCost = 0;
+
+            $other = 0;
+            $otherCost = 0;
+            
+            $totalCosting = 0;
+
+
+            if ($course == 0) {
+                $requests = $this->AdminModel->generateDocumentDocument2($dateFrom, $dateTo, $student_type);
+            } else {
+                $requests = $this->AdminModel->generateDocumentDocument($dateFrom, $dateTo, $course, $student_type);
+            }
+
+
+            $sheet->setCellValue('A31', 'REQUEST ID');
+            $sheet->getStyle('A31')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('B31', 'STUDENT TYPE');
+            $sheet->getStyle('B31')->getFont()->setBold(true)->setSize(11);
+            
+            $sheet->setCellValue('C31', 'DOCUMENT NAME');
+            $sheet->getStyle('C31')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('D31', 'DOCUMENT COPIES');
+            $sheet->getStyle('D31')->getFont()->setBold(true)->setSize(11);
+
+            
+            $sheet->setCellValue('E31', 'DOCUMENT PAGES');
+            $sheet->getStyle('E31')->getFont()->setBold(true)->setSize(11);
+
+            
+            $sheet->setCellValue('F31', 'DOCUMENT COST');
+            $sheet->getStyle('F31')->getFont()->setBold(true)->setSize(11);
+
+            
+            $sheet->setCellValue('G31', 'DATE CREATED');
+            $sheet->getStyle('G31')->getFont()->setBold(true)->setSize(11);
+
+
+            $countCells = 32;
+            foreach($requests as $request):
+                
+                $request_id = $request->request_id;
+                $student_type = $request->student_type;
+                $document_name = $request->document_name;
+                $document_cost = $request->document_cost;
+                $document_type = $request->document_type;
+                $document_copies = $request->document_copies;
+                $document_pages = $request->document_pages;
+                $date_created = $request->date_created;
+
+                if ($student_type == 1) {
+                    $type = "Active Student";
+                }
+
+                if ($student_type == 2) {
+                    $type = "Alumni/Inactive Student";
+                }
+
+
+                $totalCosting += $document_cost;
+
+                switch ($document_type) {
+
+                    case 1:
+                        $cog++;
+                        $cogCost += $document_cost;
+                    break;
+
+                    case 2:
+                        $coe++;
+                        $coeCost += $document_cost;
+                    break;
+
+                    case 3:
+                        $cue++;
+                        $cueCost += $document_cost;
+                    break;
+
+                    case 4:
+                        $ccd++;
+                        $ccdCost += $document_cost;
+                    break;
+
+                    case 5:
+                        $cgr++;
+                        $cgrCost += $document_cost;
+                    break;
+
+                    case 6:
+                        $cgah++;
+                        $cgahCost += $document_cost;
+                    break;
+
+                    case 7:
+                        $cgg++;
+                        $cggCost += $document_cost;
+                    break;
+
+                    case 8:
+                        $cgs++;
+                        $cgsCost += $document_cost;
+                    break;
+
+                    case 9:
+                        $cft++;
+                        $cftCost += $document_cost;
+                    break;
+
+                    case 10:
+                        $cnid++;
+                        $cnidCost += $document_cost;
+                    break;
+
+                    case 11:
+                        $cr++;
+                        $crCost += $document_cost;
+                    break;
+
+                    case 12:
+                        $checklist++;
+                        $checklistCost += $document_cost;
+                    break;
+
+                    case 13:
+                        $tor++;
+                        $torCost += $document_cost;
+                    break;
+
+                    case 14:
+                        $honorable++;
+                        $honorableCost += $document_cost;
+                    break;
+
+                    case 15:
+                        $diploma++;
+                        $diplomaCost += $document_cost;
+                    break;
+
+                    case 16:
+                        $authentication++;
+                        $authenticationCost += $document_cost;
+                    break;
+
+                    case 17:
+                        $cav_dfa++;
+                        $cav_dfaCost += $document_cost;
+                    break;
+
+                    case 18:
+                        $cav++;
+                        $cavCost += $document_cost;
+                    break;
+
+                    case 19:
+                        $endorsement++;
+                        $endorsementCost += $document_cost;
+                    break;
+
+                    case 20:
+                        $other++;
+                        $otherCost += $document_cost;
+                    break;
+
+                }
+
+
+
+
+
+                $sheet->setCellValue('A'.$countCells, $request_id);
+                $sheet->getStyle('A'.$countCells)->getFont()->setBold(false)->setSize(11);
+    
+                $sheet->setCellValue('B'.$countCells, $type);
+                $sheet->getStyle('B'.$countCells)->getFont()->setBold(false)->setSize(11);
+                
+                $sheet->setCellValue('C'.$countCells, $document_name);
+                $sheet->getStyle('C'.$countCells)->getFont()->setBold(false)->setSize(11);
+                
+                $sheet->setCellValue('D'.$countCells, $document_copies);
+                $sheet->getStyle('D'.$countCells)->getFont()->setBold(false)->setSize(11);
+    
+                
+                $sheet->setCellValue('E'.$countCells, $document_pages);
+                $sheet->getStyle('E'.$countCells)->getFont()->setBold(false)->setSize(11);
+    
+                
+                $sheet->setCellValue('F'.$countCells, $document_cost);
+                $sheet->getStyle('F'.$countCells)->getFont()->setBold(false)->setSize(11);
+    
+                
+                $sheet->setCellValue('G'.$countCells, $date_created);
+                $sheet->getStyle('G'.$countCells)->getFont()->setBold(false)->setSize(11);
+
+                $countCells++;
+
+            endforeach;
+
+
+
+
+
+
+
+
+
+
+
+            $sheet->setCellValue('A6', 'SUMMARY OF TOTAL DOCUMENT REQUESTED & FEES COLLECTED');
+            $sheet->getStyle('A6')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('A7', 'Document Name');
+            $sheet->getStyle('A7')->getFont()->setBold(true)->setSize(11);
+
+            $sheet->setCellValue('A8', 'Certification of Grades');
+            $sheet->getStyle('A8')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A9', 'Certification of Enrollment');
+            $sheet->getStyle('A9')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A10', 'Certification of Units Earned');
+            $sheet->getStyle('A10')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A11', 'Certification of Course Description');
+            $sheet->getStyle('A11')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A12', 'Certification of Graduating with Ranking');
+            $sheet->getStyle('A12')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A13', 'Certification of Graduating with Academic Honors');
+            $sheet->getStyle('A13')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A14', 'Certification of Graduation with GWA');
+            $sheet->getStyle('A14')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A15', 'Certification of Grading System');
+            $sheet->getStyle('A15')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A16', 'Certification of Free Tuition');
+            $sheet->getStyle('A16')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A17', 'Certification of No Issued ID');
+            $sheet->getStyle('A17')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A18', 'Certification of Registration');
+            $sheet->getStyle('A18')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A19', 'Checklist of Completed Grades');
+            $sheet->getStyle('A19')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A20', 'Transcript of Records');
+            $sheet->getStyle('A19')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('A21', 'Honorable Dismissal & Transfer Credentials');
+            $sheet->getStyle('A22')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A23', 'Copy of Diploma');
+            $sheet->getStyle('A23')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A24', 'Authentication');
+            $sheet->getStyle('A24')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A25', 'CAV (for DFA)');
+            $sheet->getStyle('A25')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A26', 'CAV (for non-DFA)');
+            $sheet->getStyle('A26')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A27', 'Endorsement Letter');
+            $sheet->getStyle('A27')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('A28', 'Others');
+            $sheet->getStyle('A28')->getFont()->setBold(false)->setSize(11);
+            
+
+
+
+
+
+
+            $sheet->setCellValue('B7', 'Number of Request');
+            $sheet->getStyle('B7')->getFont()->setBold(true)->setSize(11);
+
+
+            
+            $sheet->setCellValue('B8', $cog);
+            $sheet->getStyle('B8')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('B9', $coe);
+            $sheet->getStyle('B9')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B10', $cue);
+            $sheet->getStyle('B10')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B11', $ccd);
+            $sheet->getStyle('B11')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B12', $cgr);
+            $sheet->getStyle('B12')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B13', $cgah);
+            $sheet->getStyle('B13')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B14', $cgg);
+            $sheet->getStyle('B14')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B15', $cgs);
+            $sheet->getStyle('B15')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B16', $cft);
+            $sheet->getStyle('B16')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B17', $cnid);
+            $sheet->getStyle('B17')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B18', $cr);
+            $sheet->getStyle('B18')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B19', $checklist);
+            $sheet->getStyle('B19')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B20', $tor);
+            $sheet->getStyle('B19')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('B21', $honorable);
+            $sheet->getStyle('B21')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('B22', $diploma);
+            $sheet->getStyle('B22')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('B23', $authentication);
+            $sheet->getStyle('B23')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('B24', $cav_dfa);
+            $sheet->getStyle('B24')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('B25', $cav);
+            $sheet->getStyle('B25')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('B26', $endorsement);
+            $sheet->getStyle('B26')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('B27', $other);
+            $sheet->getStyle('B27')->getFont()->setBold(false)->setSize(11);
+
+
+
+
+
+
+
+
+
+
+            
+            $sheet->setCellValue('C7', 'Document Cost');
+            $sheet->getStyle('C7')->getFont()->setBold(true)->setSize(11);
+
+
+            
+            $sheet->setCellValue('C8', '50');
+            $sheet->getStyle('C8')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('C9', '50');
+            $sheet->getStyle('C9')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C10', '50');
+            $sheet->getStyle('C10')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C11', '50');
+            $sheet->getStyle('C11')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C12', '50');
+            $sheet->getStyle('C12')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C13', '50');
+            $sheet->getStyle('C13')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C14', '50');
+            $sheet->getStyle('C14')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C15', '50');
+            $sheet->getStyle('C15')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C16', '0');
+            $sheet->getStyle('C16')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C17', '0');
+            $sheet->getStyle('C17')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C18', '50');
+            $sheet->getStyle('C18')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C19', '50');
+            $sheet->getStyle('C19')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C20', '100/page');
+            $sheet->getStyle('C20')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('C21', '50');
+            $sheet->getStyle('C21')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('C22', '300');
+            $sheet->getStyle('C22')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('C23', '50');
+            $sheet->getStyle('C23')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('C24', '200');
+            $sheet->getStyle('C24')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('C25', '200');
+            $sheet->getStyle('C25')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('C26', '50');
+            $sheet->getStyle('C26')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('C27', '50');
+            $sheet->getStyle('C27')->getFont()->setBold(false)->setSize(11);
+
+
+
+
+
+
+
+
+            
+            $sheet->setCellValue('D7', 'Total Collected Fees');
+            $sheet->getStyle('D7')->getFont()->setBold(true)->setSize(11);
+
+            
+            $sheet->setCellValue('D8', $cogCost);
+            $sheet->getStyle('D8')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D9', $coeCost);
+            $sheet->getStyle('D9')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D10', $cueCost);
+            $sheet->getStyle('D10')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D11', $ccdCost);
+            $sheet->getStyle('D11')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D12', $cgrCost);
+            $sheet->getStyle('D12')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D13', $cgahCost);
+            $sheet->getStyle('D13')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D14', $cggCost);
+            $sheet->getStyle('D14')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D15', $cgsCost);
+            $sheet->getStyle('D15')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D16', $cftCost);
+            $sheet->getStyle('D16')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D17', $cnidCost);
+            $sheet->getStyle('D17')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D18', $crCost);
+            $sheet->getStyle('D18')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D19', $checklistCost);
+            $sheet->getStyle('D19')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D20', $torCost);
+            $sheet->getStyle('D20')->getFont()->setBold(false)->setSize(11);
+            
+            $sheet->setCellValue('D21', $honorableCost);
+            $sheet->getStyle('D21')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D22', $diplomaCost);
+            $sheet->getStyle('D22')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D23', $authenticationCost);
+            $sheet->getStyle('D23')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D24', $cav_dfaCost);
+            $sheet->getStyle('D24')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D25', $cavCost);
+            $sheet->getStyle('D25')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D26', $endorsementCost);
+            $sheet->getStyle('D26')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D27', $otherCost);
+            $sheet->getStyle('D27')->getFont()->setBold(false)->setSize(11);
+            
+
+
+            
+            $sheet->setCellValue('A28', 'Total');
+            $sheet->getStyle('A28')->getFont()->setBold(false)->setSize(11);
+
+            $sheet->setCellValue('D28', $totalCosting);
+            $sheet->getStyle('D28')->getFont()->setBold(false)->setSize(11);
+
+
+            $writer = new Xlsx($spreadsheet);
+            $writer->save("php://output");
+
 
         }
 

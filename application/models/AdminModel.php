@@ -203,4 +203,28 @@ class AdminModel extends CI_Model
 		return $query->row();
 	}
 
+
+	public function generateDocumentDocument($dateFrom, $dateTo, $course, $student_type) {
+
+		$query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, document_request_tbl WHERE request_tbl.request_id = requestor_info_tbl.request_id AND request_tbl.request_id = document_request_tbl.request_id AND request_tbl.course_id = $course AND request_tbl.status = 0 AND CONVERT(request_tbl.date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND request_tbl.student_type IN($student_type)");
+
+		return $query->result();
+
+	}
+
+
+	public function getCourse($course_id) {
+		$query = $this->db->query("SELECT * FROM admissions.tbl_course WHERE course_id = $course_id");
+		return $query->row();
+	}
+
+	public function generateDocumentDocument2($dateFrom, $dateTo, $student_type) {
+
+		$query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, document_request_tbl WHERE request_tbl.request_id = requestor_info_tbl.request_id AND request_tbl.request_id = document_request_tbl.request_id AND request_tbl.status = 0 AND CONVERT(request_tbl.date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND request_tbl.student_type IN($student_type)");
+
+		return $query->result();
+
+	}
+
+
 }

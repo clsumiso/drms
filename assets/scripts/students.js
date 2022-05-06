@@ -491,18 +491,44 @@ $(document).ready(function() {
 
 
 
-
-        if ($(this).val() == 1 || $(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 5 || $(this).val() == 6 || $(this).val() == 7 || $(this).val() == 8) {
+        if ($(this).val() == 1) {
             $(this).parent().parent().parent().find('.getFType').val('1')
-        } else if ($(this).val() == 9) {
+        } else if ($(this).val() == 2) {
             $(this).parent().parent().parent().find('.getFType').val('2')
-        } else if($(this).val() == 10) {
+        } else if ($(this).val() == 3) {
             $(this).parent().parent().parent().find('.getFType').val('3')
-        } else if ($(this).val() == 11) {
+        } else if ($(this).val() == 4) {
             $(this).parent().parent().parent().find('.getFType').val('4')
+        } else if ($(this).val() == 5) {
+            $(this).parent().parent().parent().find('.getFType').val('8')
+        } else if ($(this).val() == 6) {
+            $(this).parent().parent().parent().find('.getFType').val('9')
+        } else if ($(this).val() == 7) {
+            $(this).parent().parent().parent().find('.getFType').val('10')
+        } else if ($(this).val() == 8) {
+            $(this).parent().parent().parent().find('.getFType').val('11')
+        } else if ($(this).val() == 9) {
+            $(this).parent().parent().parent().find('.getFType').val('12')
+        } else if ($(this).val() == 10) {
+            $(this).parent().parent().parent().find('.getFType').val('13')
+        } else if ($(this).val() == 11) {
+            $(this).parent().parent().parent().find('.getFType').val('19')
         } else if ($(this).val() == 12) {
-            $(this).parent().parent().parent().find('.getFType').val('5')
+            $(this).parent().parent().parent().find('.getFType').val('20')
         }
+
+
+        // if ($(this).val() == 1 || $(this).val() == 2 || $(this).val() == 3 || $(this).val() == 4 || $(this).val() == 5 || $(this).val() == 6 || $(this).val() == 7 || $(this).val() == 8) {
+        //     $(this).parent().parent().parent().find('.getFType').val('1')
+        // } else if ($(this).val() == 9) {
+        //     $(this).parent().parent().parent().find('.getFType').val('2')
+        // } else if($(this).val() == 10) {
+        //     $(this).parent().parent().parent().find('.getFType').val('3')
+        // } else if ($(this).val() == 11) {
+        //     $(this).parent().parent().parent().find('.getFType').val('4')
+        // } else if ($(this).val() == 12) {
+        //     $(this).parent().parent().parent().find('.getFType').val('5')
+        // }
 
 
         
@@ -648,7 +674,7 @@ $(document).ready(function() {
                 let documentCopies = $(this).parent().parent().parent().find('.getCopies').val()
                 let totalDocumentPayment = 0
                 let addDataDocument = ""
-                let page = 0
+                let page = 1
 
                 let singleDocCost = 0
 
@@ -891,6 +917,9 @@ $(document).ready(function() {
 
     // Page Function Validations
     function validatePage1() {
+        
+        $('#validateDataPrivacy').css('display', 'none')
+
         if($('#flexCheckChecked').prop('checked') && $('#flexCheckChecked2').prop('checked')) {
             $('#dataPrivacyContentPage').css('display', 'none')
             $('#personalInfoContentPage').css('display', 'block')
