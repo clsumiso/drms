@@ -11,16 +11,6 @@
 
                         <p class="report-description">Allows the generation of data reports exclusively for the feedback. Kindly specify the date range you want to generate.</p>
 
-
-                        <div class="form-group col-lg-8 mb-3">
-                            <label for="getStudentType" class="form-label">Student Type</label>
-                            <select name="getStudentType" id="getStudentTypeFeedback" class="form-select getStudentType" required>
-                                <option value="1,2">All students</option>
-                                <option value="1">Active Students</option>
-                                <option value="2">Inactive Students</option>
-                            </select>
-                        </div>
-
                         <div class="row">
                             <div class="form-group col-lg-6 mb-3">
                                 <label for="getDateFrom" class="form-label">From</label>
@@ -35,7 +25,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" id="btnExcelReport" class="btn btn-success">Generate XLS</button>
+                        <button type="submit" id="btnPDFReport" name="pdfBtn" class="btn btn-primary">Generate PDF</button>
+                        <button type="submit" id="btnExcelReport" name="excelBtn" class="btn btn-success">Generate XLS</button>
                     </div>
                 </div>
             </form>

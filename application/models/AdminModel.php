@@ -203,6 +203,11 @@ class AdminModel extends CI_Model
 		return $query->row();
 	}
 
+	public function generateAverageRatingFeedbackReports($student_type, $dateFrom, $dateTo) {
+		$query = $this->db->query("SELECT AVG(user_friendly) AS ave FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN($student_type)");
+		return $query->row();
+	}
+
 
 	public function generateDocumentDocument($dateFrom, $dateTo, $course, $student_type) {
 
