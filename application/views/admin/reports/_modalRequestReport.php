@@ -43,8 +43,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <!-- <button type="button" class="btn btn-primary">Generate PDF</button> -->
-                        <button type="submit" class="btn btn-success">Generate XLS</button>
+                        <button type="submit" id="btnPDFReport" name="pdfBtn" class="btn btn-primary">Generate PDF</button>
+                        <button type="submit" id="btnExcelReport" name="excelBtn" class="btn btn-success">Generate XLSX</button>
                     </div>
                 </div>
             </form>
