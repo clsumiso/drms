@@ -192,44 +192,79 @@ class AdminModel extends CI_Model
 	}
 
 
-	public function generateFeedbackReports($student_type, $dateFrom, $dateTo) {
-		$query = $this->db->query("SELECT * FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN($student_type)");
+	public function getFeedbackResult($dateFrom, $dateTo) {
+		$query = $this->db->query("SELECT * FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo'");
 		return $query->result();
 	}
 
 
-	public function generateCountFeedbackReports($student_type, $dateFrom, $dateTo) {
-		$query = $this->db->query("SELECT COUNT(*) AS count FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN($student_type)");
-		return $query->row();
-	}
-
-	public function generateAverageRatingFeedbackReports($student_type, $dateFrom, $dateTo) {
-		$query = $this->db->query("SELECT AVG(user_friendly) AS ave FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN($student_type)");
+	public function getFeedbackAverage($dateFrom, $dateTo, $student_type) {
+		$query = $this->db->query("SELECT AVG(user_friendly) AS average FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN ($student_type)");
 		return $query->row();
 	}
 
 
-	public function generateDocumentDocument($dateFrom, $dateTo, $course, $student_type) {
+	public function getFeedbackCount($dateFrom, $dateTo, $student_type) {
+		$query = $this->db->query("SELECT COUNT(*) AS count FROM feedback_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN ($student_type)");
+		return $query->row();
+	}
 
-		$query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, document_request_tbl WHERE request_tbl.request_id = requestor_info_tbl.request_id AND request_tbl.request_id = document_request_tbl.request_id AND request_tbl.course_id = $course AND request_tbl.status = 0 AND CONVERT(request_tbl.date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND request_tbl.student_type IN($student_type)");
-
+	public function getStaffAccountsActive() {
+		$query = $this->db->query("SELECT * FROM staff_account_tbl WHERE account_status = 1 ORDER BY staff_type ASC");
 		return $query->result();
-
 	}
 
+	public function getStaffCourseHandled($staff_id) {
+		$query = $this->db->query("SELECT * FROM course_handler_tbl WHERE (staff_id_ric = $staff_id OR staff_id_frontline = $staff_id)");
+		return $query->result();
+	}
 
-	public function getCourse($course_id) {
-		$query = $this->db->query("SELECT * FROM admissions.tbl_course WHERE course_id = $course_id");
+	public function getCourseData($course_id) {
+		$query = $this->db->query("SELECT * FROM admissions.tbl_course WHERE course_id = '$course_id'");
 		return $query->row();
 	}
 
-	public function generateDocumentDocument2($dateFrom, $dateTo, $student_type) {
-
-		$query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl, document_request_tbl WHERE request_tbl.request_id = requestor_info_tbl.request_id AND request_tbl.request_id = document_request_tbl.request_id AND request_tbl.status = 0 AND CONVERT(request_tbl.date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND request_tbl.student_type IN($student_type)");
-
-		return $query->result();
-
+	public function getCountTotalRequest($dateFrom, $dateTo, $student_type) {
+		$query = $this->db->query("SELECT COUNT(*) AS count from request_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type in ($student_type)");
+		return $query->row();
 	}
 
+	public function getCountRequest($dateFrom, $dateTo, $status, $student_type) {
+		$query = $this->db->query("SELECT COUNT(*) AS count from request_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND status IN($status) AND student_type IN ($student_type)");
+		return $query->row();
+	}
+
+	public function getCountDocumentRequest($dateFrom, $dateTo, $status, $student_type) {
+		$query = $this->db->query("SELECT * from request_tbl WHERE CONVERT(date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND student_type IN ($student_type) AND status IN ($status)");
+		return $query->result();
+	}
+
+	public function getCountDocs($request_id) {
+		$query = $this->db->query("SELECT * from document_request_tbl WHERE request_id = '$request_id'");
+		return $query->result();
+	}
+
+
+	public function getAllStaffActive() {
+		$query = $this->db->query("SELECT * from staff_account_tbl WHERE account_status = 1 ORDER BY staff_type ASC");
+		return $query->result();
+	}
+
+
+	public function getStaffStatus($staff_id, $request_type, $status, $dateFrom, $dateTo) {
+		$query = $this->db->query("SELECT COUNT(*) as count from request_log, request_tbl JOIN document_request_tbl WHERE request_log.request_id = request_tbl.request_id AND request_log.staff_id = '$staff_id' AND document_request_tbl.request_id = request_log.request_id AND CONVERT(request_tbl.date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND document_request_tbl.document_type = '$request_type' and request_log.status IN ($status);");
+		return $query->row();
+	}
+
+	public function getStaffStatusPending($staff_id, $request_type, $status, $student_type, $dateFrom, $dateTo) {
+		$query = $this->db->query("SELECT COUNT(*) as count from request_tbl, document_request_tbl JOIN course_handler_tbl WHERE request_tbl.request_id = document_request_tbl.request_id AND request_tbl.status IN ($status) AND CONVERT(request_tbl.date_created, DATE) BETWEEN '$dateFrom' AND '$dateTo' AND course_handler_tbl.course_id = request_tbl.course_id AND (course_handler_tbl.staff_id_ric = '$staff_id' OR course_handler_tbl.staff_id_frontline = '$staff_id') AND document_request_tbl.document_type = '$request_type' AND request_tbl.student_type = '$student_type'");
+		return $query->row();
+	}
+
+
+	public function getCountRequestChart($status, $month) {
+		$query = $this->db->query("SELECT COUNT(*) as count FROM request_tbl WHERE status IN ($status) AND Month(date_created) = $month");
+		return $query->row();
+	}
 
 }

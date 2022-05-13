@@ -19,8 +19,10 @@
                 <h3 class="maintenance-title">Announcement</h3>
                 <p class="maintenance-description">Create announcement for the system maintenance.</p>
                 <div class="button-maintenance-wrapper">
-                    <!-- <button class="btn btn-success px-5" type="button" id="toggleAnnouncement">Create announcement</button> -->
-                    <button type="button" class="btn btn-primary px-5" data-bs-toggle="modal" data-bs-target="#formAnnouncement">
+                    <!-- <button type="button" class="btn btn-primary px-5" data-bs-toggle="modal" data-bs-target="#formAnnouncement">
+                        Create announcement
+                    </button> -->
+                    <button type="button" class="btn btn-primary px-5" id="modalAnnouncement">
                         Create announcement
                     </button>
                 </div>

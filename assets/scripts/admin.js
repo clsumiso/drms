@@ -1927,4 +1927,46 @@ $(document).ready(function() {
     }
 
 
+    $('#modalAnnouncement').click(function() {
+        Swal.fire(
+            'Coming soon',
+            'This feature will be available soon',
+            'info'
+        )
+    })
+
+    // $('#formAnnounce').submit(function(e) {
+
+    //     e.preventDefault();
+
+    //     if ($('mytextarea').val()) {
+
+    //         let data = $(this).serialize()
+    //         $.ajax ({
+    //             url: window.location.origin + '/drms/admin/announcement',
+    //             type: 'POST',
+    //             data: data,
+    //             beforeSend: function() {
+    //                 $('#webLoader').fadeIn()
+    //             },
+    //             success: function(data) {
+    //                 $('#webLoader').fadeOut()
+
+    //                 let request = JSON.parse(data)
+
+                    
+
+    //             },
+    //             error: function(xhr, status, error) {
+    //                 console.log(xhr)
+    //                 console.log(status)
+    //                 console.log(error)
+    //             }
+    //         })
+
+    //     }
+
+    // })
+
+
 })

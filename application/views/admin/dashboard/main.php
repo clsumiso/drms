@@ -84,7 +84,7 @@
 
             <div class="chart-wrapper">
                 
-                <h3 class="wrapper-title mb-3">March Overall Status</h3>
+                <h3 class="wrapper-title mb-3" id="monthlyOverallStatus"></h3>
 
                 <div id="chartOverallStats">
     

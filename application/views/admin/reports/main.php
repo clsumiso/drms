@@ -9,7 +9,7 @@
 
             <div class="report-card">
                 <h3 class="report-title">Staff Report</h3>
-                <p class="report-description">Allows the generation of data reports exclusively for the staff. Kindly specify the staff type and the date range you want to generate.</p>
+                <p class="report-description">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit repudiandae eveniet iusto magnam nesciunt laudantium error, ipsam ratione facilis obcaecati nisi numquam similique qui tempora!</p>
                 <div class="button-report-wrapper">
                     <button type="button" class="btn btn-primary px-5" data-bs-toggle="modal" data-bs-target="#formStaffReport">
                         Generate
@@ -18,10 +18,10 @@
             </div>
 
             <div class="report-card">
-                <h3 class="report-title">Request Report</h3>
-                <p class="report-description">Allows the generation of data reports exclusively for the documents requested. Kindly specify the date range you want to generate.</p>
+                <h3 class="report-title">Course Handler</h3>
+                <p class="report-description">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio unde ab, voluptatibus porro beatae aspernatur cupiditate qui earum ad asperiores autem, consequuntur magni ducimus sequi.</p>
                 <div class="button-report-wrapper">
-                    <button type="button" class="btn btn-primary px-5" data-bs-toggle="modal" data-bs-target="#formRequestReport">
+                    <button type="button" class="btn btn-primary px-5" data-bs-toggle="modal" data-bs-target="#formCourseHandler">
                         Generate
                     </button>
                 </div>

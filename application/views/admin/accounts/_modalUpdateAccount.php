@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="form-group col-lg-3 mb-3">
                                 <label for="u_getStaffID" class="form-label">Staff ID</label>
-                                <input type="text" name="u_getStaffID" id="u_getStaffID" class="form-control" maxlength="11" autocomplete="off">
+                                <input type="text" name="u_getStaffID" id="u_getStaffID" class="form-control" maxlength="11" autocomplete="off" readonly>
                             </div>
                         </div>
 

@@ -13,20 +13,20 @@
 
                         <div class="row">
                             <div class="form-group col-lg-6 mb-3">
-                                <label for="getDateFrom" class="form-label">From</label>
-                                <input type="date" name="getDateFrom" id="getDateFromFeedback" class="form-control getDateFrom" required>
+                                <label for="getDateFromFeedback" class="form-label">From</label>
+                                <input type="date" name="getDateFromFeedback" id="getDateFromFeedback" class="form-control getDateFromFeedback" required>
                             </div>
 
                             <div class="form-group col-lg-6 mb-3">
-                                <label for="getTo" class="form-label">To</label>
-                                <input type="date" name="getDateTo" id="getDateToFeedback" class="form-control getDateTo" required>
+                                <label for="getDateToFeedback" class="form-label">To</label>
+                                <input type="date" name="getDateToFeedback" id="getDateToFeedback" class="form-control getDateToFeedback" required>
                             </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" id="btnPDFReport" name="pdfBtn" class="btn btn-primary">Generate PDF</button>
-                        <button type="submit" id="btnExcelReport" name="excelBtn" class="btn btn-success">Generate XLSX</button>
+                        <button type="submit" id="pdfBtnFeedback" name="pdfBtnFeedback" class="btn btn-primary">Generate PDF</button>
+                        <button type="submit" id="btnExcelReport" name="excelBtnFeedback" class="btn btn-success">Generate XLSX</button>
                     </div>
                 </div>
             </form>

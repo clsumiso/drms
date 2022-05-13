@@ -1,3 +1,29 @@
+$(document).ready(function() {
+
+    let countpending = 0
+    let countdelivery = 0
+    let countdeclined = 0
+    let countcompleted = 0
+
+    $.ajax ({
+        url: window.location.origin + '/drms/admin/statusMonth',
+        type: 'GET',
+        success: function(data) {
+          let request = JSON.parse(data)
+
+          $('#monthlyOverallStatus').text(request.title)
+
+          countpending = request.pending
+          countdelivery = request.delivery
+          countdeclined = request.declined
+          countcompleted = request.completed
+          
+        }
+    }) 
+
+})
+
+
 am5.ready(function() {
 
   // Create root element
@@ -30,13 +56,10 @@ am5.ready(function() {
   // Set data
   // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
   series.data.setAll([
-    { value: 10, category: "One" },
-    { value: 9, category: "Two" },
-    { value: 6, category: "Three" },
-    { value: 5, category: "Four" },
-    { value: 4, category: "Five" },
-    { value: 3, category: "Six" },
-    { value: 1, category: "Seven" },
+    { value: 10, category: "Pending" },
+    { value: 10, category: "On Delivery" },
+    { value: 9, category: "Declined" },
+    { value: 6, category: "Completed" },
   ]);
 
   

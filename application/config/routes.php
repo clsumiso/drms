@@ -141,8 +141,13 @@ $route = array (
     'admin/maintenanceStatus'           => 'adminController/maintenancePageOnOff',
     'admin/setMaintenanceStatus'        => 'adminController/setMaintenance',
 
-    'admin/feedbackReport'              => 'adminController/generateReportFeedbacks',
-    'admin/documentReport'              => 'adminController/generateReportDocumentRequests'
+    'admin/feedbackReport'              => 'adminController/generateFeedbackReport',
+    'admin/courseHandlersReport'        => 'adminController/generateCourseHandlerReport',
+    'admin/staffReport'                 => 'adminController/generateStaffReport',
+
+    
+    'admin/statusMonth'                 => 'adminController/dashboardChartsMonthStatus',
+    'admin/announcement'                => 'adminController/announcementEmailBlast',
     
     
 );
