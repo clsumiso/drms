@@ -13,7 +13,7 @@
 
                     <div class="modal-footer">  
                         <button type="button" class="btn btn-secondary" id="toggleAccountClose2" data-bs-dismiss="modal">Discard</button>
-                        <button class="btn btn-primary px-5" type="sumit">Announce now</button>
+                        <button class="btn btn-primary px-5" type="submit">Announce now</button>
                     </div>
                 </div>
             </form>

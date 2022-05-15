@@ -9,7 +9,7 @@
 
             <div class="report-card">
                 <h3 class="report-title">Staff Report</h3>
-                <p class="report-description">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit repudiandae eveniet iusto magnam nesciunt laudantium error, ipsam ratione facilis obcaecati nisi numquam similique qui tempora!</p>
+                <p class="report-description">Allows the generation of data reports exclusively for the staff. Kindly specify the date range you want to generate.</p>
                 <div class="button-report-wrapper">
                     <button type="button" class="btn btn-primary px-5" data-bs-toggle="modal" data-bs-target="#formStaffReport">
                         Generate
@@ -19,7 +19,7 @@
 
             <div class="report-card">
                 <h3 class="report-title">Course Handler</h3>
-                <p class="report-description">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio unde ab, voluptatibus porro beatae aspernatur cupiditate qui earum ad asperiores autem, consequuntur magni ducimus sequi.</p>
+                <p class="report-description">Course handlers contains the list of the name of the designated records-in-charge and frontline staff including the courses they handle.</p>
                 <div class="button-report-wrapper">
                     <button type="button" class="btn btn-primary px-5" data-bs-toggle="modal" data-bs-target="#formCourseHandler">
                         Generate

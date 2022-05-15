@@ -480,6 +480,10 @@ $(document).ready(function() {
 
     
     $(document).on('change', '.getDocument', function() {
+        
+        if($(this).parent().parent().parent().find('.checkboxTORBoard').prop('checked')) {
+            $(this).parent().parent().parent().find('.checkboxTORBoard').click()
+        }
 
         updateTablePayment()
 
@@ -490,8 +494,9 @@ $(document).ready(function() {
         $(this).parent().parent().parent().find('.showPages').remove()
         $(this).parent().parent().parent().find('.showOthers').remove()
         $(this).parent().parent().parent().find('.checkboxTORBoard').remove()
+        $(this).parent().parent().parent().find('.check-wrapper-tor').remove()
 
-        $(this).removeClass('is-invalid') 
+        $(this).removeClass('is-invalid')
 
 
         if ($(this).val() == 1) {
@@ -545,7 +550,6 @@ $(document).ready(function() {
             $(this).addClass('is-invalid') 
         } else if ($(this).val() == 8) {
 
-            console.log("asdlskjajhdskjhnn")
             countTotalUploaded++
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showDescription">'+
                                                             '<b class="text-uppercase poppins">Be advised</b>'+
@@ -580,8 +584,8 @@ $(document).ready(function() {
 
                                                             '<div class="form-group col-lg-5 mb-3">'+
                                                                 '<div class="form-check">'+
-                                                                    '<input class="form-check-input checkboxTORBoard" type="checkbox" value="" id="flexCheckDefault3">'+
-                                                                    '<label class="form-check-label" for="flexCheckDefault3">Check if TOR is for Board Exam</label>'+
+                                                                    '<input class="form-check-input checkboxTORBoard" type="checkbox" value="" id="">'+
+                                                                    '<label class="form-check-label" for="">Check to upload file</label>'+
                                                                 '</div>'+
                                                             '</div>'+
                                                         '</div>'+
@@ -591,6 +595,9 @@ $(document).ready(function() {
                                                                 '<b class="text-uppercase poppins mb-2">please be advised</b>'+
                                                                 '<p class="poppins">For non-garduates of a bachelor\'s program, please estimate the number of pages of your TOR according to the number of semesters you attended CLSU: 1 page = 3 semester</p>'+
                                                                 '<p class="poppins">For non-graduates of master\'s or doctoral program, please pay 100 pesos (1 page)</p>'+
+
+                                                                '<b class="text-uppercase poppins mb-2">Note</b>'+
+                                                                '<p class="poppins">If you are going to upload Letter of Copy or an Image for your board exam, pelase check the "Check to upload file""</p>'+
                                                             '</div>'+
                                                         '</div>')
 
@@ -740,7 +747,7 @@ $(document).ready(function() {
             
             countTotalUploaded++  
             $(this).parent().parent().parent().parent().append('<div class="check-wrapper-tor">'+
-                                                                    '<b class="poppins mb-2">Please attach image (For Board Exam Only)</b>'+
+                                                                    '<b class="poppins mb-2">For Board Exam Only</b>'+
                                                                     '<p class="poppins m-0 mb-2">A. Passport size picture.</p>'+
                                                                     '<p class="poppins m-0 mb-2">B. Colored, with white background.</p>'+
                                                                     '<p class="poppins m-0 mb-2">C. Taken in full-face view directly facing the caemra.</p>'+
@@ -748,6 +755,13 @@ $(document).ready(function() {
                                                                     '<p class="poppins m-0 mb-2">E. With HANDWRITTEN (not computer-generated) name tag legibly showing PRINTED FULL NAME in the format: First Name, Middle Initial, Lastname, and Extension Name, if any.</p>'+
 
 
+                                                                    '<br>'+
+
+                                                                    '<b class="poppins mb-2">For Copy of Letter</b>'+
+                                                                    '<p class="poppins m-0 mb-2">Upload pdf file of copy of letter.</p>'+
+
+                                                                    '<br>'+
+                                                                    
                                                                     '<div class="form-group mt-0 mb-1 printValidationUploadedFileRequirement">'+
                                                                 
                                                                     '</div>'+

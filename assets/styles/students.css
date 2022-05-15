@@ -548,7 +548,6 @@ header p {
     animation: animatePageContents .5s;
 }
 
-
 @keyframes animatePageContents {
     from {
         opacity: 0;

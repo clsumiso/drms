@@ -1,30 +1,131 @@
-$(document).ready(function() {
-
-    let countpending = 0
-    let countdelivery = 0
-    let countdeclined = 0
-    let countcompleted = 0
-
-    $.ajax ({
-        url: window.location.origin + '/drms/admin/statusMonth',
-        type: 'GET',
-        success: function(data) {
-          let request = JSON.parse(data)
-
-          $('#monthlyOverallStatus').text(request.title)
-
-          countpending = request.pending
-          countdelivery = request.delivery
-          countdeclined = request.declined
-          countcompleted = request.completed
-          
-        }
-    }) 
-
-})
-
-
 am5.ready(function() {
+
+  let pending = 0
+  let delivery = 0
+  let completed = 0
+  let declined = 0
+
+  $.ajax ({
+    url: window.location.origin + '/drms/admin/statusMonth',
+    type: 'GET',
+    success: function(data) {
+      request = JSON.parse(data)
+
+      $('#monthlyOverallStatus').text(request.title)
+
+      pending = request.pending
+      delivery = request.delivery
+      completed = request.completed
+      declined = request.declined
+
+    },
+    error: function(xhr, status, error) {
+      console.log(xhr)
+      console.log(status)
+      console.log(error)
+    },
+    'async': false,
+    'global': false,
+  })
+
+
+
+
+
+  let cog = 0;
+  let coe = 0;
+  let cue = 0;
+  let ccd = 0;
+  let cgr = 0;
+  let cgah = 0;
+  let cgg = 0;
+  let cgs = 0;
+  let cft = 0;
+  let cnid = 0;
+  let cr = 0;
+  let checklist = 0;
+  let tor = 0;
+  let honor = 0;
+  let diploma = 0;
+  let authentication = 0;
+  let CAV = 0;
+  let CAVD = 0;
+  let endorse = 0;
+  let others = 0;
+
+
+  $.ajax ({
+    url: window.location.origin + '/drms/admin/statusMostRequested',
+    type: 'GET',
+    success: function(data) {
+      request = JSON.parse(data)
+
+      console.log(request)
+      console.log(JSON.stringify(request))
+
+
+      $('#monthlyMostRequested').text(request.title)
+
+      cog = request.cog;
+      coe = request.coe;
+      cue = request.cue;
+      ccd = request.ccd;
+      cgr = request.cgr;
+      cgah = request.cgah;
+      cgg = request.cgg;
+      cgs = request.cgs;
+      cft = request.cft;
+      cnid = request.cnid;
+      cr = request.cr;
+      checklist = request.checklist;
+      tor = request.tor;
+      honor = request.honor;
+      diploma = request.diploma;
+      authentication = request.authentication;
+      CAV = request.CAV;
+      CAVD = request.CAVD;
+      endorse = request.endorse;
+      others = request.others;
+
+
+    },
+    error: function(xhr, status, error) {
+      console.log(xhr)
+      console.log(status)
+      console.log(error)
+    },
+    'async': false,
+    'global': false,
+  })
+
+
+  console.log(cog)
+  console.log(coe)
+  console.log(cue)
+  console.log(ccd)
+  console.log(cgr)
+  console.log(cgah)
+  console.log(cgg)
+  console.log(cgs)
+  console.log(cft)
+  console.log(cnid)
+  console.log(cr)
+  console.log(checklist)
+  console.log(tor)
+  console.log(honor)
+  console.log(diploma)
+  console.log(authentication)
+  console.log(CAV)
+  console.log(CAVD)
+  console.log(endorse)
+  console.log(others)
+
+
+
+
+
+
+
 
   // Create root element
   // https://www.amcharts.com/docs/v5/getting-started/#Root_element
@@ -48,20 +149,32 @@ am5.ready(function() {
   // Create series
   // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
   var series = chart.series.push(am5percent.PieSeries.new(chartOverallStats, {
-    valueField: "value",
-    categoryField: "category"
+    valueField: "count",
+    categoryField: "request"
   }));
   
-  
+
   // Set data
   // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+  // series.data.setAll = gfg;
   series.data.setAll([
-    { value: 10, category: "Pending" },
-    { value: 10, category: "On Delivery" },
-    { value: 9, category: "Declined" },
-    { value: 6, category: "Completed" },
+    {
+      "request":"Pending",
+      "count":pending
+    },
+    {
+      "request":"Delivery",
+      "count":delivery}
+    ,
+    {
+      "request":"Completed",
+      "count":completed
+    },
+    {
+      "request":"Declined",
+      "count":declined
+    }
   ]);
-
   
 
   // Create legend
@@ -116,21 +229,90 @@ am5.ready(function() {
   // Create series
   // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Series
   var series = chart.series.push(am5percent.PieSeries.new(chartMostRequestDocs, {
-    valueField: "value",
-    categoryField: "category"
+    valueField: "count",
+    categoryField: "document"
   }));
   
   
   // Set data
   // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
   series.data.setAll([
-    { value: 10, category: "One" },
-    { value: 9, category: "Two" },
-    { value: 6, category: "Three" },
-    { value: 5, category: "Four" },
-    { value: 4, category: "Five" },
-    { value: 3, category: "Six" },
-    { value: 1, category: "Seven" },
+    {
+      "document":"Certification of Grades",
+      "count":cog
+    },
+    {
+      "document":"Certification of Enrollment",
+      "count":coe
+    },
+    {
+      "document":"Certification of Units Earned",
+      "count":cue
+    },
+    {
+      "document":"Certification of Course Description",
+      "count":ccd
+    },
+    {
+      "document":"Certification of Graduating with Ranking",
+      "count":cgr
+    },
+    {
+      "document":"Certification of Graduating with Academic Honors",
+      "count":cgah
+    },
+    {
+      "document":"Certification of Graduation with GWA",
+      "count":cgg
+    },
+    {
+      "document":"Certification of Free Tuition",
+      "count":cgs
+    },
+    {
+      "document":"Certification of No Issued ID",
+      "count":cft
+    },
+    {
+      "document":"Certification of Registration",
+      "count":cnid
+    },
+    {
+      "document":"Checklist of Completed Grades",
+      "count":cr
+    },
+    {
+      "document":"Transcript of Records",
+      "count":checklist
+    },
+    {
+      "document":"Honorable Dismissal & Transfer Credentials",
+      "count":tor
+    },
+    {
+      "document":"Copy of Diploma",
+      "count":honor
+    },
+    {
+      "document":"Authentication",
+      "count":authentication
+    },
+    {
+      "document":"CAV (for DFA)",
+      "count":CAV
+    },
+    {
+      "document":"CAV (for non-DFA)",
+      "count":endorse
+    },
+    {
+      "document":"Endorsement Letter",
+      "count":CAVD
+    },
+    {
+      "document":"Others",
+      "count":others
+    },
   ]);
 
 

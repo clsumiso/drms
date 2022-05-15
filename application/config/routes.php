@@ -147,6 +147,7 @@ $route = array (
 
     
     'admin/statusMonth'                 => 'adminController/dashboardChartsMonthStatus',
+    'admin/statusMostRequested'         => 'adminController/dashboardChartsMostRequestedDocument',
     'admin/announcement'                => 'adminController/announcementEmailBlast',
     
     

@@ -98,7 +98,7 @@
                 <p class="page-title">PAYMENT PROCEDURE</p>
                 <p class="default-text m-0">Pay your fees thru the following payment options:</p>
                 <p class="default-text m-0">1. CLSU Cashier</p>
-                <p class="default-text m-0">2. Landbank Cashh Deposit</p>
+                <p class="default-text m-0">2. Landbank Cash Deposit</p>
                 <p class="default-text">3. Landbank Online Fund Transfer</p>
 
                 <p class="poppins m-0">Account Name: <b>CLSU INCOME ACCOUNT F-164</b></p>
@@ -106,7 +106,7 @@
 
                 <p class="default-text"><b>NOTE:</b> We strictly accept LANDBANK deposits only. For the issuance of the Official Receipt, kindly upload a copy of the DEPOSIT SLIP and fill up the form here <a href="https://tinyurl.com/yn5pzsc4" target="_blank">https://tinyurl.com/yn5pzsc4</a>.</p>
                 
-                <p class="default-text">Otherwise, if you haven't processed your payment yet, you can proceed to the next page of the transaction. To manage your payment, you can access the "Track your Request" on the system's homepage.</p>
+                <p class="default-text">Otherwise, if you haven't processed your payment yet, you can proceed to the next page of the transaction. To manage your payment, you can access the "Track Request" on the system's homepage.</p>
                 
 
                 <div class="table-payment" id="tablePayment">

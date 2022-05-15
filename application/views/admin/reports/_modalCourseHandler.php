@@ -9,7 +9,7 @@
                     
 
                     <div class="modal-body">
-                        <p class="report-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum corrupti vel blanditiis possimus necessitatibus facere, quis voluptatum atque, eos ratione similique eum, ut perspiciatis magni?</p>
+                        <p class="report-description">Course handlers contains the list of the name of the designated records-in-charge and frontline staff including the courses they handle.</p>
                     </div>
 
                     <div class="modal-footer">

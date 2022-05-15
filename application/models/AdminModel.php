@@ -261,9 +261,19 @@ class AdminModel extends CI_Model
 		return $query->row();
 	}
 
+	public function getAllPendingRequests() {
+		$query = $this->db->query("SELECT * FROM request_tbl, requestor_info_tbl WHERE request_tbl.request_id = requestor_info_tbl.request_id AND request_tbl.status IN (1,2,4,5,6,7)");
+		return $query->result();
+	}
 
-	public function getCountRequestChart($status, $month) {
-		$query = $this->db->query("SELECT COUNT(*) as count FROM request_tbl WHERE status IN ($status) AND Month(date_created) = $month");
+	public function getCountRequestChart($status, $month, $year) {
+		$query = $this->db->query("SELECT COUNT(*) as count FROM request_tbl WHERE status IN ($status) AND Month(date_created) = $month AND YEAR(date_created) = $year");
+		return $query->row();
+	}
+
+
+	public function getCountDocumentRequestChart($month, $request_type, $year) {
+		$query = $this->db->query("SELECT COUNT(*) as count FROM document_request_tbl WHERE Month(date_created) = '$month' AND YEAR(date_created) = $year AND document_type = '$request_type'");
 		return $query->row();
 	}
 

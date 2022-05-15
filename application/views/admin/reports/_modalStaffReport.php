@@ -11,7 +11,7 @@
 
                     <div class="modal-body">
 
-                        <p class="report-description">Allows the generation of data reports exclusively for the staff. Kindly specify the staff type and the date range you want to generate</p>
+                        <p class="report-description">Allows the generation of data reports exclusively for the staff. Kindly specify the date range you want to generate.</p>
 
                         <div class="row">
                             <div class="form-group col-lg-6 mb-3">

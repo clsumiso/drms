@@ -1,3 +1,24 @@
+<!-- 
+    DEVELOPERS
+        DARWIN LABISTE
+        PHOEBE JOY PENEYRA
+        CHRISTINE DEE SARMIENTO
+
+    ADVISER
+        DR. KHAVEE AGUSTUS BOTANGEN
+
+    SPECIAL THANKS TO:
+        ANGEL ANN RAMOS
+        ALEX ROGER DE GUZMAN
+        BRYAN ANDREI MEDINA
+        RYAN BERMOZA
+        GERALD VALDEZ
+        AMIR LEDESMA
+        ANNABEL SATURNO 
+        To Lolay, the loml, that keeps me motivated :> (HAHAHAHA)
+        and to everyone who have supported this project. THANK YOU!
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

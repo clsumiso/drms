@@ -1442,7 +1442,7 @@
 
                 $data  = "<div style='width: 97%; margin: auto;'>";
                 $data = "<p style='line-height: 1.8; margin: 0 0 5px;'><b>COURSE HANDLER</b></p>";
-                $data .= "<p style='margin: 0; line-height: 1.8; text-align: justify;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat</p>";
+                $data .= "<p style='margin: 0; line-height: 1.8; text-align: justify;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Course handlers contains the list of the name of the designated records-in-charge and frontline staff including the courses they handle. The report information indicated was generated on <b>".date('F d, Y')."</b></p>";
 
 
                 $data .= "<br>";
@@ -1785,7 +1785,7 @@
                 
                 $data  = "<div style='width: 97%; margin: auto;'>";
                 $data .= "<p style='line-height: 1.8; margin: 0 0 5px;'><b>STAFF REPORT</b></p>";
-                $data .= "<p style='margin: 0; line-height: 1.8; text-align: justify;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Staff Report contains the overall record of the requested documents from <b>".$dateFromStr."</b> to <b>".$dateToStr."</b>. This includes the completed, declined, and pending requests that have been made fromthe selected date range.</p>";
+                $data .= "<p style='margin: 0; line-height: 1.8; text-align: justify;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Staff Report contains the overall record of the requested documents from <b>".$dateFromStr."</b> to <b>".$dateToStr."</b>. This includes the completed, declined, and pending requests that have been made from the selected date range.</p>";
 
                 $data .= "<p style='margin: 0; line-height: 1.8; text-align: justify;'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Record-in-Charge have <b>".$totalCountRequestActive."</b> total requests and among these requests, <b>".number_format($countCompletedRequestAverageActive, 2)."%</b> are already completed, <b>".number_format($countDeclinedRequestAverageActive, 2)."%</b> was declined, and <b>".number_format($countPendingRequestAverageActive, 2)."%</b> are still in pending. Futhermore, the Frontlines have <b>".$totalCountRequestInactive."</b> total requested document, <b>".number_format($countCompletedRequestAverageInactive, 2)."%</b> are completed, <b>".number_format($countDeclinedRequestAverageInactive, 2)."%</b> was declined, and <b>".number_format($countPendingRequestAverageInactive, 2)."%</b> are still pending.</p>";
 
@@ -2688,12 +2688,6 @@
 
 
 
-
-
-
-
-
-
                 $mpdf->WriteHTML($data);
                 $mpdf->Output("Staff_Report.pdf");
 
@@ -2716,22 +2710,23 @@
             $this->load->model('AdminModel');
 
             $month = date('m');
+            $year = date('Y');
             $monthStr = date('F');
 
-            $pending = $this->AdminModel->getCountRequestChart('1,4,5,6,7', $month);
+            $pending = $this->AdminModel->getCountRequestChart('1,4,5,6,7', $month, $year);
             $countPending = $pending->count;
 
-            $delivery = $this->AdminModel->getCountRequestChart('2', $month);
+            $delivery = $this->AdminModel->getCountRequestChart('2', $month, $year);
             $countDelivery = $delivery->count;
 
-            $completed = $this->AdminModel->getCountRequestChart('0', $month);
+            $completed = $this->AdminModel->getCountRequestChart('0', $month, $year);
             $countCompleted = $completed->count;
             
-            $declined = $this->AdminModel->getCountRequestChart('3', $month);
+            $declined = $this->AdminModel->getCountRequestChart('3', $month, $year);
             $countDeclined = $declined->count;
 
             $data = array(
-                'title'       =>  $monthStr.' Overall Status',
+                'title'       =>  'Overall Status ('.$monthStr.' '.$year.')',
                 'pending'     =>  $countPending,
                 'delivery'    =>  $countDelivery,
                 'completed'   =>  $countCompleted,
@@ -2744,6 +2739,137 @@
 
 
 
+        public function dashboardChartsMostRequestedDocument() {
+
+            $this->load->model('AdminModel');
+
+            $month = date('m');
+            $year = date('Y');
+            $monthStr = date('F');
+
+            $cog = $this->AdminModel->getCountDocumentRequestChart($month, 1, $year);
+            $coe = $this->AdminModel->getCountDocumentRequestChart($month, 2, $year);
+            $cue = $this->AdminModel->getCountDocumentRequestChart($month, 3, $year);
+            $ccd = $this->AdminModel->getCountDocumentRequestChart($month, 4, $year);
+            $cgr = $this->AdminModel->getCountDocumentRequestChart($month, 5, $year);
+            $cgah = $this->AdminModel->getCountDocumentRequestChart($month, 6, $year);
+            $cgg = $this->AdminModel->getCountDocumentRequestChart($month, 7, $year);
+            $cgs = $this->AdminModel->getCountDocumentRequestChart($month, 8, $year);
+            $cft = $this->AdminModel->getCountDocumentRequestChart($month, 9, $year);
+            $cnid = $this->AdminModel->getCountDocumentRequestChart($month, 10, $year);
+            $cr = $this->AdminModel->getCountDocumentRequestChart($month, 11, $year);
+            $ccg = $this->AdminModel->getCountDocumentRequestChart($month, 12, $year);
+            $tor = $this->AdminModel->getCountDocumentRequestChart($month, 13, $year);
+            $honor = $this->AdminModel->getCountDocumentRequestChart($month, 14, $year);
+            $diploma = $this->AdminModel->getCountDocumentRequestChart($month, 15, $year);
+            $authentication = $this->AdminModel->getCountDocumentRequestChart($month, 16, $year);
+            $CAV = $this->AdminModel->getCountDocumentRequestChart($month, 17, $year);
+            $CAVD = $this->AdminModel->getCountDocumentRequestChart($month, 18, $year);
+            $endorse = $this->AdminModel->getCountDocumentRequestChart($month, 19, $year);
+            $others = $this->AdminModel->getCountDocumentRequestChart($month, 20, $year);
+
+
+            $data = array(
+                'title'          =>  'Most Requested Document ('.$monthStr.' '.$year.')',
+                'cog'            =>  $cog->count,
+                'coe'            =>  $coe->count,
+                'cue'            =>  $cue->count,
+                'ccd'            =>  $ccd->count,
+                'cgr'            =>  $cgr->count,
+                'cgah'           =>  $cgah->count,
+                'cgg'            =>  $cgg->count,
+                'cgs'            =>  $cgs->count,
+                'cft'            =>  $cft->count,
+                'cnid'           =>  $cnid->count,
+                'cr'             =>  $cr->count,
+                'ccg'            =>  $ccg->count,
+                'tor'            =>  $tor->count,
+                'honor'          =>  $honor->count,
+                'diploma'        =>  $diploma->count,
+                'authentication' =>  $authentication->count,
+                'CAV'            =>  $CAV->count,
+                'CAVD'           =>  $CAVD->count,
+                'endorse'        =>  $endorse->count,
+                'others'         =>  $others->count
+            );
+
+            echo json_encode($data);
+
+        }
+
+
+
+        public function announcementEmailBlast() {
+
+            $message = $this->input->post('mytextarea');
+
+            $mail = new PHPMailer(true);
+
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'unofficial.oadtesting@gmail.com';
+                $mail->Password   = 'nifjnvzlrfrbskwu';
+                $mail->SMTPSecure = 'tls';
+                $mail->Port       = 587;
+                
+
+                //Content
+                $mail->isHTML(true);                                 
+                $mail->Subject = "DRMS ANNOUNCEMENT (".date('F d, Y').")";
+                $mail->Body    =  $message;
+
+                $this->load->model('AdminModel');
+                $results = $this->AdminModel->getAllPendingRequests();
+
+
+                $this->load->library('encryption');
+                $this->encryption->initialize(array('driver' => 'mcrypt')); 
+
+                $countSentEmails = 0;
+
+                foreach($results as $result):
+
+                    $countSentEmails++;
+                    $email = $this->encryption->decrypt($result->email);
+                    $fullname = ucwords($result->firstname." ".$result->middlename." ".$result->lastname." ".strtoupper($result->suffix));
+
+
+                    $mail->ClearReplyTos();
+                    $mail->addAddress($email, $fullname);
+                    $mail->setFrom('unofficial.oadtesting@gmail.com', 'OAD - DRMS');
+
+
+                    if(!$mail->send()) {
+                        $icon = "error";
+                        $title = "Failed";
+                        $errSuccMsg = "There was a problem sending the announcement.";
+                    } else {
+                        $icon = "success";
+                        $title = $countSentEmails." EMAILS SENT.";
+                        $errSuccMsg = "Announcement was successfully sent to all clients with pending requests.";
+                    }
+
+                endforeach;
+                
+            } catch (Exception $e) {
+
+                $icon = "error";
+                $title = "Failed";
+                $errSuccMsg = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}.";
+
+            }
+
+            $data = array (
+                'icon'      =>  $icon,
+                'title'     =>  $title,
+                'message'   =>  $errSuccMsg
+            );
+
+            echo json_encode($data);
+
+        }
 
 
         

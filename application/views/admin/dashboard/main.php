@@ -95,7 +95,7 @@
 
             <div class="chart-wrapper">
                 
-                <h3 class="wrapper-title mb-3">March Most Requested Document</h3>
+                <h3 class="wrapper-title mb-3" id="monthlyMostRequested">March Most Requested Document</h3>
 
                 <div id="chartMostRequestDocs">
     

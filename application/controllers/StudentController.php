@@ -368,7 +368,7 @@
                         
                                         <div class="info-data">
                                             <label for="" class="form-label">Course: </label>
-                                            <p class="text-capitalize">'.$course.'</p>
+                                            <p class="text-uppercase">'.$course.'</p>
                                         </div>
                         
                                         <div class="info-data">

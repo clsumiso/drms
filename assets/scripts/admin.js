@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     // Reusable functions for validations
     function validateEmail(email) {
-        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s @"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(String(email).toLowerCase())
     }
     
@@ -1870,43 +1870,6 @@ $(document).ready(function() {
     }
     
 
-   
-    // $('#btnPDFReport').click(function() {
-
-    //     let countValidation = 0
-
-    //     if ($('#getDateFromFeedback').val()) {
-    //         countValidation++
-    //     }
-
-        
-    //     if ($('#getDateToFeedback').val()) {
-    //         countValidation++
-    //     }
-
-    //     if (countValidation == 2) {
-    //         let type = $('#getStudentTypeFeedback').val()
-    //         let fromDate = $('#getDateFromFeedback').val()
-    //         let toDate = $('#getDateToFeedback').val()
-
-    //         $.ajax ({
-    //             url: window.location.origin + '/drms/admin/feedbackReportPDF',
-    //             type: 'POST',
-    //             data: {
-    //                 type: type,
-    //                 fromDate: fromDate,
-    //                 toDate: toDate
-    //             },
-    //             success: function(data) {
-
-    //             }
-    //         })
-
-    //     }
-
-        
-
-    // })
 
     loadReportCourses()
 
@@ -1927,46 +1890,64 @@ $(document).ready(function() {
     }
 
 
-    $('#modalAnnouncement').click(function() {
-        Swal.fire(
-            'Coming soon',
-            'This feature will be available soon',
-            'info'
-        )
+
+    $('#formAnnounce').submit(function(e) {
+        console.log('asd')
+        e.preventDefault();
+
+        if ($('#mytextarea').val()) {
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, announce it!'
+            }).then((result) => {
+                $('#toggleAccountClose2').click()
+                $('#webLoader').fadeIn()
+                
+                if (result.isConfirmed) {
+                    let data = $(this).serialize()
+                    $.ajax ({
+                        url: window.location.origin + '/drms/admin/announcement',
+                        type: 'POST',
+                        data: data,
+                        success: function(data) {
+                            $('#webLoader').fadeOut()
+
+                            let request = JSON.parse(data)
+                            
+                            Swal.fire(
+                                request.title,
+                                request.message,
+                                request.icon
+                            )
+        
+                        },
+                        error: function(xhr, status, error) {
+                            console.log(xhr)
+                            console.log(status)
+                            console.log(error)
+                        }
+                    })
+                }
+            })
+            
+        } else {
+            Swal.fire(
+                'Warning',
+                'Announcement cannot be blank!',
+                'warning'
+            )
+        }
+
     })
 
-    // $('#formAnnounce').submit(function(e) {
-
-    //     e.preventDefault();
-
-    //     if ($('mytextarea').val()) {
-
-    //         let data = $(this).serialize()
-    //         $.ajax ({
-    //             url: window.location.origin + '/drms/admin/announcement',
-    //             type: 'POST',
-    //             data: data,
-    //             beforeSend: function() {
-    //                 $('#webLoader').fadeIn()
-    //             },
-    //             success: function(data) {
-    //                 $('#webLoader').fadeOut()
-
-    //                 let request = JSON.parse(data)
-
-                    
-
-    //             },
-    //             error: function(xhr, status, error) {
-    //                 console.log(xhr)
-    //                 console.log(status)
-    //                 console.log(error)
-    //             }
-    //         })
-
-    //     }
-
-    // })
 
 
+
+    
 })
