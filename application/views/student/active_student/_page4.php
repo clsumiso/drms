@@ -18,14 +18,15 @@
                 </div>
 
                 <p class="page-title mt-5">delivery option</p>
-                <p class="default-text">Please note that Transcript of Records does not support “Send through Email Address” option. TOR can be only claim through courier or at the CLSU Main Gate.</p>
+                <!-- <p class="default-text">Please note that Transcript of Records does not support “Send through Email Address” option. TOR can be only claim through courier or at the CLSU OAD lobby.</p> -->
 
                 <div class="form-group col-lg-4">
                     <select name="getDeliveryOption" id="getDeliveryOption" class="form-select">
                         <option value="0">-- Select delivery option --</option>
                         <option value="1">Send through email address</option>
                         <option value="2">Send through courier</option>
-                        <option value="3">Claim at CLSU Main Gate</option>
+                        <option value="3">CLSU OAD Lobby</option>
+                        <option value="4">Claim by authorized representative</option>
                     </select>
 
                     <input type="text" id="getDeliveryFinal" name="getDeliveryFinal" class="form-control mt-2 d-none" readonly>

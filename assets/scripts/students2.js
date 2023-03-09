@@ -52,7 +52,7 @@ $(document).ready(function() {
     function validateImgPDF(file) {
         var ext = file.split(".")
         ext = ext[ext.length-1].toLowerCase()
-        var arrayExtensions = ["pdf"]
+        var arrayExtensions = ["pdf", "png", "jpeg", "jpg", "PDF", "PNG", "JPEG", "JPG"]
         if (arrayExtensions.lastIndexOf(ext) == -1) {
             return false
         } else {
@@ -68,7 +68,7 @@ $(document).ready(function() {
 
     var currentTime = new Date()
     var start = currentTime.getFullYear() 
-    var end = start - 15
+    var end = start - 118
 
     function generateSY(start, end) {
         var options = ""
@@ -92,31 +92,38 @@ $(document).ready(function() {
                                                         '<div class="row">'+
                                                             '<div class="form-group col-lg-7 mb-3">'+
                                                                 '<select name="getDocument" id="getDocument" class="form-select getDocument">'+
-                                                                    '<option value="0">-- Select a document --</option>'+
-                                                                    '<option value="1">Certification of Units Earned</option>'+
-                                                                    '<option value="2">Certification of Course Description</option>'+
-                                                                    '<option value="3">Certification of Graduation with Ranking</option>'+
-                                                                    '<option value="4">Certification of Graduation with Academic Honors</option>'+
-                                                                    '<option value="5">Certification of Grading System</option>'+
-                                                                    '<option value="6">Honorable Dismissal & Transfer Credentials</option>'+
-                                                                    '<option value="7">Certification of Graduation with GWA</option>'+
-                                                                    '<option value="8">Copy of Diploma</option>'+
-                                                                    '<option value="9">Transcript of Records</option>'+
-                                                                    '<option value="10">CAV (for DFA)</option>'+
-                                                                    '<option value="11">CAV (for non-DFA)</option>'+
-                                                                    '<option value="12">Authentication</option>'+
-                                                                    '<option value="13">Other, please specify</option>'+
+                                                                    '<option value="0">-- Select a document --</option>' +
+                                                                    '<option value="1">Certification of Units Earned</option>' +
+                                                                    '<option value="2">Certification of Course Description</option>' +
+                                                                    '<option value="14">Certification of English as a Medium of Instruction</option>' +
+                                                                    '<option value="3">Certification of Graduation with Ranking</option>' +
+                                                                    '<option value="4">Certification of Graduation with Academic Honors</option>' +
+                                                                    '<option value="5">Certification of Grading System with Grade Conversion</option>' +
+                                                                    '<option value="6">Honorable Dismissal & Transfer Credentials</option>' +
+                                                                    '<option value="15">Certification of Graduation</option>' +
+                                                                    '<option value="7">Certification of Graduation with GWA</option>' +
+                                                                    '<option value="8">Copy of Diploma</option>' +
+                                                                    '<option value="9">Transcript of Records</option>' +
+                                                                    '<option value="10">CAV (for DFA)</option>' +
+                                                                    '<option value="11">CAV (for non-DFA)</option>' +
+                                                                    '<option value="12">Authentication/Certified True Copy</option>' +
+                                                                    '<option value="13">Other, please specify</option>' +
                                                                 '</select>'+
                                                             '</div>'+
 
                                                             '<div class="form-group col-lg-3 mb-3">'+
                                                                 '<select name="getCopies" id="getCopies" class="form-select getCopies">'+
-                                                                    '<option value="0">-- No. of copies --</option>'+
-                                                                    '<option value="1">1 Copy</option>'+
-                                                                    '<option value="2">2 Copies</option>'+
-                                                                    '<option value="3">3 Copies</option>'+
-                                                                    '<option value="4">4 Copies</option>'+
-                                                                    '<option value="5">5 Copies</option>'+
+                                                                    '<option value="0">-- No. of copies --</option>' +
+                                                                    '<option value="1">1 Copy</option>' +
+                                                                    '<option value="2">2 Copies</option>' +
+                                                                    '<option value="3">3 Copies</option>' +
+                                                                    '<option value="4">4 Copies</option>' +
+                                                                    '<option value="5">5 Copies</option>' +
+                                                                    '<option value="6">6 Copies</option>' +
+                                                                    '<option value="7">7 Copies</option>' +
+                                                                    '<option value="8">8 Copies</option>' +
+                                                                    '<option value="9">9 Copies</option>' +
+                                                                    '<option value="10">10 Copies</option>' +
                                                                 '</select>'+
                                                             '</div>'+
 
@@ -361,35 +368,35 @@ $(document).ready(function() {
         }
     })
 
-    $('#getPhone').bind({
-        keydown: function(e) {
-            if (e.shiftKey === true ) {
-                if (e.which == 9) {
-                    return true
-                }
-                return false
-            }
-            if (e.which >= 8 && e.which <= 57) {
-                return true
-            }
-            if(e.which >= 96 && e.which <= 105) {
-                return true
-            }
-            if(e.which == 189) {
-                return true
-            }
-            if (e.which==32) {
-                return false
-            }
-            return false
-        }
-    })
+    // $('#getPhone').bind({
+    //     keydown: function(e) {
+    //         if (e.shiftKey === true ) {
+    //             if (e.which == 9) {
+    //                 return true
+    //             }
+    //             return false
+    //         }
+    //         if (e.which >= 8 && e.which <= 57) {
+    //             return true
+    //         }
+    //         if(e.which >= 96 && e.which <= 105) {
+    //             return true
+    //         }
+    //         if(e.which == 189) {
+    //             return true
+    //         }
+    //         if (e.which==32) {
+    //             return false
+    //         }
+    //         return false
+    //     }
+    // })
 
     $('#getPhone').change(function() { 
         $(this).parent().parent().find('.error-msg').remove()
         if($(this).val()) {
             if(digitOnly($(this).val())) {
-                if($(this).val().length == 10) {
+                if($(this).val().length > 0) {
                     // success code
                     $(this).removeClass('is-invalid')
                 } else {
@@ -579,6 +586,7 @@ $(document).ready(function() {
                                                                     '<option value="3">3 Pages</option>'+
                                                                     '<option value="4">4 Pages</option>'+
                                                                     '<option value="5">5 Pages</option>'+
+                                                                    '<option value="6">6 Pages</option>'+
                                                                 '</select>'+
                                                             '</div>'+
 
@@ -593,11 +601,11 @@ $(document).ready(function() {
                                                         '<div class="row showDescription">'+
                                                             '<div class="form-group col-lg">'+
                                                                 '<b class="text-uppercase poppins mb-2">please be advised</b>'+
-                                                                '<p class="poppins">For non-garduates of a bachelor\'s program, please estimate the number of pages of your TOR according to the number of semesters you attended CLSU: 1 page = 3 semester</p>'+
+                                                                '<p class="poppins">For non-graduates of a bachelor\'s program, please estimate the number of pages of your TOR according to the number of semesters you attended CLSU: 1 page = 3 semester</p>'+
                                                                 '<p class="poppins">For non-graduates of master\'s or doctoral program, please pay 100 pesos (1 page)</p>'+
 
                                                                 '<b class="text-uppercase poppins mb-2">Note</b>'+
-                                                                '<p class="poppins">If you are going to upload Letter of Copy or an Image for your board exam, pelase check the "Check to upload file""</p>'+
+                                                                '<p class="poppins">If you are going to upload Letter of Copy or an Image for your board exam, pelase check the "Check to upload file"</p>'+
                                                             '</div>'+
                                                         '</div>')
 
@@ -629,8 +637,19 @@ $(document).ready(function() {
             $(this).parent().parent().parent().find('.btnRemoveWrapper2').before('<div class="row showDescription">'+
                                                             '<b class="text-uppercase poppins">Be advised</b>'+
                                                             '<p class="poppins m-0 mt-2">Please attach a clear scanned copy of the document(PDF) to be authenticated.</p>'+
-                                                            '<p class="poppins mb-2">We will not process your Authentication request without a clear scanned copy of the document (PDF) to be authenticated.</p>'+
+                                                            '<p class="poppins mb-2">We will not process your Authentication request without a clear scanned copy of the document (PDF) to be authenticated. <b>IF MULTIPLE ATTACHMENT</b>, compile using this link <a href="https://www.ilovepdf.com/merge_pdf">https://www.ilovepdf.com/merge_pdf</a> donwload the merged file then upload using the <button class="btn btn-sm btn-primary" type="button">Upload file</button></p>'+
+
+                                                            '<b class="poppins mb-2">If For WES</b>'+
+                                                            '<p class="poppins m-0 mb-2">Send your WES Form to the designated staff email address upon completing the online request. (Check your email inbox or spam)</p>'+
+
+                                                            '<br>'+
+
+                                                            '<b class="poppins mb-2">If For Copy for School</b>'+
+                                                            '<p class="poppins m-0 mb-2">Upload pdf file of copy of letter.</p>'+
+                                                            '<br>'+
                                                         '</div>'+
+
+                                                        
                                                         
                                                         '<div class="row showUploadButton">'+
                                                             '<div class="form-group mt-0 mb-1 printValidationUploadedFileRequirement">'+
@@ -639,7 +658,7 @@ $(document).ready(function() {
 
                                                             '<div class="form-group">'+
                                                                 '<button class="btn btn-primary poppins custom-button-mini btnUploadDocumentFileRequirement" type="button">Upload file</button>'+
-                                                                '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf file is accepted</p>'+
+                                                                '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf, png, jpg, or jpeg file is accepted</p>'+
                                                             '</div>'+
                                                         '</div>')
 
@@ -747,17 +766,22 @@ $(document).ready(function() {
             
             countTotalUploaded++  
             $(this).parent().parent().parent().parent().append('<div class="check-wrapper-tor">'+
-                                                                    '<b class="poppins mb-2">For Board Exam Only</b>'+
+                                                                    '<b class="poppins mb-2">If For Board Exam Only</b>'+
                                                                     '<p class="poppins m-0 mb-2">A. Passport size picture.</p>'+
                                                                     '<p class="poppins m-0 mb-2">B. Colored, with white background.</p>'+
-                                                                    '<p class="poppins m-0 mb-2">C. Taken in full-face view directly facing the caemra.</p>'+
+                                                                    '<p class="poppins m-0 mb-2">C. Taken in full-face view directly facing the camera.</p>'+
                                                                     '<p class="poppins m-0 mb-2">D. With neutral facial expression, and both eyes open.</p>'+
                                                                     '<p class="poppins m-0 mb-2">E. With HANDWRITTEN (not computer-generated) name tag legibly showing PRINTED FULL NAME in the format: First Name, Middle Initial, Lastname, and Extension Name, if any.</p>'+
 
 
                                                                     '<br>'+
 
-                                                                    '<b class="poppins mb-2">For Copy of Letter</b>'+
+                                                                    '<b class="poppins mb-2">If For WES</b>'+
+                                                                    '<p class="poppins m-0 mb-2">Upload your WES Form.</p>'+
+
+                                                                    '<br>'+
+
+                                                                    '<b class="poppins mb-2">If For Copy for School</b>'+
                                                                     '<p class="poppins m-0 mb-2">Upload pdf file of copy of letter.</p>'+
 
                                                                     '<br>'+
@@ -769,7 +793,7 @@ $(document).ready(function() {
                                                                     
                                                                     '<div class="form-group">'+
                                                                         '<button class="btn btn-primary w-25 poppins btnUploadDocumentFileRequirement" type="button">Upload file</button>'+
-                                                                        '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf file is accepted</p>'+
+                                                                        '<p class="m-0 poppins fs-14 fw-500 mb-3"><b>Note:</b> Only pdf, png, jpg, or jpeg file is accepted</p>'+
                                                                     '</div>'+
                                                                 '</div>')
         } else {
@@ -810,6 +834,8 @@ $(document).ready(function() {
                     case '6':
                     case '7':
                     case '12':
+                    case '14':
+                    case '15':
 
                         addDataDocument = documentNameText
                         documentRequested.push('x'+documentCopies+' '+addDataDocument)
@@ -1009,20 +1035,29 @@ $(document).ready(function() {
 
                 $('.modalTitleChangeHeader').text('Procedure for Courier')
 
-                $('#modalBodyChangeText').append('<p class="poppins"><b>Step 1:</b> Request document/s.</p><p class="poppins"><b>Step 2:</b> Visit to the nearest jrs express branch and avail 2 pouches for the requested document/s.  Write down the sender and receiver details on the pouch.</p><p class="poppins"><b>Step 3:</b> Client will be notified when the document/s is already prepared and when it is already handed to the JRS service courier.</p><p class="poppins"><b>NOTE: </b>JRS express has two way process of delivering a package, the two pouches you avail will be delivered in CLSU and will be handed to the OAd Staff. After the document/s have been processed, the staff will put the document/s in the pouch and will be handed back to the courier for the delivery.</p>')
+                $('#modalBodyChangeText').append('<p class="poppins"><b>Step 1:</b> Request document/s.</p><p class="poppins"><b>Step 2:</b> Visit to the nearest jrs express branch and avail 2 pouches for the requested document/s.  Write down the sender and receiver details on the pouch.</p><p class="poppins"><b>Step 3:</b> Please use this information to address your prepaid pouch. Name: Frontline Services, Address:  OFFICE OF ADMISSIONS, CENTRAL LUZON STATE UNIVERSITY, SCIENCE CITY OF MUÑOZ, NUEVA ECIJA.</p><b>Step 4:</b> Client will be notified when the document/s is already prepared and when it is already handed to the JRS service courier.</p><p class="poppins"><b>NOTE: </b>JRS express has two way process of delivering a package, the two pouches you avail will be delivered in CLSU and will be handed to the OAd Staff. After the document/s have been processed, the staff will put the document/s in the pouch and will be handed back to the courier for the delivery.</p>')
 
                 $('#btnToggleModalCourierNote').click()
 
             }
 
             if ($(this).val() == 3) {
+                
+                $('.modalTitleChangeHeader').text('Procedure for Claiming')
 
-                $('.modalTitleChangeHeader').text('Procedure for Dropbox')
-
-                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU Main Gate allows the receiving of the documents through dropbox. You will receive an email if the document/s are available on the CLSU Main Gate.</p> <p class="poppins">Claiming hours are from <b>10:00 am - 11:00 am</b> and <b>3:00 pm - 5:00 pm</b> Monday to Friday only.</p>')
+                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU OAD Lobby. You will receive an email if the document/s are available.</p> <p class="poppins">Claiming is during office hours <b>(8:00AM-05:00PM)</b> Mondays to Fridays only except holidays.</p>')
 
                 $('#btnToggleModalCourierNote').click()
+            }
+
+            if ($(this).val() == 4) {
+
                 
+                $('.modalTitleChangeHeader').text('Procedure for Claiming')
+
+                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU OAD Lobby. Authorized representative must bring authorization letter and authorized ID.</p> <p class="poppins">Claiming is during office hours <b>(8:00AM-05:00PM)</b> Mondays to Fridays only except holidays.</p>')
+
+                $('#btnToggleModalCourierNote').click()
             }
             
         }
@@ -1181,7 +1216,7 @@ $(document).ready(function() {
         // Validates Phone Number
         if($('#getPhone').val()) {
             if(digitOnly($('#getPhone').val())) {
-                if($('#getPhone').val().length == 10) {
+                if($('#getPhone').val().length >= 1) {
                     // success code
                     $('#getPhone').removeClass('is-invalid')
                     countValidatePage2++
@@ -1487,9 +1522,6 @@ $(document).ready(function() {
                 let copiesDoc = $(this).parent().parent().parent().find('.getFCopies').val()
                 let pagesDoc = $(this).parent().parent().parent().find('.getFPages').val()
                 let uploadsDocCheck = $(this).parent().parent().parent().find('.getFUploads').val()
-
-
-
                 
                 let page = "page"
 
@@ -1648,6 +1680,7 @@ $(document).ready(function() {
             //     $("#webLoader").fadeIn()
             // },
             success: function(data) {
+                console.log(data);
                 $('#validationSubmit').empty()
 
                 let request = JSON.parse(data)

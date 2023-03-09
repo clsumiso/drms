@@ -17,7 +17,6 @@
                                 <option value="4">Certification of Course Description</option>
                                 <option value="5">Certification of Grading System</option>
                                 <option value="6">Certification of Free Tuition</option>
-                                <option value="7">Certification of No Issued ID</option>
                                 <option value="8">Certification of Registration</option>
                                 <option value="9">Checklist of Completed Grades</option>
                                 <option value="10">Transcript of Records</option>
@@ -68,6 +67,23 @@
                 
                 <hr class="my-4">
 
+                <p class="page-title">NOTE</p>
+                <p class="default-text m-0">The 𝗖𝗲𝗿𝘁𝗶𝗳𝗶𝗰𝗮𝘁𝗶𝗼𝗻 𝗼𝗳 𝗖𝗼𝘂𝗿𝘀𝗲 𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻 depends on how many pages your request reached (50 pesos per page).</p>
+                
+                <hr class="my-4">
+
+                <p class="page-title">TAKE NOTE:</p>
+                <p class="default-text m-0">As per our Citizen's Charter, the maximum processing time for the following requests are as follows:</p>
+                <br><br>
+                <p class="default-text m-0">DIPLOMA is <b>20 working days</b></p>
+                <p class="default-text m-0">TOR is <b>14 working days</b></p>
+                <p class="default-text">CERTIFICATION is <b>3 working days</b></p>
+                <p class="poppins m-0">(The Certificate of Course Description, depends on the number of subjects and how many pages your request reached (Php 50.00 per page).)</p>
+                <br><br>
+                <p class="poppins"><b>THE COUNTING OF WORKING DAYS STARTS AFTER RECEIVING THE SECOND CONFIRMATION EMAIL.</b></p>
+                
+                <hr class="my-4">
+
                 <p class="page-title">PAYMENT PROCEDURE</p>
                 <p class="default-text m-0">Pay your fees thru the following payment options:</p>
                 <p class="default-text m-0">1. CLSU Cashier</p>
@@ -77,7 +93,7 @@
                 <p class="poppins m-0">Account Name: <b>CLSU INCOME ACCOUNT F-164</b></p>
                 <p class="poppins">Account Number: <b>2961-038416</b></p>
 
-                <p class="default-text"><b>NOTE:</b> We strictly accept LANDBANK deposits only. For the issuance of the Official Receipt, kindly upload a copy of the DEPOSIT SLIP and fill up the form here <a href="https://tinyurl.com/yn5pzsc4" target="_blank">https://tinyurl.com/yn5pzsc4</a>.</p>
+                <p class="default-text"><b>NOTE:</b> We strictly accept LANDBANK deposits only. For the issuance of the Official Receipt, kindly upload a copy of the DEPOSIT SLIP and fill up the form here <a href="https://tinyurl.com/2p8dfdpj" target="_blank">https://tinyurl.com/2p8dfdpj)</a>.</p>
                 
                 <p class="default-text">Otherwise, if you haven't processed your payment yet, you can proceed to the next page of the transaction. To manage your payment, you can access the "Track Request" on the system's homepage.</p>
                 

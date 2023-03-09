@@ -15,7 +15,7 @@
         GERALD VALDEZ
         AMIR LEDESMA
         ANNABEL SATURNO 
-        To Lolay, the loml, that keeps me motivated :> (HAHAHAHA)
+        To Lolay, the loml, that keeps me motivated
         and to everyone who have supported this project. THANK YOU!
 -->
 

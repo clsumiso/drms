@@ -534,12 +534,12 @@ $(document).ready(function() {
         
         if($(this).val() == 0) {
             $(this).addClass('is-invalid') 
-        } else if ($(this).val() == 1 || $(this).val() == 2) {
+        } else if ($(this).val() == 1 || $(this).val() == 2 || $(this).val() == 6) {
 
 
             var currentTime = new Date()
             var start = currentTime.getFullYear() 
-            var end = start - 7
+            var end = start - 15
 
             var options = ""
             let count = 1
@@ -681,6 +681,7 @@ $(document).ready(function() {
                 switch (documentName) {
                     case '1':
                     case '2':
+                    case '6':
                         let documentSemester = $(this).parent().parent().parent().find('.getSemester').val()
                         let documentSchoolYear = $(this).parent().parent().parent().find('.getYear').val()
                         let documentSemesterText = $(this).parent().parent().parent().find('.getSemester option:selected').text()
@@ -742,7 +743,6 @@ $(document).ready(function() {
                         $(this).parent().parent().parent().find('.getFPages').val(page)
                     break
 
-                    case '6':
                     case '7':
                         flag = 1
 
@@ -896,7 +896,7 @@ $(document).ready(function() {
 
                 $('.modalTitleChangeHeader').text('Procedure for Courier')
 
-                $('#modalBodyChangeText').append('<p class="poppins"><b>Step 1:</b> Request document/s.</p><p class="poppins"><b>Step 2:</b> Visit to the nearest jrs express branch and avail 2 pouches for the requested document/s.  Write down the sender and receiver details on the pouch.</p><p class="poppins"><b>Step 3:</b> Client will be notified when the document/s is already prepared and when it is already handed to the JRS service courier.</p><p class="poppins"><b>NOTE: </b>JRS express has two way process of delivering a package, the two pouches you avail will be delivered in CLSU and will be handed to the OAd Staff. After the document/s have been processed, the staff will put the document/s in the pouch and will be handed back to the courier for the delivery.</p>')
+                $('#modalBodyChangeText').append('<p class="poppins"><b>Step 1:</b> Request document/s.</p><p class="poppins"><b>Step 2:</b> Visit to the nearest jrs express branch and avail 2 pouches for the requested document/s.  Write down the sender and receiver details on the pouch.</p><p class="poppins"><b>Step 3:</b> Please use this information to address your prepaid pouch. Name: (Name of your designated Records-in-charge), Address:  OFFICE OF ADMISSIONS, CENTRAL LUZON STATE UNIVERSITY, SCIENCE CITY OF MUÑOZ, NUEVA ECIJA.</p><b>Step 4:</b> Client will be notified when the document/s is already prepared and when it is already handed to the JRS service courier.</p><p class="poppins"><b>NOTE: </b>JRS express has two way process of delivering a package, the two pouches you avail will be delivered in CLSU and will be handed to the OAd Staff. After the document/s have been processed, the staff will put the document/s in the pouch and will be handed back to the courier for the delivery.</p>')
 
                 $('#btnToggleModalCourierNote').click()
 
@@ -905,9 +905,19 @@ $(document).ready(function() {
             if ($(this).val() == 3) {
 
                 
-                $('.modalTitleChangeHeader').text('Procedure for Dropbox')
+                $('.modalTitleChangeHeader').text('Procedure for Claiming')
 
-                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU Main Gate allows the receiving of the documents through dropbox. You will receive an email if the document/s are available on the CLSU Main Gate.</p> <p class="poppins">Claiming hours are from <b>10:00 am - 11:00 am</b> and <b>3:00 pm - 5:00 pm</b> Monday to Friday only.</p>')
+                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU OAD Lobby. You will receive an email if the document/s are available.</p> <p class="poppins">Claiming is during office hours <b>(8:00AM-05:00PM)</b> Mondays to Fridays only except holidays.</p>')
+
+                $('#btnToggleModalCourierNote').click()
+            }
+
+            if ($(this).val() == 4) {
+
+                
+                $('.modalTitleChangeHeader').text('Procedure for Claiming')
+
+                $('#modalBodyChangeText').append('<p class="poppins">Claim at CLSU OAD Lobby. Authorized representative must bring authorization letter and authorized ID.</p> <p class="poppins">Claiming is during office hours <b>(8:00AM-05:00PM)</b> Mondays to Fridays only except holidays.</p>')
 
                 $('#btnToggleModalCourierNote').click()
             }

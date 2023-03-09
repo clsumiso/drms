@@ -90,7 +90,7 @@
                         <label for="getPhone" class="form-label d-flex">Phone number<p class="m-0 text-danger mx-1">*</p></label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">+63</span>
+                                <!-- <span class="input-group-text" id="basic-addon1">+63</span> -->
                             </div>
                             <input type="text" class="form-control" id="getPhone" name="getPhone" maxlength="10" autocomplete="off">
                         </div>

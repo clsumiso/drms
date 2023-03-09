@@ -430,20 +430,6 @@
             return $string ? implode(', ', $string) . ' ago' : 'just now';
         }
 
-
-
-
-       
-
-
-
-
-
-
-
-
-
-
         public function getReminderRequest() {
 
             $uid = $_SESSION['UID'];
@@ -598,8 +584,6 @@
 
         }
 
-
-
         public function getOutboxRequest() {
             
             $uid = $_SESSION['UID'];
@@ -750,7 +734,6 @@
             }
         }
 
-
         public function get_search_request() {
             $uid = $_SESSION['UID'];
             $student_type = $_SESSION["staff_type"];
@@ -900,9 +883,6 @@
                     </div>';
             }
         }
-
-
-
 
         public function getRequestReview() {
 
@@ -1238,15 +1218,15 @@
                         <div class="action-main">
 
                             <button type="button" class="btn-send-document btn btn-success poppins '.$showSendDocumentBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                <i class="fas fa-paper-plane"></i> Send Document
+                                <i class="fas fa-paper-plane"></i> Send Document (via Email)
                             </button>
                             
                             <button type="button" class="btn-deliver btn-primary btn poppins '.$showSetDeliveryBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal2">
-                                <i class="fas fa-truck"></i> Set request as on delivery
+                                <i class="fas fa-truck"></i> Set request as to release
                             </button>
 
                             <button type="button" class="btn-deliver btn-primary btn poppins '.$showSetDeliveredBtn.'" data-bs-toggle="modal" data-bs-target="#exampleModal4">
-                                <i class="fas fa-truck"></i> Set request as delivered
+                                <i class="fas fa-truck"></i> Set request as completed
                             </button>
 
                             <button type="button" class="btn-deliver btn-dark poppins '.$showPaymentBtn.' btnPaymentApprove">
@@ -1410,10 +1390,6 @@
             }
         }
 
-
-
-
-
         public function notes() {
             $request_id = $this->input->post('requestID');
             $note  = $this->input->post('notesContent');
@@ -1440,8 +1416,6 @@
 
         }
 
-
-
         public function mailDeclineRequest() {
             $uid = $this->session->UID;
 
@@ -1453,7 +1427,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             $staff_text = "";
             if (isset($staff)) {
-                $staff_id = $staff->staff_id;
+                $staff_id = "'".$staff->staff_id."'";
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -1537,11 +1511,15 @@
 
                                       <br>
 
+                                      <p>Please make another request here: <a href='https://oad.clsu2.edu.ph/drms/'>https://oad.clsu2.edu.ph/drms/</a></p>
+
+                                      <br>
+
                                       <p>Please response on our survey questionnaire here: <a href='https://forms.gle/FTw6qBw5ED3pDhsu9'>https://forms.gle/FTw6qBw5ED3pDhsu9</a></p>
 
                                       <br>
 
-                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below  for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1636,7 +1614,7 @@
             $staff_text = "";
 
             if (isset($staff)) {
-                $staff_id = $staff->staff_id;
+                $staff_id = "'".$staff->staff_id."'";
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -1714,17 +1692,17 @@
 
                 //Content
                 $mail->isHTML(true);                                 
-                $mail->Subject = "Request is On delivery [Request ID: ".$request_id."]";
+                $mail->Subject = "Request is To Relase [Request ID: ".$request_id."]";
                 $mail->Body    =  "<p style='margin: 0; '>Hello, ".ucwords($student_fname)."!</p>
                     
                                       <br>
                   
-                                      <p style='margin: 0; '>This is to inform you that your requests have been processed. Documents will be prepared and will be dropped at the CLSU main gate (drop box) and/or at the courier. You will be duly informed regarding the claiming details of the document/s.</p>
+                                      <p style='margin: 0; '>This is to inform you that your requests have been processed. You will be duly informed regarding the claiming details of the document/s.</p>
 
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below  for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -1828,7 +1806,7 @@
 
             $staff = $this->StaffModel->get_staff_details($uid);
             if (isset($staff)) {
-                $staff_id = $staff->staff_id;
+                $staff_id = "'".$staff->staff_id."'";
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -1898,16 +1876,12 @@
                     
                                       <br>
                   
-                                      <p style='margin: 0; '>The document/s has been released. To claim it: </p>
-                                      <p style='margin: 0; '>a.) For the drop box, claiming hours will be at  10:00 am - 11:00am and 3:00 pm - 5:00 pm and  located at the CLSU Main Gate.
-                                      </p>
-                                      <p style='margin: 0; '>b.) For the courier, kindly wait for further notice and delivery of your document/s.
-                                      </p>
+                                      <p style='margin: 0; '>Documents will be prepared and you may claim it at CLSU OAD Lobby during working hours from (08:00AM - 05:00PM) from mondays to fridays only except holidays or wait for your documents to be delivered by a courier.</p>
 
                                       ".$addition_message."
  
 
-                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below  for other inquiries.</p>
 
                                       <br>
                                       <br>
@@ -2014,7 +1988,7 @@
 
             $staff = $this->StaffModel->get_staff_details($uid);
             if (isset($staff)) {
-                $staff_id = $staff->staff_id;
+                $staff_id = "'".$staff->staff_id."'";
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -2092,7 +2066,7 @@
 
                                       <br>
 
-                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                      <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below  for other inquiries.</p>
 
                                       <br>
 
@@ -2231,7 +2205,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             
             if (isset($staff)) {
-                $staff_id = $staff->staff_id;
+                $staff_id = "'".$staff->staff_id."'";
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -2302,7 +2276,7 @@
 
                                     <br>
 
-                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below  for other inquiries.</p>
 
                                     <br>
                                     <br>
@@ -2408,7 +2382,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             
             if (isset($staff)) {
-                $staff_id = $staff->staff_id;
+                $staff_id = "'".$staff->staff_id."'";
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -2485,7 +2459,7 @@
 
                                     <br>
 
-                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below  for other inquiries.</p>
 
                                     <br>
                                     <br>
@@ -2569,14 +2543,6 @@
         }
 
 
-
-
-
-
-
-
-
-
         public function mailPaymentCompleted() {
 
             $uid = $this->session->UID;
@@ -2588,7 +2554,7 @@
             $staff = $this->StaffModel->get_staff_details($uid);
             
             if (isset($staff)) {
-                $staff_id = $staff->staff_id;
+                $staff_id = "'".$staff->staff_id."'";
                 $firstname = $staff->staff_fname;
                 $middlename = $staff->staff_mname;
                 $lastname = $staff->staff_lname;
@@ -2657,7 +2623,7 @@
 
                                     <br>
 
-                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below or <a href='mailto:drms.concerns@gmail.com'>drms.concerns@gmail.com</a> for other inquiries.</p>
+                                    <p style='margin: 0; '>If you have any concern regarding your request, kindly email the designated staff indicated below  for other inquiries.</p>
 
                                     <br>
                                     <br>

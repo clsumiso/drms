@@ -11,6 +11,7 @@
                         <option value="3">Transfer of School</option>
                         <option value="4">Advance Studies</option>
                         <option value="5">Employment</option>
+                        <option value="7">Board Examination</option>
                         <option value="6">Other</option>
                     </select>
 
@@ -25,7 +26,8 @@
                         <option value="0">-- Select delivery option --</option>
                         <option value="1">Send through email address</option>
                         <option value="2">Send through courier</option>
-                        <option value="3">Claim at CLSU Main Gate</option>
+                        <option value="3">CLSU OAD Lobby</option>
+                        <option value="4">Claim by authorized representative</option>
                     </select>
 
                     <input type="text" id="getDeliveryFinal" name="getDeliveryFinal" class="form-control mt-2 d-none" readonly>

@@ -30,7 +30,7 @@
             <li>
                 <a href="" id="navPendingRequest">
                     <i class="fas fa-comment-dots"></i>
-                    <p>Pending <div class="content-counts" id="pendingCount">0</div></p>
+                    <p>In Progress <div class="content-counts" id="pendingCount">0</div></p>
                 </a>
             </li>
 
@@ -51,14 +51,14 @@
             <li>
                 <a href="" id="navDeliveryRequest">
                     <i class="fas fa-truck"></i>
-                    <p>On Delivery <div class="content-counts" id="deliveryCount">0</div></p>
+                    <p>To Release <div class="content-counts" id="deliveryCount">0</div></p>
                 </a>
             </li>
 
             <li>
                 <a href="" id="navSentRequest">
                     <i class="fas fa-paper-plane"></i>
-                    <p>Sent</p>
+                    <p>Completed</p>
                 </a>
             </li>
 
